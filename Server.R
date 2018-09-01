@@ -750,7 +750,7 @@ function(input, output, session) {
   #                  sendSweetAlert(session, title = "File downloaded", text = "Check the 'NEON Downloads' directory. Go to step 2 to unzip files and make them more accesible.", type = 'success')
   #                }
   #              })
-  output$download_NEON_general <- downloadHandler(filename = "test.zip", content = function(file) {
+  output$download_NEON_general <- downloadHandler(filename = "test", content = function(file) {
     file.copy(from = '/home/danielslee/test_dir', to = file)
   })
   ####—— Download NEON data: specific ####
