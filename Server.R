@@ -751,7 +751,7 @@ function(input, output, session) {
   #                }
   #              })
   output$download_NEON_general <- downloadHandler(filename = "test.zip", content = function(file) {
-    file.copy(from = '/home/danielslee/test_dir/test.zip', to = file)
+    file.copy(from = '/home/danielslee/test_dir', to = file)
   })
   ####—— Download NEON data: specific ####
   observeEvent(eventExpr = input$download_NEON_specific,
