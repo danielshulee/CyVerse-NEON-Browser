@@ -737,19 +737,22 @@ function(input, output, session) {
   Folder_path_general <- reactive(req(paste0("../NEON Downloads/NEON_", Field_Site_general(), "_", Product_ID_middle())))
   Folder_path_specific <- reactive(req(paste0("../NEON Downloads/NEON_", Field_Site_specific(), "_", Date_specific())))
   ####—— Download NEON data: general####
-  observeEvent(eventExpr = input$download_NEON_general,
-               handlerExpr = {
-                 showNotification(ui = "Download in progess…", id = "download_general", type = "message")
-                 download <- try(zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = '../NEON Downloads/'), silent = TRUE)
-                 if (class(download) == "try-error") {
-                   removeNotification(id = "download_general")
-                   sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to the data package you tried to obtain or the neonUtlities package used to pull data. Read the error code message: ", strsplit(download, ":")[[1]][-1]), type = 'error')
-                 } else {
-                   file.rename(from = paste0("../NEON Downloads/", Folder_general()), to = Folder_path_general())
-                   removeNotification(id = "download_general")
-                   sendSweetAlert(session, title = "File downloaded", text = "Check the 'NEON Downloads' directory. Go to step 2 to unzip files and make them more accesible.", type = 'success')
-                 }
-               })
+  # observeEvent(eventExpr = input$download_NEON_general,
+  #              handlerExpr = {
+  #                showNotification(ui = "Download in progess…", id = "download_general", type = "message")
+  #                download <- try(zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = '../NEON Downloads/'), silent = TRUE)
+  #                if (class(download) == "try-error") {
+  #                  removeNotification(id = "download_general")
+  #                  sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to the data package you tried to obtain or the neonUtlities package used to pull data. Read the error code message: ", strsplit(download, ":")[[1]][-1]), type = 'error')
+  #                } else {
+  #                  file.rename(from = paste0("../NEON Downloads/", Folder_general()), to = Folder_path_general())
+  #                  removeNotification(id = "download_general")
+  #                  sendSweetAlert(session, title = "File downloaded", text = "Check the 'NEON Downloads' directory. Go to step 2 to unzip files and make them more accesible.", type = 'success')
+  #                }
+  #              })
+  output$download_NEON_general <- downloadHandler(filename = "test", content = function(file) {
+    file.copy(from = '/home/danielslee/test_dir/test.zip', to = file)
+  })
   ####—— Download NEON data: specific ####
   observeEvent(eventExpr = input$download_NEON_specific,
                handlerExpr = {
@@ -885,9 +888,9 @@ function(input, output, session) {
   ####FOR ME TAB####
   
   #Text for troublshooting
-  output$text_me <- renderText(input$sublocs_birdgrid & nrow(Subloc_tes_plots_bird()) != 0)
+  output$text_me <- renderText(getwd())
   #Text for troublshooting 2
-  output$text_me_two <- renderText(!input$sublocs_birdgrid | (nrow(Subloc_tes_plots_bird()) == 0))
+  output$text_me_two <- renderText(""))
   #Table for troubleshooting
   #output$table_me <- renderDataTable()
 }
