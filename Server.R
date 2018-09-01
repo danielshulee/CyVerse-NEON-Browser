@@ -890,7 +890,7 @@ function(input, output, session) {
   #Text for troublshooting
   output$text_me <- renderText(getwd())
   #Text for troublshooting 2
-  output$text_me_two <- renderText(""))
+  output$text_me_two <- renderText("")
   #Table for troubleshooting
   #output$table_me <- renderDataTable()
 }
