@@ -750,6 +750,22 @@ function(input, output, session) {
   #                  sendSweetAlert(session, title = "File downloaded", text = "Check the 'NEON Downloads' directory. Go to step 2 to unzip files and make them more accesible.", type = 'success')
   #                }
   #              })
+  
+  download_function <- function(file) {
+    unlink(x = "/home/danielslee/NEON/*", recursive = TRUE, force = TRUE)
+    zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = "/home/danielslee/NEON/")
+    stackByTable(filepath = paste0("/home/danielslee/NEON/", Folder_general()), folder = TRUE)
+    file.rename(from = paste0("/home/danielslee/NEON/", Folder_general(), "/stackedFiles"), to = paste0("/home/danielslee/NEON/", Folder_general(), "/", Folder_path_general()))
+    setwd(paste0("/home/danielslee/NEON/", Folder_general(), "/"))
+    zip(zipfile = file, files = Folder_path_general())
+    setwd('/srv/shiny-server/NEON-Hosted-Browser')
+  }
+  
+  observeEvent(eventExpr = input$download,
+               handlerExpr = {
+    download_function(file = '/tmp/test.zip')
+  })
+  
   output$download_NEON_general <- downloadHandler(filename = "test.zip", content = function(file) {
     unlink(x = "/home/danielslee/NEON/*", recursive = TRUE, force = TRUE)
     zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = "/home/danielslee/NEON/")
