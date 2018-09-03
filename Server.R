@@ -772,7 +772,21 @@ function(input, output, session) {
     download_function(file = '/tmp/data2.zip')
   })
   
-#  output$download_NEON_general <- downloadHandler(filename = "test.zip", content = download_function(file), contentType = "application/zip")
+  output$download_NEON_general <- downloadHandler(filename = "test.zip", content = function(file) {
+    unlink(x = "/home/danielslee/NEON/*", recursive = TRUE, force = TRUE)
+    showNotification(ui = "Downloading files…", id = "download", type = "message")
+    zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = "/home/danielslee/NEON/")
+    removeNotification(id = "download")
+    showNotification(ui = "Stacking files…", id = "stack", type = "message")
+    stackByTable(filepath = paste0("/home/danielslee/NEON/", Folder_general()), folder = TRUE)
+    removeNotification(id = "stack")
+    showNotification(ui = "Converting into .zip file…", id = "zip", type = "message")
+    file.rename(from = paste0("/home/danielslee/NEON/", Folder_general(), "/stackedFiles"), to = paste0("/home/danielslee/NEON/", Folder_general(), "/", Folder_path_general()))
+    setwd(paste0("/home/danielslee/NEON/", Folder_general(), "/"))
+    zip(zipfile = file, files = Folder_path_general())
+    setwd('/srv/shiny-server/NEON-Hosted-Browser')
+    removeNotification(id = "zip")
+  }, contentType = "application/zip")
   ####—— Download NEON data: specific ####
   observeEvent(eventExpr = input$download_NEON_specific,
                handlerExpr = {
