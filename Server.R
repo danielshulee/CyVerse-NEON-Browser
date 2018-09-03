@@ -772,7 +772,10 @@ function(input, output, session) {
     download_function(file = '/tmp/data2.zip')
   })
   
-  output$download_NEON_general <- downloadHandler(filename = "test.zip", content = function(file) {
+  output$download_NEON_general <- downloadHandler(filename = function() {
+    Folder_path_general()
+  },
+  content = function(file) {
     unlink(x = "/home/danielslee/NEON/*", recursive = TRUE, force = TRUE)
     showNotification(ui = "Downloading files…", id = "download", type = "message")
     zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = "/home/danielslee/NEON/")
@@ -786,7 +789,8 @@ function(input, output, session) {
     zip(zipfile = file, files = Folder_path_general())
     setwd('/srv/shiny-server/NEON-Hosted-Browser')
     removeNotification(id = "zip")
-  }, contentType = "application/zip")
+  },
+  contentType = "application/zip")
   ####—— Download NEON data: specific ####
   observeEvent(eventExpr = input$download_NEON_specific,
                handlerExpr = {
