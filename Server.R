@@ -772,8 +772,7 @@ function(input, output, session) {
     download_function(file = '/tmp/data2.zip')
   })
   
-  output$download_NEON_general <- downloadHandler(filename = "test.zip", content = download_function(file), contentType = "application/zip"
-  )
+#  output$download_NEON_general <- downloadHandler(filename = "test.zip", content = download_function(file), contentType = "application/zip")
   ####—— Download NEON data: specific ####
   observeEvent(eventExpr = input$download_NEON_specific,
                handlerExpr = {
