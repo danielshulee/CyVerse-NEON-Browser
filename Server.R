@@ -773,7 +773,7 @@ function(input, output, session) {
   })
   
   output$download_NEON_general <- downloadHandler(filename = function() {
-    return(Folder_path_general())
+    Folder_path_general()
   },
   content = function(file) {
     unlink(x = "/home/danielslee/NEON/*", recursive = TRUE, force = TRUE)
