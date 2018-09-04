@@ -106,6 +106,7 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                                      selectInput(inputId = "package_type_general", label = "Package Type", choices = c("basic", "expanded"))),
                                                                                     includeMarkdown('Rmd/NEON_download_message.Rmd'),
                                                                                     actionButton(inputId = "download", label = "Download"),
+                                                                                    actionButton(inputId = "test", label = "TEST"),
                                                                                     downloadButton(outputId = "download_NEON_general", label = "Download items")
                                                                    ),
                                                                    conditionalPanel("input.NEON_download_type == 'specific'",
