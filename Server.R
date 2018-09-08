@@ -895,7 +895,7 @@ function(input, output, session) {
     removeNotification(id = "zip")
   }
   
-  observeEvent(eventExpr = input$download, ignoreInit = TRUE,
+  observeEvent(eventExpr = input$download_NEON_general, ignoreInit = TRUE,
                handlerExpr = {
                  disable(id = "download_NEON_general")
                  unlink(x = "/home/danielslee/NEON/*", recursive = TRUE, force = TRUE)
