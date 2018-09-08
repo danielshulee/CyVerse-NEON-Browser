@@ -915,6 +915,7 @@ function(input, output, session) {
     paste0(Folder_path_general(),".zip")
   },
   content = function(file) {
+    showNotification(ui = name)
     setwd(paste0("/home/danielslee/NEON/", Folder_general(), "/"))
     zip(zipfile = file, files = name)
     setwd('/srv/shiny-server/NEON-Hosted-Browser')
