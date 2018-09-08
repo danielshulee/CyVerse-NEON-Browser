@@ -877,20 +877,7 @@ function(input, output, session) {
   Year_AOP <- reactive(req(strsplit(as.character(input$year_AOP), "-")[[1]][1]))
   Folder_path_general <- reactive(req(paste0("NEON_", Field_Site_general(), "_", Product_ID_middle())))
   Folder_path_specific <- reactive(req(paste0("../NEON Downloads/NEON_", Field_Site_specific(), "_", Date_specific())))
-  ####—— Download NEON data: general####
-  # observeEvent(eventExpr = input$download_NEON_general,
-  #              handlerExpr = {
-  #                showNotification(ui = "Download in progess…", id = "download_general", type = "message")
-  #                download <- try(zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = '../NEON Downloads/'), silent = TRUE)
-  #                if (class(download) == "try-error") {
-  #                  removeNotification(id = "download_general")
-  #                  sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to the data package you tried to obtain or the neonUtlities package used to pull data. Read the error code message: ", strsplit(download, ":")[[1]][-1]), type = 'error')
-  #                } else {
-  #                  file.rename(from = paste0("../NEON Downloads/", Folder_general()), to = Folder_path_general())
-  #                  removeNotification(id = "download_general")
-  #                  sendSweetAlert(session, title = "File downloaded", text = "Check the 'NEON Downloads' directory. Go to step 2 to unzip files and make them more accesible.", type = 'success')
-  #                }
-  #              })
+
   
   download_function <- function(file) {
     unlink(x = "/home/danielslee/NEON/*", recursive = TRUE, force = TRUE)
@@ -910,26 +897,27 @@ function(input, output, session) {
   
   observeEvent(eventExpr = input$download, ignoreInit = TRUE,
                handlerExpr = {
-    download_function(file = '/tmp/data2.zip')
+                 disable(id = "download_NEON_general")
+                 unlink(x = "/home/danielslee/NEON/*", recursive = TRUE, force = TRUE)
+                 showNotification(ui = "Downloading files…", id = "download", type = "message")
+                 zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = "/home/danielslee/NEON/")
+                 removeNotification(id = "download")
+                 showNotification(ui = "Stacking files…", id = "stack", type = "message")
+                 stackByTable(filepath = paste0("/home/danielslee/NEON/", Folder_general()), folder = TRUE)
+                 removeNotification(id = "stack")
+                 file.rename(from = paste0("/home/danielslee/NEON/", Folder_general(), "/stackedFiles"), to = paste0("/home/danielslee/NEON/", Folder_general(), "/", Folder_path_general()))
+                 assign(x = "name", value = Folder_path_general())
+                 showNotification(ui = "Ready to transfer!", type = "message")
+                 enable(id = "download_NEON_general")
   })
   
   output$download_NEON_general <- downloadHandler(filename = function() {
     paste0(Folder_path_general(),".zip")
   },
   content = function(file) {
-    unlink(x = "/home/danielslee/NEON/*", recursive = TRUE, force = TRUE)
-    showNotification(ui = "Downloading files…", id = "download", type = "message")
-    zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = "/home/danielslee/NEON/")
-    removeNotification(id = "download")
-    showNotification(ui = "Stacking files…", id = "stack", type = "message")
-    stackByTable(filepath = paste0("/home/danielslee/NEON/", Folder_general()), folder = TRUE)
-    removeNotification(id = "stack")
-    showNotification(ui = "Converting into .zip file…", id = "zip", type = "message")
-    file.rename(from = paste0("/home/danielslee/NEON/", Folder_general(), "/stackedFiles"), to = paste0("/home/danielslee/NEON/", Folder_general(), "/", Folder_path_general()))
     setwd(paste0("/home/danielslee/NEON/", Folder_general(), "/"))
-    zip(zipfile = file, files = Folder_path_general())
+    zip(zipfile = file, files = name)
     setwd('/srv/shiny-server/NEON-Hosted-Browser')
-    removeNotification(id = "zip")
   },
   contentType = "application/zip")
   ####—— Download NEON data: specific ####
