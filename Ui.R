@@ -45,9 +45,9 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                                                          textInput(inputId = "NEONproductID_site", label = "Product ID"),
                                                                                                                          checkboxInput(inputId = "toggledownload_site", label = "Toggle Download"),
                                                                                                                          conditionalPanel("input.toggledownload_site",
-                                                                                                                                          actionBttn(inputId = "togglegeneral_site", label = "General",color = "primary", size = "xs"),
-                                                                                                                                          actionBttn(inputId = "togglespecific_site", label = "Specific",color = "primary", size = "xs"),
-                                                                                                                                          actionBttn(inputId = "toggleAOP_site", label = "AOP", color = "primary", size = "xs")
+                                                                                                                                          hidden(actionBttn(inputId = "togglegeneral_site", label = "General",color = "primary", size = "xs")),
+                                                                                                                                          hidden(actionBttn(inputId = "togglespecific_site", label = "Specific",color = "primary", size = "xs")),
+                                                                                                                                          hidden(actionBttn(inputId = "toggleAOP_site", label = "AOP", color = "primary", size = "xs"))
                                                                                                                          ),
                                                                                                                          
                                                                                                                          tags$b("Name:"),
@@ -85,9 +85,9 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                                                          textInput(inputId = "NEONproductID_product", label = "Product ID"),
                                                                                                                          checkboxInput(inputId = "toggledownload_product", label = "Toggle Download"),
                                                                                                                          conditionalPanel("input.toggledownload_product",
-                                                                                                                                          actionBttn(inputId = "togglegeneral_product", label = "General",color = "primary", size = "xs"),
-                                                                                                                                          actionBttn(inputId = "togglespecific_product", label = "Specific",color = "primary", size = "xs"),
-                                                                                                                                          actionBttn(inputId = "toggleAOP_product", label = "AOP", color = "primary", size = "xs")
+                                                                                                                                          hidden(actionBttn(inputId = "togglegeneral_product", label = "General",color = "primary", size = "xs")),
+                                                                                                                                          hidden(actionBttn(inputId = "togglespecific_product", label = "Specific",color = "primary", size = "xs")),
+                                                                                                                                          hidden(actionBttn(inputId = "toggleAOP_product", label = "AOP", color = "primary", size = "xs"))
                                                                                                                          ),
                                                                                                                          tags$b("Name:"),
                                                                                                                          verbatimTextOutput(outputId = "NEONproductname_product", placeholder = TRUE),
@@ -112,7 +112,7 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                        )
                                                                               ),
                                                                               #### —— STEP 2: Download Data####
-                                                                              tabPanel("Download",  value = "download",
+                                                                              tabPanel("Product Download",  value = "download",
                                                                                        radioButtons(inputId = "NEON_download_type", label = "Download method", choices = list("By Data Product— General" = "general", "By Data Product— Specific" = "specific", "By Data Product— AOP" = "AOP","By Data Product— Manual" = "manual"), inline = TRUE),
                                                                                        conditionalPanel("input.NEON_download_type == 'general'",
                                                                                                         includeMarkdown('Rmd/NEON_download_general.Rmd'),
