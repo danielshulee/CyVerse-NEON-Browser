@@ -883,24 +883,8 @@ function(input, output, session) {
   Year_AOP <- reactive(req(strsplit(as.character(input$year_AOP), "-")[[1]][1]))
   Folder_path_general <- reactive(req(paste0("NEON_", Field_Site_general(), "_", Product_ID_middle())))
   Folder_path_specific <- reactive(req(paste0("../NEON Downloads/NEON_", Field_Site_specific(), "_", Date_specific())))
-
   
-  download_function <- function(file) {
-    unlink(x = "/home/danielslee/NEON/*", recursive = TRUE, force = TRUE)
-    showNotification(ui = "Downloading files…", id = "download", type = "message")
-    zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = "/home/danielslee/NEON/")
-    removeNotification(id = "download")
-    showNotification(ui = "Stacking files…", id = "stack", type = "message")
-    stackByTable(filepath = paste0("/home/danielslee/NEON/", Folder_general()), folder = TRUE)
-    removeNotification(id = "stack")
-    showNotification(ui = "Converting into .zip file…", id = "zip", type = "message")
-    file.rename(from = paste0("/home/danielslee/NEON/", Folder_general(), "/stackedFiles"), to = paste0("/home/danielslee/NEON/", Folder_general(), "/", Folder_path_general()))
-    setwd(paste0("/home/danielslee/NEON/", Folder_general(), "/"))
-    zip(zipfile = file, files = Folder_path_general())
-    setwd('/srv/shiny-server/NEON-Hosted-Browser')
-    removeNotification(id = "zip")
-  }
-  
+  ####—— Download NEON data: general ####
   observeEvent(eventExpr = input$download_NEON_general, ignoreInit = TRUE,
                handlerExpr = {
                  disable(id = "transfer_NEON_general")
@@ -917,7 +901,7 @@ function(input, output, session) {
                  enable(id = "transfer_NEON_general")
   })
   
-  output$download_NEON_general <- downloadHandler(filename = function() {
+  output$transfer_NEON_general <- downloadHandler(filename = function() {
     paste0(Folder_path_general(),".zip")
   },
   content = function(file) {
