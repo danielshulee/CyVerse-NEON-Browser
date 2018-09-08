@@ -1,16 +1,7 @@
 # Shiny server
 function(input, output, session) {
   
-<<<<<<< HEAD
   # Initializationƒ
-=======
-  # Initialization
-  if (dir_created == TRUE) {
-    showNotification(ui = "'NEON Downloads' folder created in the directory containing this app. All downloads will go to this folder.", duration = 20, type = "message")
-  } else {
-    showNotification(ui = "Welcome back!", duration = 10, type = "message")
-  }
->>>>>>> 13022a314ba92670a7249903700cafe7ea066bc6
   hideElement(id = "togglegeneral_site")
   hideElement(id = "togglespecific_site")
   hideElement(id = "toggleAOP_site")
@@ -671,11 +662,8 @@ function(input, output, session) {
   # Display products: single
   output$NEONproductsite_site <- renderPrint(req(input$NEONsite_site))
   output$NEONproductname_site <- renderPrint(req(NEONproductinfo_site()$productName))
-<<<<<<< HEAD
   
   # Buttons to toggle downloads
-=======
->>>>>>> 13022a314ba92670a7249903700cafe7ea066bc6
   observe({
     if (nrow(NEONproductinfo_product()) == 0) {
       hideElement(id = "togglegeneral_site", anim = TRUE, animType = "slide")
@@ -779,7 +767,6 @@ function(input, output, session) {
   NEONproductinfo_product <- reactive(req(filter(.data = NEONproducts_product, productCode == NEONproductID_product())))
   # Display products: list
   output$NEONproductoptions_product <- renderDT(datatable(NEONproductlist_product()[1:2], class = 'cell-border stripe hover order-column',
-<<<<<<< HEAD
                                                           options = list(dom = 'tlfipr',
                                                                          lengthMenu = c(10,25,50),
                                                                          pageLength = 25,
@@ -787,15 +774,6 @@ function(input, output, session) {
                                                                          scrollY = '40vh'
                                                           ),
                                                           selection = list(mode = 'single', target = 'cell')))
-=======
-                                                    options = list(dom = 'tlfipr',
-                                                                   lengthMenu = c(10,25,50),
-                                                                   pageLength = 25,
-                                                                   deferRender = TRUE,
-                                                                   scrollY = '40vh'
-                                                    ),
-                                                    selection = list(mode = 'single', target = 'cell')))
->>>>>>> 13022a314ba92670a7249903700cafe7ea066bc6
   observeEvent(eventExpr = input$NEONproductoptions_product_cells_selected,
                handlerExpr = {
                  updateTextInput(session = session, inputId = "NEONproductID_product", value = ifelse(length(input$NEONproductoptions_product_cells_selected)==0,NA,NEONproductlist_product()[[2]][[input$NEONproductoptions_product_cells_selected[1]]]))
@@ -835,11 +813,7 @@ function(input, output, session) {
                  updateSelectInput(session, inputId = "location_NEON_general", selected = input$NEONsite_product)
                  updateTabsetPanel(session, inputId = "data", selected = "download")
                  updateRadioButtons(session, inputId = "NEON_download_type", selected = "general")
-<<<<<<< HEAD
                })
-=======
-  })
->>>>>>> 13022a314ba92670a7249903700cafe7ea066bc6
   observeEvent(eventExpr = input$togglespecific_product,
                handlerExpr = {
                  updateTextInput(session, inputId = "dpID_specific", value = input$NEONproductID_product)
@@ -1093,15 +1067,9 @@ function(input, output, session) {
   ####FOR ME TAB####
   
   #Text for troublshooting
-<<<<<<< HEAD
   output$text_me <- renderText(getwd())
   #Text for troublshooting 2
   output$text_me_two <- renderText("")
-=======
-  output$text_me <- renderText(input$NEONproductoptions_product_cells_selected)
-  #Text for troublshooting 2
-  output$text_me_two <- renderText(input$NEONproductoptions_site_cells_selected)
->>>>>>> 13022a314ba92670a7249903700cafe7ea066bc6
   #Table for troubleshooting
   output$table_me <- shiny::renderDataTable(NEONproductlist_site()[1:2])
 }
