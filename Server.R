@@ -906,7 +906,7 @@ function(input, output, session) {
                  stackByTable(filepath = paste0("/home/danielslee/NEON/", Folder_general()), folder = TRUE)
                  removeNotification(id = "stack")
                  file.rename(from = paste0("/home/danielslee/NEON/", Folder_general(), "/stackedFiles"), to = paste0("/home/danielslee/NEON/", Folder_general(), "/", Folder_path_general()))
-                 assign(x = "name", value = Folder_path_general())
+                 assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
                  showNotification(ui = "Ready to transfer!", type = "message")
                  enable(id = "download_NEON_general")
   })
