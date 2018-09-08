@@ -899,10 +899,10 @@ function(input, output, session) {
                handlerExpr = {
                  hide(id = "download_NEON_general")
                  unlink(x = "/home/danielslee/NEON/*", recursive = TRUE, force = TRUE)
-                 showNotification(ui = "Downloading files…", id = "download", type = "message")
+                 showNotification(ui = "Downloading files…", duration = NULL, id = "download", type = "message")
                  zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = "/home/danielslee/NEON/")
                  removeNotification(id = "download")
-                 showNotification(ui = "Stacking files…", id = "stack", type = "message")
+                 showNotification(ui = "Stacking files…", duration = NULL, id = "stack", type = "message")
                  stackByTable(filepath = paste0("/home/danielslee/NEON/", Folder_general()), folder = TRUE)
                  removeNotification(id = "stack")
                  file.rename(from = paste0("/home/danielslee/NEON/", Folder_general(), "/stackedFiles"), to = paste0("/home/danielslee/NEON/", Folder_general(), "/", Folder_path_general()))
@@ -915,9 +915,11 @@ function(input, output, session) {
     paste0(Folder_path_general(),".zip")
   },
   content = function(file) {
+    showNotification(ui = "Transferring as zip…", duration = NULL, id = "zip", type = "message")
     setwd(paste0("/home/danielslee/NEON/", Folder_general(), "/"))
     zip(zipfile = file, files = name)
     setwd('/srv/shiny-server/NEON-Hosted-Browser')
+    removeNotification(id = "zip")
   },
   contentType = "application/zip")
   ####—— Download NEON data: specific ####
