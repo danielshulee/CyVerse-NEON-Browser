@@ -19,7 +19,6 @@ source('Functions/keyword_lists_function.R')
 
 ####———MAP DATA———####
 
-var = "F"
 ####——NEON——####
 
 ###NEON Field Sites####
