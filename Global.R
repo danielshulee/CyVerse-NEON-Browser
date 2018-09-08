@@ -3,6 +3,7 @@ library(DT)
 library(shinythemes)
 library(shinyWidgets)
 library(shinyBS)
+library(shinyjs)
 library(leaflet)
 library(leaflet.extras)
 library(sf)
@@ -81,7 +82,7 @@ FieldSite_locations_tes <- read.csv("NEON-data/Fieldsites_locations_tes", string
 FieldSite_plots_tes <- read.csv("NEON-data/Fieldsites_plots_tes", stringsAsFactors = FALSE)[-1]
 FieldSite_locations_aqu <- read.csv("NEON-data/Fieldsites_locations_aqu", stringsAsFactors = FALSE)
 aqu_location_filter <- startsWith(FieldSite_locations_aqu$Name, "WELL") | startsWith(FieldSite_locations_aqu$Name, "METSTN") | grepl("S.LOC", FieldSite_locations_aqu$Name) |startsWith(FieldSite_locations_aqu$Name, "INLET") | startsWith(FieldSite_locations_aqu$Name, "OUTLET") | startsWith(FieldSite_locations_aqu$Name, "BUOY") | startsWith(FieldSite_locations_aqu$Name, "SGAUGE") |
-endsWith(FieldSite_locations_aqu$Name, "reach.bottom") | endsWith(FieldSite_locations_aqu$Name, "reach.top") | grepl("riparian[.]point", FieldSite_locations_aqu$Name) | grepl("riparian[.]transect", FieldSite_locations_aqu$Name)
+  endsWith(FieldSite_locations_aqu$Name, "reach.bottom") | endsWith(FieldSite_locations_aqu$Name, "reach.top") | grepl("riparian[.]point", FieldSite_locations_aqu$Name) | grepl("riparian[.]transect", FieldSite_locations_aqu$Name)
 FieldSite_locations_aqu <- FieldSite_locations_aqu[aqu_location_filter,]
 for (i in 1:nrow(FieldSite_locations_aqu)) {
   FieldSite_locations_aqu$`General Type`[i] <- if (startsWith(FieldSite_locations_aqu$Type[i], "GROUND")) {

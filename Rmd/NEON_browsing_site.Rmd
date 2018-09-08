@@ -1,4 +1,2 @@
-##### Find site, then availability of data products
-
-Alternatively, browse NEON's [data portal](http://data.neonscience.org/static/browse.html).
-
+##### Choose site, then find availability of data products
+ Alternatively, browse NEON's [data portal](http://data.neonscience.org/static/browse.html).
