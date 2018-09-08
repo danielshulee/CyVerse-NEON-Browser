@@ -122,7 +122,8 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                                         conditionalPanel("input.extra_options_general",
                                                                                                                          selectInput(inputId = "package_type_general", label = "Package Type", choices = c("basic", "expanded"))),
                                                                                                         includeMarkdown('Rmd/NEON_download_message.Rmd'),
-                                                                                                        actionButton(inputId = "download_NEON_general", label = "Download items")
+                                                                                                        actionButton(inputId = "download_NEON_general", label = "Download Items"),
+                                                                                                        disabled(downloadButton(outputId = "download_NEON_general", label = "Transfer Downloads"))
                                                                                        ),
                                                                                        conditionalPanel("input.NEON_download_type == 'specific'",
                                                                                                         includeMarkdown('Rmd/NEON_download_specific.Rmd'),
@@ -150,22 +151,6 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                        ),
                                                                                        conditionalPanel("input.NEON_download_type == 'manual'",
                                                                                                         includeMarkdown('Rmd/NEON_download_manual.Rmd')
-                                                                                       )
-                                                                              ),
-                                                                              #### —— STEP 3: Unzip/Join Downloads ####
-                                                                              tabPanel("Unzip/Join",
-                                                                                       includeMarkdown('Rmd/NEON_unzip.Rmd'),
-                                                                                       radioButtons(inputId = "NEON_unzip_type", label = "Method of browsing (from step 1)", choices = list("By Data Product— General/Specific" = "general/specific", "By Data Product— Manual" = "manual")),
-                                                                                       tags$hr(),
-                                                                                       conditionalPanel("input.NEON_unzip_type == 'general/specific'",
-                                                                                                        includeMarkdown('Rmd/NEON_unzip_general:specific.Rmd'),
-                                                                                                        directoryInput('NEON_unzip_folder', label = 'Select the directory', value = '../NEON Downloads/'),
-                                                                                                        actionButton(inputId = "unzip_NEON_folder", label = "Unzip/join folder")
-                                                                                       ),
-                                                                                       conditionalPanel("input.NEON_unzip_type == 'manual'",
-                                                                                                        includeMarkdown('Rmd/NEON_unzip_manual.Rmd'),
-                                                                                                        selectInput(inputId = 'NEON_unzip_file', label = "Choose .zip file", choices = list.files(path = '..', pattern = ".zip")),
-                                                                                                        actionButton(inputId = "unzip_NEON_file", label = "Unzip/join file")
                                                                                        )
                                                                               )
                                                                   )

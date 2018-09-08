@@ -17,17 +17,6 @@ source('Functions/filter_keyword_function.R')
 source('Functions/filter_site_function.R')
 source('Functions/keyword_lists_function.R')
 
-if (!dir.exists("../NEON Downloads")) {
-  dir.create("../NEON Downloads")
-  dir_created <- TRUE
-} else {
-  dir_created <- FALSE
-}
-if (sum(as.data.frame(installed.packages())$Package %in% 'geosphere') < 1) {
-  print("Please install the package 'geosphere'. Run this line: 'install.packages('geosphere')'")
-  stop(call. = TRUE)
-}
-
 ####———MAP DATA———####
 
 

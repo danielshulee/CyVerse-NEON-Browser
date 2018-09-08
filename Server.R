@@ -1,12 +1,7 @@
 # Shiny server
 function(input, output, session) {
   
-  # Initialization
-  if (dir_created == TRUE) {
-    showNotification(ui = "'NEON Downloads' folder created in the directory containing this app. All downloads will go to this folder.", duration = 20, type = "message")
-  } else {
-    showNotification(ui = "Welcome back!", duration = 10, type = "message")
-  }
+  # Initializationƒ
   hideElement(id = "togglegeneral_site")
   hideElement(id = "togglespecific_site")
   hideElement(id = "toggleAOP_site")
