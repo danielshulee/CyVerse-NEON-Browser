@@ -897,7 +897,7 @@ function(input, output, session) {
   
   observeEvent(eventExpr = input$download_NEON_general, ignoreInit = TRUE,
                handlerExpr = {
-                 disable(id = "download_NEON_general")
+                 hide(id = "download_NEON_general")
                  unlink(x = "/home/danielslee/NEON/*", recursive = TRUE, force = TRUE)
                  showNotification(ui = "Downloading files…", id = "download", type = "message")
                  zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = "/home/danielslee/NEON/")
@@ -908,14 +908,13 @@ function(input, output, session) {
                  file.rename(from = paste0("/home/danielslee/NEON/", Folder_general(), "/stackedFiles"), to = paste0("/home/danielslee/NEON/", Folder_general(), "/", Folder_path_general()))
                  assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
                  showNotification(ui = "Ready to transfer!", type = "message")
-                 enable(id = "download_NEON_general")
+                 show(id = "download_NEON_general")
   })
   
   output$download_NEON_general <- downloadHandler(filename = function() {
     paste0(Folder_path_general(),".zip")
   },
   content = function(file) {
-    showNotification(ui = name)
     setwd(paste0("/home/danielslee/NEON/", Folder_general(), "/"))
     zip(zipfile = file, files = name)
     setwd('/srv/shiny-server/NEON-Hosted-Browser')
