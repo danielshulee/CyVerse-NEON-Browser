@@ -890,7 +890,7 @@ function(input, output, session) {
                handlerExpr = {
                  if (list.files(paste0("/home/danielslee/NEON/", Folder_general(), "/")) %in% Folder_path_general()) {
                    assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
-                   showNotification(ui = "Ready to transfer!", type = "message")
+                   showNotification(ui = "Ready to transfer!!!", type = "message")
                    enable(id = "transfer_NEON_general")
                  } else {
                  disable(id = "transfer_NEON_general")
@@ -1054,9 +1054,9 @@ function(input, output, session) {
   ####FOR ME TAB####
   
   #Text for troublshooting
-  output$text_me <- renderText(getwd())
+  output$text_me <- renderText(Folder_path_general())
   #Text for troublshooting 2
-  output$text_me_two <- renderText(as.character(Current_date()))
+  output$text_me_two <- renderText(Folder_general())
   #Table for troubleshooting
   #output$table_me <- shiny::renderDataTable()
 }
