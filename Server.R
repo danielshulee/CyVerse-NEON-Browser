@@ -881,6 +881,7 @@ function(input, output, session) {
   Date_specific_parts <- reactive(req(strsplit(Date_specific_long(), "-")[[1]]))
   Date_specific <- reactive(req(paste0(Date_specific_parts()[1], "-", Date_specific_parts()[2])))
   Year_AOP <- reactive(req(strsplit(as.character(input$year_AOP), "-")[[1]][1]))
+  Current_date <- reactivePoll(intervalMillis = 60000, session, checkFunc = Sys.Date, valueFunc = Sys.Date)
   Folder_path_general <- reactive(req(paste0("NEON_", Field_Site_general(), "_", Product_ID_middle())))
   Folder_path_specific <- reactive(req(paste0("../NEON Downloads/NEON_", Field_Site_specific(), "_", Date_specific())))
   
@@ -1049,7 +1050,7 @@ function(input, output, session) {
   #Text for troublshooting
   output$text_me <- renderText(getwd())
   #Text for troublshooting 2
-  output$text_me_two <- renderText("")
+  output$text_me_two <- renderText(as.character(Current_date()))
   #Table for troubleshooting
-  output$table_me <- shiny::renderDataTable(NEONproductlist_site()[1:2])
+  #output$table_me <- shiny::renderDataTable()
 }
