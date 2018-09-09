@@ -1,10 +1,12 @@
 # Shiny server
 function(input, output, session) {
   
-  # Initializationƒ
+  # Initialization
   hideElement(id = "togglegeneral_site")
   hideElement(id = "togglespecific_site")
   hideElement(id = "toggleAOP_site")
+  observeEvent(eventExpr = input$TEST,
+               handlerExpr = sendSweetAlert(session, title = "TEST"))
   
   ####INTERACTIVE MAP TAB####
   
@@ -905,6 +907,7 @@ function(input, output, session) {
                  assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
                  showNotification(ui = "Ready to transfer!", type = "message")
                  enable(id = "transfer_NEON_general")
+                 click(id = "TEST")
                  }
   })
   
