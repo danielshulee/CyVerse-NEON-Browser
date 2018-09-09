@@ -881,15 +881,20 @@ function(input, output, session) {
   Date_specific_parts <- reactive(req(strsplit(Date_specific_long(), "-")[[1]]))
   Date_specific <- reactive(req(paste0(Date_specific_parts()[1], "-", Date_specific_parts()[2])))
   Year_AOP <- reactive(req(strsplit(as.character(input$year_AOP), "-")[[1]][1]))
-  Current_date <- reactivePoll(intervalMillis = 60000, session, checkFunc = Sys.Date, valueFunc = Sys.Date)
+  Current_date <- reactivePoll(intervalMillis = 10000, session, checkFunc = Sys.Date, valueFunc = Sys.Date)
   Folder_path_general <- reactive(req(paste0("NEON_", Field_Site_general(), "_", Product_ID_middle())))
   Folder_path_specific <- reactive(req(paste0("../NEON Downloads/NEON_", Field_Site_specific(), "_", Date_specific())))
   
   ####—— Download NEON data: general ####
   observeEvent(eventExpr = input$download_NEON_general, ignoreInit = TRUE,
                handlerExpr = {
+                 if (list.files(paste0("/home/danielslee/NEON/", Folder_general(), "/")) %in% Folder_path_general()) {
+                   assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
+                   showNotification(ui = "Ready to transfer!", type = "message")
+                   enable(id = "transfer_NEON_general")
+                 } else {
                  disable(id = "transfer_NEON_general")
-                 unlink(x = "/home/danielslee/NEON/*", recursive = TRUE, force = TRUE)
+                 #unlink(x = "/home/danielslee/NEON/*", recursive = TRUE, force = TRUE)
                  showNotification(ui = "Downloading files…", duration = NULL, id = "download", type = "message")
                  zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = "/home/danielslee/NEON/")
                  removeNotification(id = "download")
@@ -900,6 +905,7 @@ function(input, output, session) {
                  assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
                  showNotification(ui = "Ready to transfer!", type = "message")
                  enable(id = "transfer_NEON_general")
+                 }
   })
   
   output$transfer_NEON_general <- downloadHandler(filename = function() {
