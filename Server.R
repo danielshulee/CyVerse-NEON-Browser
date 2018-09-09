@@ -5,8 +5,6 @@ function(input, output, session) {
   hideElement(id = "togglegeneral_site")
   hideElement(id = "togglespecific_site")
   hideElement(id = "toggleAOP_site")
-  observeEvent(eventExpr = input$TEST,
-               handlerExpr = sendSweetAlert(session, title = "TEST"))
   
   ####INTERACTIVE MAP TAB####
   
@@ -887,6 +885,21 @@ function(input, output, session) {
   Folder_path_general <- reactive(req(paste0("NEON_", Field_Site_general(), "_", Product_ID_middle())))
   Folder_path_specific <- reactive(req(paste0("../NEON Downloads/NEON_", Field_Site_specific(), "_", Date_specific())))
   
+  downloadFunction_general <- function() {
+    disable(id = "transfer_NEON_general")
+    #unlink(x = "/home/danielslee/NEON/*", recursive = TRUE, force = TRUE)
+    showNotification(ui = "Downloading files…", duration = NULL, id = "download", type = "message")
+    zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = "/home/danielslee/NEON/")
+    removeNotification(id = "download")
+    showNotification(ui = "Stacking files…", duration = NULL, id = "stack", type = "message")
+    stackByTable(filepath = paste0("/home/danielslee/NEON/", Folder_general()), folder = TRUE)
+    removeNotification(id = "stack")
+    file.rename(from = paste0("/home/danielslee/NEON/", Folder_general(), "/stackedFiles"), to = paste0("/home/danielslee/NEON/", Folder_general(), "/", Folder_path_general()))
+    assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
+    showNotification(ui = "Ready to transfer!", type = "message")
+    enable(id = "transfer_NEON_general")
+    click(id = "transfer_NEON_general")
+  }
   ####—— Download NEON data: general ####
   observeEvent(eventExpr = input$download_NEON_general, ignoreInit = TRUE,
                handlerExpr = {
@@ -895,21 +908,11 @@ function(input, output, session) {
                      assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
                      showNotification(ui = "Ready to transfer!!!", type = "message")
                      enable(id = "transfer_NEON_general")
+                   } else {
+                     downloadFunction_general()
                    }
                  } else {
-                   disable(id = "transfer_NEON_general")
-                   #unlink(x = "/home/danielslee/NEON/*", recursive = TRUE, force = TRUE)
-                   showNotification(ui = "Downloading files…", duration = NULL, id = "download", type = "message")
-                   zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = "/home/danielslee/NEON/")
-                   removeNotification(id = "download")
-                   showNotification(ui = "Stacking files…", duration = NULL, id = "stack", type = "message")
-                   stackByTable(filepath = paste0("/home/danielslee/NEON/", Folder_general()), folder = TRUE)
-                   removeNotification(id = "stack")
-                   file.rename(from = paste0("/home/danielslee/NEON/", Folder_general(), "/stackedFiles"), to = paste0("/home/danielslee/NEON/", Folder_general(), "/", Folder_path_general()))
-                   assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
-                   showNotification(ui = "Ready to transfer!", type = "message")
-                   enable(id = "transfer_NEON_general")
-                   click(id = "TEST")
+                   downloadFunction_general()
                  }
                })
   
