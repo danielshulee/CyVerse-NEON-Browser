@@ -896,19 +896,19 @@ function(input, output, session) {
     removeNotification(id = "stack")
     file.rename(from = paste0("/home/danielslee/NEON/", Folder_general(), "/stackedFiles"), to = paste0("/home/danielslee/NEON/", Folder_general(), "/", Folder_path_general()))
     assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
-    showNotification(ui = "Ready to transfer!", type = "message")
+    showNotification(ui = "Ready to transfer!", type = "message", id = "ready")
     enable(id = "transfer_NEON_general")
-    click(id = "transfer_NEON_general")
+    runjs("document.getElementById('transfer_NEON_general').click();")
   }
-  observeEvent(eventExpr = input$TEST, handlerExpr = shinyjs::runjs("document.getElementById('transfer_NEON_general').click();"))
   ####—— Download NEON data: general ####
   observeEvent(eventExpr = input$download_NEON_general, ignoreInit = TRUE,
                handlerExpr = {
                  if (length(list.files(paste0("/home/danielslee/NEON/", Folder_general(), "/"))) > 0) {
                    if (list.files(paste0("/home/danielslee/NEON/", Folder_general(), "/")) %in% Folder_path_general()) {
                      assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
-                     showNotification(ui = "Ready to transfer!!!", type = "message")
+                     showNotification(ui = "Ready to transfer!", type = "message")
                      enable(id = "transfer_NEON_general")
+                     runjs("document.getElementById('transfer_NEON_general').click();")
                    } else {
                      downloadFunction_general()
                    }
@@ -921,6 +921,7 @@ function(input, output, session) {
     paste0(Folder_path_general(),".zip")
   },
   content = function(file) {
+    removeNotification(id = "ready")
     showNotification(ui = "Transferring as zip…", duration = NULL, id = "zip", type = "message")
     setwd(paste0("/home/danielslee/NEON/", Folder_general(), "/"))
     zip(zipfile = file, files = name)
