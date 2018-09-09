@@ -890,7 +890,7 @@ function(input, output, session) {
   ####—— Download NEON data: general ####
   observeEvent(eventExpr = input$download_NEON_general, ignoreInit = TRUE,
                handlerExpr = {
-                 if (list.files(paste0("/home/danielslee/NEON/", Folder_general(), "/")) %in% Folder_path_general()) {
+                 if (length(list.files(paste0("/home/danielslee/NEON/", Folder_general(), "/"))) > 0 & list.files(paste0("/home/danielslee/NEON/", Folder_general(), "/")) %in% Folder_path_general()) {
                    assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
                    showNotification(ui = "Ready to transfer!!!", type = "message")
                    enable(id = "transfer_NEON_general")
@@ -998,59 +998,6 @@ function(input, output, session) {
                  } else {
                    removeNotification("download_AOP")
                    sendSweetAlert(session, title = "File downloaded", text = "Check the 'NEON Download' directory. Go to step 2 to unzip files and make them more accesible.", type = 'success')
-                 }
-               })
-  
-  ####— NEON: Step 3- Unzip/Join Downloads####
-  # Variables
-  NEON_folder_path <- reactive(req(readDirectoryInput(session, 'NEON_unzip_folder')))
-  NEON_file_name <- reactive(req(input$NEON_unzip_file))
-  NEON_file_path <- reactive(req(paste0("../NEON Downloads/", NEON_file_name())))
-  # Server function needed by directoryInput (https://github.com/wleepang/shiny-directory-input)
-  observeEvent(ignoreNULL = TRUE,
-               eventExpr = {input$NEON_unzip_folder},
-               handlerExpr = {
-                 if (input$NEON_unzip_folder > 0) {
-                   # condition prevents handler execution on initial app launch, launch the directory selection dialog with initial path read from the widget
-                   path = choose.dir(default = readDirectoryInput(session, 'NEON_unzip_folder'))
-                   # update the widget value
-                   updateDirectoryInput(session, 'NEON_unzip_folder', value = path)}
-               })
-  # Functions needed to make list of files reactive
-  has.new.files <- function() {
-    unique(list.files(path = '../NEON Downloads', pattern = ".zip"))
-  }
-  get.files <- function() {
-    list.files(path = '../NEON Downloads', pattern = ".zip")
-  }
-  NEON_unzip_files <- reactivePoll(intervalMillis = 10, session, checkFunc = has.new.files, valueFunc = get.files)
-  observeEvent(NEON_unzip_files(), ignoreInit = TRUE, ignoreNULL = TRUE, {
-    updateSelectInput(session, inputId = 'NEON_unzip_file', choices = NEON_unzip_files())
-  })
-  # Unzip data: general/specific
-  observeEvent(eventExpr = input$unzip_NEON_folder,
-               handlerExpr = {
-                 showNotification(ui = "Unzip in progess…", id = "unzip_normal", type = "message")
-                 unzip <- try(stackByTable(filepath = NEON_folder_path(), folder = TRUE), silent = TRUE) 
-                 if (class(unzip) == "try-error") {
-                   removeNotification("unzip_normal")
-                   sendSweetAlert(session, title = "Unzip failed", text = paste0("Check that you are unzipping the folder from part 2. Read the error code message: ", strsplit(unzip, ":")[[1]][-1]), type = "error")
-                 } else {
-                   removeNotification("unzip_normal")
-                   sendSweetAlert(session, title = "File unzipped", text = "The outer appearance of the folder should be the same. On the inside, there should be a new folder called 'stackedFiles' which contains the datasets.", type = "success")
-                 }
-               })
-  # Unzip data: manual
-  observeEvent(eventExpr = input$unzip_NEON_file,
-               handlerExpr = {
-                 showNotification(ui = "Unzip in progess…", id = "unzip_manual", type = "message")
-                 unzip <- try(stackByTable(filepath = NEON_file_path(), folder = FALSE))
-                 if (class(unzip) == "try-error") {
-                   removeNotification("unzip_manual")
-                   sendSweetAlert(session, title = "Unzip failed", text = paste0("Check that you are unzipping the .zip file that was manually downloaded. Read the error code message: ", strsplit(unzip, ":")[[1]][-1]), type = "error")
-                 } else {
-                   removeNotification("unzip_manual")
-                   sendSweetAlert(session, title = "File unzipped", text = paste0("There should now be a new folder titled '", strsplit(NEON_file_name(), ".zip")[[1]][1], "' with all of the datasets."), type = "success")
                  }
                })
   
