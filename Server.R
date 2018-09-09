@@ -55,7 +55,7 @@ function(input, output, session) {
   TOS_data_filtered <- reactive(TOS_data %>% filter(siteID %in% Field_sites_point_filtered()$siteCode))
   Flight_data_filtered <- reactive(flight_data %>% filter(SiteAbb %in% Field_sites_point_filtered()$siteCode) %>%
                                      filter(Year %in% input$flightpath_year))
- 
+  
   Subloc_tes_plots_base <- reactive(FieldSite_plots_tes %>% filter(Type %in% "Distributed Base Plot") %>%
                                       filter(Site %in% input$fieldsite_sublocs))
   Subloc_tes_plots_bird <- reactive(FieldSite_plots_tes %>% filter(Type %in% "Distributed Bird Grid") %>%
@@ -65,22 +65,22 @@ function(input, output, session) {
   Subloc_tes_plots_mos <- reactive(FieldSite_plots_tes %>% filter(Type %in% "Distributed Mosquito Plot") %>%
                                      filter(Site %in% input$fieldsite_sublocs))
   Subloc_tes_plots_tick <- reactive(FieldSite_plots_tes %>% filter(Type %in% "Distributed Tick Plot") %>%
-                                          filter(Site %in% input$fieldsite_sublocs))
+                                      filter(Site %in% input$fieldsite_sublocs))
   Subloc_tes_plots_phe <- reactive(FieldSite_plots_tes %>% filter(Type %in% "Tower Phenology Plot") %>%
                                      filter(Site %in% input$fieldsite_sublocs))
   
   Subloc_aqu_plots_well <- reactive(FieldSite_locations_aqu %>% filter(`General Type` %in% "Groundwater Well") %>%
                                       filter(Site %in% input$fieldsite_sublocs))
   Subloc_aqu_plots_metstn <- reactive(FieldSite_locations_aqu %>% filter(`General Type` %in% "Met. Station") %>%
-                                      filter(Site %in% input$fieldsite_sublocs))
+                                        filter(Site %in% input$fieldsite_sublocs))
   Subloc_aqu_plots_sensor <- reactive(FieldSite_locations_aqu %>% filter(`General Type` %in% "Sensor Station") %>%
                                         filter(Site %in% input$fieldsite_sublocs))
   Subloc_aqu_plots_gauge <- reactive(FieldSite_locations_aqu %>% filter(`General Type` %in% "Staff gauge/camera") %>%
-                                        filter(Site %in% input$fieldsite_sublocs))
-  Subloc_aqu_plots_reach <- reactive(FieldSite_locations_aqu %>% filter(`General Type` %in% "Sampling Reach Boundary") %>%
-                                        filter(Site %in% input$fieldsite_sublocs))
-  Subloc_aqu_plots_riparian <- reactive(FieldSite_locations_aqu %>% filter(`General Type` %in% "Riparian Assessment") %>%
                                        filter(Site %in% input$fieldsite_sublocs))
+  Subloc_aqu_plots_reach <- reactive(FieldSite_locations_aqu %>% filter(`General Type` %in% "Sampling Reach Boundary") %>%
+                                       filter(Site %in% input$fieldsite_sublocs))
+  Subloc_aqu_plots_riparian <- reactive(FieldSite_locations_aqu %>% filter(`General Type` %in% "Riparian Assessment") %>%
+                                          filter(Site %in% input$fieldsite_sublocs))
   
   #### —— Plot Domains #### 
   observe({
@@ -210,18 +210,18 @@ function(input, output, session) {
             )
         } else if (is.list(Field_sites_poly_filtered()$coordinates[[i]])) {
           for (num in 1:length(Field_sites_poly_filtered()$coordinates[[i]])) {
-          proxy %>%
-            addPolylines(lng = Field_sites_poly_filtered()$coordinates[[i]][[num]][,1],
-                         lat = Field_sites_poly_filtered()$coordinates[[i]][[num]][,2],
-                         group = "Field Sites",
-                         color = "#49E2BD",
-                        # layerId = Field_sites_poly_filtered()$code[i],
-                         popup = paste0("Boundaries for ",
-                                        Field_sites_poly_filtered()$name[i]),
-                         opacity = 1,
-                         fillOpacity = 0.4,
-                         highlightOptions = highlightOptions(stroke = TRUE, color = "#39ff14", weight = 7)
-            )
+            proxy %>%
+              addPolylines(lng = Field_sites_poly_filtered()$coordinates[[i]][[num]][,1],
+                           lat = Field_sites_poly_filtered()$coordinates[[i]][[num]][,2],
+                           group = "Field Sites",
+                           color = "#49E2BD",
+                           # layerId = Field_sites_poly_filtered()$code[i],
+                           popup = paste0("Boundaries for ",
+                                          Field_sites_poly_filtered()$name[i]),
+                           opacity = 1,
+                           fillOpacity = 0.4,
+                           highlightOptions = highlightOptions(stroke = TRUE, color = "#39ff14", weight = 7)
+              )
           }
         }
       }
@@ -890,26 +890,28 @@ function(input, output, session) {
   ####—— Download NEON data: general ####
   observeEvent(eventExpr = input$download_NEON_general, ignoreInit = TRUE,
                handlerExpr = {
-                 if (length(list.files(paste0("/home/danielslee/NEON/", Folder_general(), "/"))) > 0 & list.files(paste0("/home/danielslee/NEON/", Folder_general(), "/")) %in% Folder_path_general()) {
-                   assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
-                   showNotification(ui = "Ready to transfer!!!", type = "message")
-                   enable(id = "transfer_NEON_general")
+                 if (length(list.files(paste0("/home/danielslee/NEON/", Folder_general(), "/"))) > 0) {
+                   if (list.files(paste0("/home/danielslee/NEON/", Folder_general(), "/")) %in% Folder_path_general()) {
+                     assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
+                     showNotification(ui = "Ready to transfer!!!", type = "message")
+                     enable(id = "transfer_NEON_general")
+                   }
                  } else {
-                 disable(id = "transfer_NEON_general")
-                 #unlink(x = "/home/danielslee/NEON/*", recursive = TRUE, force = TRUE)
-                 showNotification(ui = "Downloading files…", duration = NULL, id = "download", type = "message")
-                 zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = "/home/danielslee/NEON/")
-                 removeNotification(id = "download")
-                 showNotification(ui = "Stacking files…", duration = NULL, id = "stack", type = "message")
-                 stackByTable(filepath = paste0("/home/danielslee/NEON/", Folder_general()), folder = TRUE)
-                 removeNotification(id = "stack")
-                 file.rename(from = paste0("/home/danielslee/NEON/", Folder_general(), "/stackedFiles"), to = paste0("/home/danielslee/NEON/", Folder_general(), "/", Folder_path_general()))
-                 assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
-                 showNotification(ui = "Ready to transfer!", type = "message")
-                 enable(id = "transfer_NEON_general")
-                 click(id = "TEST")
+                   disable(id = "transfer_NEON_general")
+                   #unlink(x = "/home/danielslee/NEON/*", recursive = TRUE, force = TRUE)
+                   showNotification(ui = "Downloading files…", duration = NULL, id = "download", type = "message")
+                   zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = "/home/danielslee/NEON/")
+                   removeNotification(id = "download")
+                   showNotification(ui = "Stacking files…", duration = NULL, id = "stack", type = "message")
+                   stackByTable(filepath = paste0("/home/danielslee/NEON/", Folder_general()), folder = TRUE)
+                   removeNotification(id = "stack")
+                   file.rename(from = paste0("/home/danielslee/NEON/", Folder_general(), "/stackedFiles"), to = paste0("/home/danielslee/NEON/", Folder_general(), "/", Folder_path_general()))
+                   assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
+                   showNotification(ui = "Ready to transfer!", type = "message")
+                   enable(id = "transfer_NEON_general")
+                   click(id = "TEST")
                  }
-  })
+               })
   
   output$transfer_NEON_general <- downloadHandler(filename = function() {
     paste0(Folder_path_general(),".zip")
