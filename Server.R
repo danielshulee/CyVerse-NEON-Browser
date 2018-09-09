@@ -900,7 +900,7 @@ function(input, output, session) {
     enable(id = "transfer_NEON_general")
     click(id = "transfer_NEON_general")
   }
-  observeEvent(eventExpr = input$TEST, handlerExpr = click(id = "transfer_NEON_general"))
+  observeEvent(eventExpr = input$TEST, handlerExpr = shinyjs::runjs("document.getElementById('transfer_NEON_general').click();"))
   ####—— Download NEON data: general ####
   observeEvent(eventExpr = input$download_NEON_general, ignoreInit = TRUE,
                handlerExpr = {
