@@ -901,7 +901,7 @@ function(input, output, session) {
       if (class(stack) == "try-error") {
         removeNotification(id = "stack")
         sendSweetAlert(session, title = "Stack failed", text = "Something went wrong in the stacking process. Please submit an issue on Github.", type = "error")
-      } else {}
+      } else {
       removeNotification(id = "stack")
       file.rename(from = paste0("/home/danielslee/NEON/", Folder_general(), "/stackedFiles"), to = paste0("/home/danielslee/NEON/", Folder_general(), "/", Folder_path_general()))
       assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
