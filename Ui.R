@@ -103,7 +103,7 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                                                                           tags$style(type="text/css", "#NEONproductdesign_product {white-space: pre-wrap;}"),
                                                                                                                                           tags$b("Notes: (if any)"),
                                                                                                                                           verbatimTextOutput(outputId = "NEONproductnotes_product", placeholder = TRUE),
-                                                                                                                                          tags$style(type="text/css", "#NEONproductdesign_product {white-space: pre-wrap;}")
+                                                                                                                                          tags$style(type="text/css", "#NEONproductnotes_product {white-space: pre-wrap;}")
                                                                                                                          ),
                                                                                                                          uiOutput(outputId = "ui_selectsite"),
                                                                                                                          tags$b("Available dates:"),
