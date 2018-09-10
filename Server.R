@@ -889,24 +889,35 @@ function(input, output, session) {
     disable(id = "transfer_NEON_general")
     #unlink(x = "/home/danielslee/NEON/*", recursive = TRUE, force = TRUE)
     showNotification(ui = "Downloading files…", duration = NULL, id = "download", type = "message")
-    zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = "/home/danielslee/NEON/")
-    removeNotification(id = "download")
-    showNotification(ui = "Stacking files…", duration = NULL, id = "stack", type = "message")
-    stackByTable(filepath = paste0("/home/danielslee/NEON/", Folder_general()), folder = TRUE)
-    removeNotification(id = "stack")
-    file.rename(from = paste0("/home/danielslee/NEON/", Folder_general(), "/stackedFiles"), to = paste0("/home/danielslee/NEON/", Folder_general(), "/", Folder_path_general()))
-    assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
-    showNotification(ui = "Ready to transfer!", type = "message", id = "ready")
-    enable(id = "transfer_NEON_general")
-    runjs("document.getElementById('transfer_NEON_general').click();")
+    download <- try(zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = "/home/danielslee/NEON/"), silent = TRUE)
+    if (class(download) == "try-error") {
+      removeNotification(id = "download")
+      sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to a faulty request or a problem with the product itself. Read the error code message: ", strsplit(download, ":")[[1]][-1]), type = 'error')
+    }
+    else {
+      removeNotification(id = "download")
+      showNotification(ui = "Stacking files…", duration = NULL, id = "stack", type = "message")
+      stack <- try(stackByTable(filepath = paste0("/home/danielslee/NEON/", Folder_general()), folder = TRUE), silent = TRUE)
+      if (class(stack) == "try-error") {
+        removeNotification(id = "stack")
+        sendSweetAlert(session, title = "Stack failed", text = "Something went wrong in the stacking process. Please submit an issue on Github.", type = "error")
+      } else {}
+      removeNotification(id = "stack")
+      file.rename(from = paste0("/home/danielslee/NEON/", Folder_general(), "/stackedFiles"), to = paste0("/home/danielslee/NEON/", Folder_general(), "/", Folder_path_general()))
+      assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
+      showNotification(ui = "Ready to transfer!", type = "message", id = "ready")
+      enable(id = "transfer_NEON_general")
+      runjs("document.getElementById('transfer_NEON_general').click();")
+    }
   }
+}
   ####—— Download NEON data: general ####
   observeEvent(eventExpr = input$download_NEON_general, ignoreInit = TRUE,
                handlerExpr = {
                  if (length(list.files(paste0("/home/danielslee/NEON/", Folder_general(), "/"))) > 0) {
                    if (list.files(paste0("/home/danielslee/NEON/", Folder_general(), "/")) %in% Folder_path_general()) {
                      assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
-                     showNotification(ui = "Ready to transfer!", type = "message")
+                     showNotification(ui = "Ready to transfer!", type = "message", id = "ready")
                      enable(id = "transfer_NEON_general")
                      runjs("document.getElementById('transfer_NEON_general').click();")
                    } else {
@@ -927,6 +938,7 @@ function(input, output, session) {
     zip(zipfile = file, files = name)
     setwd('/srv/shiny-server/NEON-Hosted-Browser')
     removeNotification(id = "zip")
+    disable(id = "transfer_NEON_general")
   },
   contentType = "application/zip")
   ####—— Download NEON data: specific ####
