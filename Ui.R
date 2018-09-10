@@ -49,17 +49,19 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                                                                           hidden(actionBttn(inputId = "togglespecific_site", label = "Specific",color = "primary", size = "xs")),
                                                                                                                                           hidden(actionBttn(inputId = "toggleAOP_site", label = "AOP", color = "primary", size = "xs"))
                                                                                                                          ),
-                                                                                                                         
                                                                                                                          tags$b("Name:"),
                                                                                                                          verbatimTextOutput(outputId = "NEONproductname_site", placeholder = TRUE),
                                                                                                                          tags$b("Description:"),
                                                                                                                          verbatimTextOutput(outputId = "NEONproductdesc_site", placeholder = TRUE),
+                                                                                                                         tags$style(type="text/css", "#NEONproductdesc_site {white-space: pre-wrap;}"),
                                                                                                                          checkboxInput(inputId = "showmoreinfo_site", label = "Show more info"),
                                                                                                                          conditionalPanel("input.showmoreinfo_site",
                                                                                                                                           tags$b("Product Design:"),
                                                                                                                                           verbatimTextOutput(outputId = "NEONproductdesign_site", placeholder = TRUE),
+                                                                                                                                          tags$style(type="text/css", "#NEONproductdesign_site {white-space: pre-wrap;}"),
                                                                                                                                           tags$b("Notes (if any):"),
-                                                                                                                                          verbatimTextOutput(outputId = "NEONproductnotes_site", placeholder = TRUE)
+                                                                                                                                          verbatimTextOutput(outputId = "NEONproductnotes_site", placeholder = TRUE),
+                                                                                                                                          tags$style(type="text/css", "#NEONproductnotes_site {white-space: pre-wrap;}")
                                                                                                                          ),
                                                                                                                          tags$b("Available dates at this site:"),
                                                                                                                          verbatimTextOutput(outputId = "NEONproductdates_site", placeholder = TRUE),
@@ -98,8 +100,10 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                                                          conditionalPanel("input.showmoreinfo_product",
                                                                                                                                           tags$b("Product Design:"),
                                                                                                                                           verbatimTextOutput(outputId = "NEONproductdesign_product", placeholder = TRUE),
+                                                                                                                                          tags$style(type="text/css", "#NEONproductdesign_product {white-space: pre-wrap;}"),
                                                                                                                                           tags$b("Notes: (if any)"),
-                                                                                                                                          verbatimTextOutput(outputId = "NEONproductnotes_product", placeholder = TRUE)
+                                                                                                                                          verbatimTextOutput(outputId = "NEONproductnotes_product", placeholder = TRUE),
+                                                                                                                                          tags$style(type="text/css", "#NEONproductdesign_product {white-space: pre-wrap;}")
                                                                                                                          ),
                                                                                                                          uiOutput(outputId = "ui_selectsite"),
                                                                                                                          tags$b("Available dates:"),
