@@ -923,7 +923,7 @@ function(input, output, session) {
                      downloadFunction_general()
                    }
                  } else {
-                   dir.create(paste0("/home/danielslee/NEON/", Folder_general(), "/"))
+                   dir.create(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Folder_general(), "/"))
                    downloadFunction_general()
                  }
                })
