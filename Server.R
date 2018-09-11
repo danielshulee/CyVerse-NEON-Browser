@@ -928,7 +928,7 @@ function(input, output, session) {
                    }
                  } else {
                    showNotification('hhh')
-                   dir.create(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general()))
+                   dir.create(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general()), recursive = TRUE)
                    downloadFunction_general()
                  }
                })
