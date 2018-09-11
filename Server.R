@@ -882,7 +882,7 @@ function(input, output, session) {
   Date_specific <- reactive(req(paste0(Date_specific_parts()[1], "-", Date_specific_parts()[2])))
   Year_AOP <- reactive(req(strsplit(as.character(input$year_AOP), "-")[[1]][1]))
   Current_date <- reactivePoll(intervalMillis = 10000, session, checkFunc = Sys.Date, valueFunc = Sys.Date)
-  Folder_path_general <- reactive(req(paste0("NEON_", Field_Site_general(), "_", Product_ID_middle())))
+  Folder_path_general <- reactive(req(paste0("NEON_", Field_Site_general(), "_", Product_ID_general())))
   Folder_path_specific <- reactive(req(paste0("../NEON Downloads/NEON_", Field_Site_specific(), "_", Date_specific())))
   
   downloadFunction_general <- function() {
