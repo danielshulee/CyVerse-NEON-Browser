@@ -924,10 +924,10 @@ function(input, output, session) {
                        downloadFunction_general()
                      }
                    } else {
+                     dir.create(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general()))
                      downloadFunction_general()
                    }
                  } else {
-                   showNotification('hhh')
                    dir.create(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general()), recursive = TRUE)
                    downloadFunction_general()
                  }
