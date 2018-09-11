@@ -916,10 +916,10 @@ function(input, output, session) {
                  if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/"))) {
                    if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/"))) {
                      if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Folder_general()))) {
-                     assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
-                     showNotification(ui = "Ready to transfer!", type = "message", id = "ready")
-                     enable(id = "transfer_NEON_general")
-                     runjs("document.getElementById('transfer_NEON_general').click();")
+                       assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
+                       showNotification(ui = "Ready to transfer!", type = "message", id = "ready")
+                       enable(id = "transfer_NEON_general")
+                       runjs("document.getElementById('transfer_NEON_general').click();")
                      } else {
                        downloadFunction_general()
                      }
@@ -927,6 +927,7 @@ function(input, output, session) {
                      downloadFunction_general()
                    }
                  } else {
+                   showNotification('hhh')
                    dir.create(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general()))
                    downloadFunction_general()
                  }
