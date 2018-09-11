@@ -1028,9 +1028,9 @@ function(input, output, session) {
   ####FOR ME TAB####
   
   #Text for troublshooting
-  output$text_me <- renderText(Folder_path_general())
+  output$text_me <- renderText(Field_Site_general())
   #Text for troublshooting 2
-  output$text_me_two <- renderText(Folder_general())
+  output$text_me_two <- renderText(Product_ID_general())
   #Table for troubleshooting
   #output$table_me <- shiny::renderDataTable()
 }
