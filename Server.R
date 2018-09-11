@@ -889,21 +889,20 @@ function(input, output, session) {
     disable(id = "transfer_NEON_general")
     #unlink(x = "/home/danielslee/NEON/*", recursive = TRUE, force = TRUE)
     showNotification(ui = "Downloading files…", duration = NULL, id = "download", type = "message")
-    download <- try(zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = "/home/danielslee/NEON/"), silent = TRUE)
+    download <- try(zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = paste0("/home/danielslee/NEON/", Field_Site_general())), silent = TRUE)
     if (class(download) == "try-error") {
       removeNotification(id = "download")
       sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to a faulty request or a problem with the product itself. Read the error code message: ", strsplit(download, ":")[[1]][-1]), type = 'error')
-    }
-    else {
+    } else {
       removeNotification(id = "download")
       showNotification(ui = "Stacking files…", duration = NULL, id = "stack", type = "message")
-      stack <- try(stackByTable(filepath = paste0("/home/danielslee/NEON/", Folder_general()), folder = TRUE), silent = TRUE)
+      stack <- try(stackByTable(filepath = paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Folder_general()), folder = TRUE), silent = TRUE)
       if (class(stack) == "try-error") {
         removeNotification(id = "stack")
         sendSweetAlert(session, title = "Stack failed", text = "Something went wrong in the stacking process. Please submit an issue on Github.", type = "error")
       } else {
       removeNotification(id = "stack")
-      file.rename(from = paste0("/home/danielslee/NEON/", Folder_general(), "/stackedFiles"), to = paste0("/home/danielslee/NEON/", Folder_general(), "/", Folder_path_general()))
+      file.rename(from = paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Folder_general(), "/stackedFiles"), to = paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Folder_general(), "/", Folder_path_general()))
       assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
       showNotification(ui = "Ready to transfer!", type = "message", id = "ready")
       enable(id = "transfer_NEON_general")
@@ -914,8 +913,8 @@ function(input, output, session) {
   ####—— Download NEON data: general ####
   observeEvent(eventExpr = input$download_NEON_general, ignoreInit = TRUE,
                handlerExpr = {
-                 if (length(list.files(paste0("/home/danielslee/NEON/", Folder_general(), "/"))) > 0) {
-                   if (list.files(paste0("/home/danielslee/NEON/", Folder_general(), "/")) %in% Folder_path_general()) {
+                 if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/"))) {
+                   if (list.files(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Folder_general(), "/")) %in% Folder_path_general()) {
                      assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
                      showNotification(ui = "Ready to transfer!", type = "message", id = "ready")
                      enable(id = "transfer_NEON_general")
@@ -924,6 +923,7 @@ function(input, output, session) {
                      downloadFunction_general()
                    }
                  } else {
+                   dir.create(paste0("/home/danielslee/NEON/", Folder_general(), "/"))
                    downloadFunction_general()
                  }
                })
@@ -934,7 +934,7 @@ function(input, output, session) {
   content = function(file) {
     removeNotification(id = "ready")
     showNotification(ui = "Transferring as zip…", duration = NULL, id = "zip", type = "message")
-    setwd(paste0("/home/danielslee/NEON/", Folder_general(), "/"))
+    setwd(paste0("/home/danielslee/NEON/", Folder_general(), "/", Field_Site_general(), "/"))
     zip(zipfile = file, files = name)
     setwd('/srv/shiny-server/NEON-Hosted-Browser')
     removeNotification(id = "zip")
