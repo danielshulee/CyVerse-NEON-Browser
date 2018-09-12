@@ -911,9 +911,10 @@ function(input, output, session) {
         removeNotification(id = "stack")
         file.rename(from = paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Folder_general(), "/stackedFiles"), to = paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Folder_general(), "/", Folder_path_general()))
         assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
-        showNotification(ui = "Ready to transfer!", type = "message", id = "ready")
         setwd(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Folder_general(), "/"))
+        showNotification(ui = "Transferring as zip…", duration = NULL, id = "zip", type = "message")
         zip(zipfile = paste0("NEON_", Field_Site_general(), "_", Product_ID_middle()), files = name)
+        removeNotification(id = "zip")
         enable(id = "transfer_NEON_general")
         runjs("document.getElementById('transfer_NEON_general').click();")
       }
@@ -925,7 +926,6 @@ function(input, output, session) {
                    if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/"))) {
                      if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Folder_general()))) {
                        setwd(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Folder_general(), "/"))
-                       showNotification(ui = "Ready to transfer!", type = "message", id = "ready")
                        enable(id = "transfer_NEON_general")
                        runjs("document.getElementById('transfer_NEON_general').click();")
                      } else {
@@ -948,11 +948,8 @@ function(input, output, session) {
       paste0(Folder_path_general(),".zip")
     },
     content = function(file) {
-      removeNotification(id = "ready")
-      showNotification(ui = "Transferring as zip…", duration = NULL, id = "zip", type = "message")
       file.copy(from = paste0("NEON_", Field_Site_general(), "_", Product_ID_middle(), ".zip"), to = file)
       setwd('/srv/shiny-server/NEON-Hosted-Browser')
-      removeNotification(id = "zip")
       disable(id = "transfer_NEON_general")
       showNotification(ui = "Download Complete!", type = "message")
     },
