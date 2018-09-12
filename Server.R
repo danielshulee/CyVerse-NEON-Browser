@@ -922,7 +922,7 @@ function(input, output, session) {
                handlerExpr = {
                  if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/"))) {
                    if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/"))) {
-                     if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Folder_general()))) {
+                     if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general()))) {
                        if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general()))) {
                          assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
                          showNotification(ui = "Ready to transfer!", type = "message", id = "ready")
@@ -932,15 +932,15 @@ function(input, output, session) {
                          downloadFunction_general()
                        }
                      } else {
-                       dir.create(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general()), recursive = TRUE)
+                       dir.create(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general()), recursive = TRUE)
                        downloadFunction_general()
                      }
                    } else {
-                     dir.create(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general()), recursive = TRUE)
+                     dir.create(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general()), recursive = TRUE)
                      downloadFunction_general()
                    }
                  } else {
-                   dir.create(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general()), recursive = TRUE)
+                   dir.create(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general()), recursive = TRUE)
                    downloadFunction_general()
                  }
                  updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "list")
