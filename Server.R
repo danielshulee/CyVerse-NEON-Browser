@@ -891,6 +891,7 @@ function(input, output, session) {
   Folder_path_general <- reactive(req(paste0("NEON_", Field_Site_general(), "_", Product_ID_general())))
   Folder_path_specific <- reactive(req(paste0("../NEON Downloads/NEON_", Field_Site_specific(), "_", Date_specific())))
   
+  ####—— Download NEON data: general ####
   downloadFunction_general <- function() {
     disable(id = "transfer_NEON_general")
     #unlink(x = "/home/danielslee/NEON/*", recursive = TRUE, force = TRUE)
@@ -907,16 +908,17 @@ function(input, output, session) {
         removeNotification(id = "stack")
         sendSweetAlert(session, title = "Stack failed", text = "Something went wrong in the stacking process. Please submit an issue on Github.", type = "error")
       } else {
-      removeNotification(id = "stack")
-      file.rename(from = paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Folder_general(), "/stackedFiles"), to = paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Folder_general(), "/", Folder_path_general()))
-      assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
-      showNotification(ui = "Ready to transfer!", type = "message", id = "ready")
-      enable(id = "transfer_NEON_general")
-      runjs("document.getElementById('transfer_NEON_general').click();")
+        removeNotification(id = "stack")
+        file.rename(from = paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Folder_general(), "/stackedFiles"), to = paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Folder_general(), "/", Folder_path_general()))
+        assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
+        showNotification(ui = "Ready to transfer!", type = "message", id = "ready")
+        setwd(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Folder_general(), "/"))
+        zip(zipfile = paste0("NEON_", Field_Site_general(), "_", Product_ID_middle()), files = name)
+        enable(id = "transfer_NEON_general")
+        runjs("document.getElementById('transfer_NEON_general').click();")
+      }
     }
   }
-}
-  ####—— Download NEON data: general ####
   observeEvent(eventExpr = input$download_NEON_general, ignoreInit = TRUE,
                handlerExpr = {
                  if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/"))) {
@@ -947,30 +949,48 @@ function(input, output, session) {
   content = function(file) {
     removeNotification(id = "ready")
     showNotification(ui = "Transferring as zip…", duration = NULL, id = "zip", type = "message")
-    setwd(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Folder_general(), "/"))
-    zip(zipfile = file, files = name)
+    file.copy(from = paste0("NEON_", Field_Site_general(), "_", Product_ID_middle()), to = file)
     setwd('/srv/shiny-server/NEON-Hosted-Browser')
     removeNotification(id = "zip")
     disable(id = "transfer_NEON_general")
+    showNotification(ui = "Download Complete!", type = "message")
   },
   contentType = "application/zip")
+  
   ####—— Download NEON data: specific ####
-  observeEvent(eventExpr = input$download_NEON_specific,
+  downloadFunction_specific <- function() {
+    showNotification(ui = "Downloading files…", duration = NULL, id = "download", type = "message")
+    try <- getPackage(dpID = Product_ID_specific(), site_code = Field_Site_specific(), year_month = Date_specific, package = Package_type_specific(), savepath = )
+  }
+  observeEvent(eventExpr = input$download_NEON_specific, ignoreInit = TRUE,
                handlerExpr = {
-                 showNotification(ui = "Download in progess…", id = "download_specific", type = "message")
-                 dir.create(path = Folder_path_specific())
-                 download <- try(getPackage(dpID = Product_ID_specific(), site_code = Field_Site_specific(), year_month = Date_specific(), package = Package_type_specific(), savepath = Folder_path_specific()), silent = TRUE)
-                 if (class(download) == "try-error") {
-                   if (length(dir(path = Folder_path_specific())) == 0) {
-                     unlink(x = Folder_path_specific(), recursive = TRUE)
+                 if (dir.exists(paste0("/home/danielslee/NEON_single/", Field_Site_general(), "/"))) {
+                   if (dir.exists(paste0("/home/danielslee/NEON_single/", Field_Site_general(), "/", Product_ID_general(), "/"))) {
+                     if (dir.exists(paste0("/home/danielslee/NEON_single/", Field_Site_general(), "/", Product_ID_general(), "/", Folder_general()))) {
+                       if (dir.exists(paste0("/home/danielslee/NEON_single/", Field_Site_general(), "/", Product_ID_general(), "/", Folder_general(), "/", Date_specific()))) {
+                         assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
+                         showNotification(ui = "Ready to transfer!", type = "message", id = "ready")
+                         enable(id = "transfer_NEON_general")
+                         runjs("document.getElementById('transfer_NEON_specific').click();")
+                       } else {
+                         downloadFunction_single()
+                       }
+                     } else {
+                       dir.create(paste0("/home/danielslee/NEON_single/", Field_Site_general(), "/", Product_ID_general(), "/", Folder_general(), "/", Date_specific()), recursive = TRUE)
+                       downloadFunction_single()
+                     }
+                   } else {
+                     dir.create(paste0("/home/danielslee/NEON_single/", Field_Site_general(), "/", Product_ID_general(), "/", Folder_general(), "/", Date_specific()), recursive = TRUE)
+                     downloadFunction_single()
                    }
-                   removeNotification(id = "download_specific")
-                   sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to the data package you tried to obtain or the neonUtlities package used to pull data. Read the error message: ", download), type = 'error')
                  } else {
-                   removeNotification(id = "download_specific")
-                   sendSweetAlert(session, title = "File downloaded", text = "Check the 'NEON Downloads' directory. Go to step 2 to unzip files and make them more accesible.", type = 'success')
+                   dir.create(paste0("/home/danielslee/NEON_single/", Field_Site_general(), "/", Product_ID_general(), "/", Folder_general(), "/", Date_specific()), recursive = TRUE)
+                   downloadFunction_single()
                  }
-               })
+                 updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "list")
+                 updateRadioButtons(session, inputId = "NEONbrowsingstep_product", selected = "list")
+               }
+  )
   ####—— Download NEON data: AOP####
   product_table <- reactive(NEONproducts_product[NEONproducts_product$productCode == Product_ID_AOP(),])
   # Checking is data product is AOP
