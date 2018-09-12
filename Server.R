@@ -924,7 +924,7 @@ function(input, output, session) {
                  if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/"))) {
                    if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/"))) {
                      if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Folder_general()))) {
-                       assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
+                       setwd(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Folder_general(), "/"))
                        showNotification(ui = "Ready to transfer!", type = "message", id = "ready")
                        enable(id = "transfer_NEON_general")
                        runjs("document.getElementById('transfer_NEON_general').click();")
@@ -943,19 +943,20 @@ function(input, output, session) {
                  updateRadioButtons(session, inputId = "NEONbrowsingstep_product", selected = "list")
                })
   
-  output$transfer_NEON_general <- downloadHandler(filename = function() {
-    paste0(Folder_path_general(),".zip")
-  },
-  content = function(file) {
-    removeNotification(id = "ready")
-    showNotification(ui = "Transferring as zip…", duration = NULL, id = "zip", type = "message")
-    file.copy(from = paste0("NEON_", Field_Site_general(), "_", Product_ID_middle(), ".zip"), to = file)
-    setwd('/srv/shiny-server/NEON-Hosted-Browser')
-    removeNotification(id = "zip")
-    disable(id = "transfer_NEON_general")
-    showNotification(ui = "Download Complete!", type = "message")
-  },
-  contentType = "application/zip")
+  output$transfer_NEON_general <- downloadHandler(
+    filename = function() {
+      paste0(Folder_path_general(),".zip")
+    },
+    content = function(file) {
+      removeNotification(id = "ready")
+      showNotification(ui = "Transferring as zip…", duration = NULL, id = "zip", type = "message")
+      file.copy(from = paste0("NEON_", Field_Site_general(), "_", Product_ID_middle(), ".zip"), to = file)
+      setwd('/srv/shiny-server/NEON-Hosted-Browser')
+      removeNotification(id = "zip")
+      disable(id = "transfer_NEON_general")
+      showNotification(ui = "Download Complete!", type = "message")
+    },
+    contentType = "application/zip")
   
   ####—— Download NEON data: specific ####
   downloadFunction_specific <- function() {
