@@ -896,7 +896,7 @@ function(input, output, session) {
     disable(id = "transfer_NEON_general")
     #unlink(x = "/home/danielslee/NEON/*", recursive = TRUE, force = TRUE)
     showNotification(ui = "Downloading files…", duration = NULL, id = "download", type = "message")
-    download <- try(zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general())), silent = TRUE)
+    download <- try(zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general())), silent = TRUE)
     if (class(download) == "try-error") {
       removeNotification(id = "download")
       sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to a faulty request or a problem with the product itself. Read the error code message: ", strsplit(download, ":")[[1]][-1]), type = 'error')
