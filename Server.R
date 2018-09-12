@@ -949,7 +949,7 @@ function(input, output, session) {
   content = function(file) {
     removeNotification(id = "ready")
     showNotification(ui = "Transferring as zip…", duration = NULL, id = "zip", type = "message")
-    file.copy(from = paste0("NEON_", Field_Site_general(), "_", Product_ID_middle()), to = file)
+    file.copy(from = paste0("NEON_", Field_Site_general(), "_", Product_ID_middle(), ".zip"), to = file)
     setwd('/srv/shiny-server/NEON-Hosted-Browser')
     removeNotification(id = "zip")
     disable(id = "transfer_NEON_general")
