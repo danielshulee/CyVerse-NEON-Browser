@@ -928,7 +928,7 @@ function(input, output, session) {
                      if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general()))) {
                        if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general()))) {
                          if (sum(grepl("zip", list.files(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general()))))) {
-                           assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
+                           setwd(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/",Folder_general(), "/"))
                            enable(id = "transfer_NEON_general")
                            runjs("document.getElementById('transfer_NEON_general').click();")
                          } else {
