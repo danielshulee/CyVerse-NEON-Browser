@@ -927,10 +927,14 @@ function(input, output, session) {
                    if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/"))) {
                      if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general()))) {
                        if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general()))) {
-                         assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
-                         showNotification(ui = "Ready to transfer!", type = "message", id = "ready")
-                         enable(id = "transfer_NEON_general")
-                         runjs("document.getElementById('transfer_NEON_general').click();")
+                         if (sum(grepl("zip", list.files(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general()))))) {
+                           assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
+                           enable(id = "transfer_NEON_general")
+                           runjs("document.getElementById('transfer_NEON_general').click();")
+                         } else {
+                           unlink(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/*"), recursive = TRUE)
+                           downloadFunction_general()
+                         }
                        } else {
                          downloadFunction_general()
                        }
@@ -948,6 +952,7 @@ function(input, output, session) {
                  }
                  updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "list")
                  updateRadioButtons(session, inputId = "NEONbrowsingstep_product", selected = "list")
+                 updateSelectInput(session, inputId = "package_type_general", selected = "basic")
                })
   
   output$transfer_NEON_general <- downloadHandler(
