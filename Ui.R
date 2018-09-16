@@ -23,7 +23,7 @@ fluidPage(theme = shinytheme('cerulean'),
                                 sidebarPanel(width = 5,
                                              tabsetPanel(id = "main",
                                                          #### — NEON ####
-                                                         tabPanel(tags$h5("Data Manager"), value = "data",
+                                                         tabPanel(tags$h5("Data"), value = "data",
                                                                   tabsetPanel(id = "data",
                                                                               #### —— STEP 1: Find Data####
                                                                               tabPanel("Product Catalog", value = "find",
@@ -162,7 +162,8 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                   )
                                                          ),
                                                          #### — MAP FEATURES ####
-                                                         tabPanel(title = tags$h5("Filter Map Features"), value = "filter",
+                                                         tabPanel(title = tags$h5("Map"), value = "filter",
+                                                                  tags$h4("Filter Map Features"),
                                                                   radioButtons(inputId = "map_features", label = "Map feature:", choices = list("Field Sites"= "fieldsites", "Domains" = "domains", "Flight Boxes" = "flightpath"), inline = TRUE),
                                                                   conditionalPanel("input.map_features == 'fieldsites'",
                                                                                    selectInput(inputId = "fieldsite_type", label = "Site Type:", choices = c("CORE", "RELOCATABLE"), selected = c("CORE", "RELOCATABLE"), multiple = TRUE),
