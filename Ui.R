@@ -163,7 +163,7 @@ fluidPage(theme = shinytheme('cerulean'),
                                                          ),
                                                          #### — MAP FEATURES ####
                                                          tabPanel(title = tags$h5("Filter Map Features"), value = "filter",
-                                                                  radioButtons(inputId = "map_features", label = "Map feature:", choices = list("Field Sites"= "fieldsites", "Domains" = "domains", "Flightpaths" = "flightpath"), inline = TRUE),
+                                                                  radioButtons(inputId = "map_features", label = "Map feature:", choices = list("Field Sites"= "fieldsites", "Domains" = "domains", "Flight Boxes" = "flightpath"), inline = TRUE),
                                                                   conditionalPanel("input.map_features == 'fieldsites'",
                                                                                    selectInput(inputId = "fieldsite_type", label = "Site Type:", choices = c("CORE", "RELOCATABLE"), selected = c("CORE", "RELOCATABLE"), multiple = TRUE),
                                                                                    selectInput(inputId = "fieldsite_habitat", label = "Site Habitat", choices = c("Terrestrial", "Aquatic"), selected = c("Terrestrial", "Aquatic"), multiple = TRUE),
@@ -220,14 +220,12 @@ fluidPage(theme = shinytheme('cerulean'),
                               )
                      ),
                      #### Tab 2: Description of NEON ####
-                     tabPanel("About NEON",
+                     tabPanel("About This Project",
                               navlistPanel(well = FALSE, widths = c(2,10),
-                                           tabPanel("Objective",
-                                                    includeMarkdown('Rmd/NEON_info_about.Rmd')),
-                                           tabPanel("Field Site Selection",
-                                                    includeMarkdown('Rmd/NEON_info_site_selection.Rmd')),
-                                           tabPanel("Field Site Types",
-                                                    includeMarkdown('Rmd/NEON_info_site_types.Rmd'))
+                                           tabPanel("Goal"
+                                                    ),
+                                           tabPanel("About NEON",
+                                                    includeMarkdown('Rmd/NEON_about.Rmd'))
                               )),
                      ####Tab 3: Includes outputs to help with testing or troubleshooting####
                      tabPanel("For me (troubleshooting)",
