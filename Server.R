@@ -175,7 +175,7 @@ function(input, output, session) {
                         color = "#49E2BD",
                         layerId = Field_sites_poly_filtered()$code[i],
                         popup = paste0("Boundaries for ",
-                                       "<a href='https://www.neonscience.org/field-sites/field-sites-map/", Field_sites_point_filtered()$code[i], "' target='_blank'>",
+                                       "<a href='https://www.neonscience.org/field-sites/field-sites-map/", Field_sites_poly_filtered()$code[i], "' target='_blank'>",
                                        Field_sites_poly_filtered()$name[i], "</a>"),
                         opacity = 1,
                         fillOpacity = 0,
@@ -190,7 +190,7 @@ function(input, output, session) {
                            color = "#49E2BD",
                            # layerId = Field_sites_poly_filtered()$code[i],
                            popup = paste0("Boundaries for ",
-                                          "<a href='https://www.neonscience.org/field-sites/field-sites-map/", Field_sites_point_filtered()$code[i], "' target='_blank'>",
+                                          "<a href='https://www.neonscience.org/field-sites/field-sites-map/", Field_sites_poly_filtered()$code[i], "' target='_blank'>",
                                           Field_sites_poly_filtered()$name[i], "</a>"),
                            opacity = 1,
                            fillOpacity = 0.4,
@@ -217,7 +217,7 @@ function(input, output, session) {
                                     Subloc_tes_plots_base()$Type[i],
                                     "<br><b>Dimensions: </b>",
                                     Subloc_tes_plots_base()$Plot.Size[i]),
-                     group = "Sub Locations",
+                     group = "Sublocations",
                      layerId = Subloc_tes_plots_base()$Name[i]) %>%
           addRectangles(lng1 = geosphere::destPoint(p = c(Subloc_tes_plots_base()$Longitude[i], Subloc_tes_plots_base()$Latitude[i]), b = 225, d = 20*sqrt(2))[1],
                         lat1 = geosphere::destPoint(p = c(Subloc_tes_plots_base()$Longitude[i], Subloc_tes_plots_base()$Latitude[i]), b = 225, d = 20*sqrt(2))[2],
@@ -247,7 +247,7 @@ function(input, output, session) {
                         lat1 = geosphere::destPoint(p = c(Subloc_tes_plots_bird()$Longitude[i], Subloc_tes_plots_bird()$Latitude[i]), b = 225, d = 250*sqrt(2))[2],
                         lng2 = geosphere::destPoint(p = c(Subloc_tes_plots_bird()$Longitude[i], Subloc_tes_plots_bird()$Latitude[i]), b = 45, d = 250*sqrt(2))[1],
                         lat2 = geosphere::destPoint(p = c(Subloc_tes_plots_bird()$Longitude[i], Subloc_tes_plots_bird()$Latitude[i]), b = 45, d = 250*sqrt(2))[2],
-                        group = "Sub Locations",
+                        group = "Sublocations",
                         color = "#155AA8",
                         opacity = 1,
                         fillOpacity = 0,
@@ -280,7 +280,7 @@ function(input, output, session) {
                                     Subloc_tes_plots_mam()$Type[i],
                                     "<br><b>Dimensions: </b>",
                                     Subloc_tes_plots_mam()$Plot.Size[i]),
-                     group = "Sub Locations",
+                     group = "Sublocations",
                      layerId = Subloc_tes_plots_mam()$Name[i]) %>%
           addRectangles(lng1 = geosphere::destPoint(p = c(Subloc_tes_plots_mam()$Longitude[i], Subloc_tes_plots_mam()$Latitude[i]), b = 225, d = 45*sqrt(2))[1],
                         lat1 = geosphere::destPoint(p = c(Subloc_tes_plots_mam()$Longitude[i], Subloc_tes_plots_mam()$Latitude[i]), b = 225, d = 45*sqrt(2))[2],
@@ -314,7 +314,7 @@ function(input, output, session) {
                                     Subloc_tes_plots_mos()$Type[i],
                                     "<br><b>Dimensions: </b>",
                                     Subloc_tes_plots_mos()$Plot.Size[i]),
-                     group = "Sub Locations",
+                     group = "Sublocations",
                      layerId = Subloc_tes_plots_mos()$Name[i])
       }
     }
@@ -336,7 +336,7 @@ function(input, output, session) {
                                     Subloc_tes_plots_tick()$Type[i],
                                     "<br><b>Dimensions: </b>",
                                     Subloc_tes_plots_tick()$Plot.Size[i]),
-                     group = "Sub Locations",
+                     group = "Sublocations",
                      layerId = Subloc_tes_plots_tick()$Name[i]) %>%
           addRectangles(lng1 = geosphere::destPoint(p = c(Subloc_tes_plots_tick()$Longitude[i], Subloc_tes_plots_tick()$Latitude[i]), b = 225, d = 20*sqrt(2))[1],
                         lat1 = geosphere::destPoint(p = c(Subloc_tes_plots_tick()$Longitude[i], Subloc_tes_plots_tick()$Latitude[i]), b = 225, d = 20*sqrt(2))[2],
@@ -370,7 +370,7 @@ function(input, output, session) {
                                     Subloc_tes_plots_phe()$Type[i],
                                     "<br><b>Dimensions: </b>",
                                     Subloc_tes_plots_phe()$Plot.Size[i]),
-                     group = "Sub Locations",
+                     group = "Sublocations",
                      layerId = Subloc_tes_plots_phe()$Name[i]) %>%
           addRectangles(lng1 = geosphere::destPoint(p = c(Subloc_tes_plots_phe()$Longitude[i], Subloc_tes_plots_phe()$Latitude[i]), b = 225, d = 100*sqrt(2))[1],
                         lat1 = geosphere::destPoint(p = c(Subloc_tes_plots_phe()$Longitude[i], Subloc_tes_plots_phe()$Latitude[i]), b = 225, d = 100*sqrt(2))[2],
@@ -385,7 +385,7 @@ function(input, output, session) {
           )
       }
     }
-    else if (!input$sublocs_tickplot | (nrow(Subloc_tes_plots_phe()) == 0)) {
+    else if (!input$sublocs_phenologyplot | (nrow(Subloc_tes_plots_phe()) == 0)) {
       proxy %>% removeMarker(layerId = (FieldSite_plots_tes %>% filter(Type %in% "Tower Phenology Plot"))$Name) %>%
         removeShape(layerId = (FieldSite_plots_tes %>% filter(Type %in% "Tower Phenology Plot"))$Name)
     }
@@ -403,7 +403,7 @@ function(input, output, session) {
                                     Subloc_aqu_plots_well()$Description[i],
                                     "<br><b>Type: </b>",
                                     Subloc_aqu_plots_well()$`General Type`[i]),
-                     group = "Sub Locations",
+                     group = "Sublocations",
                      layerId = Subloc_aqu_plots_well()$Name[i])
       }
     } else if (!input$sublocs_well | (nrow(Subloc_aqu_plots_well()) == 0)) {
@@ -422,10 +422,10 @@ function(input, output, session) {
                                     Subloc_aqu_plots_metstn()$Description[i],
                                     "<br><b>Type: </b>",
                                     Subloc_aqu_plots_metstn()$`General Type`[i]),
-                     group = "Sub Locations",
+                     group = "Sublocations",
                      layerId = Subloc_aqu_plots_metstn()$Name[i])
       }
-    } else if (!input$sublocs_well | (nrow(Subloc_aqu_plots_well()) == 0)) {
+    } else if (!input$sublocs_metstn | (nrow(Subloc_aqu_plots_well()) == 0)) {
       proxy %>% removeMarker(layerId = (FieldSite_locations_aqu %>% filter(`General Type` %in% "Met. Station"))$Name)
     }
   })
@@ -441,7 +441,7 @@ function(input, output, session) {
                                     Subloc_aqu_plots_sensor()$Description[i],
                                     "<br><b>Type: </b>",
                                     Subloc_aqu_plots_sensor()$`General Type`[i]),
-                     group = "Sub Locations",
+                     group = "Sublocations",
                      layerId = Subloc_aqu_plots_sensor()$Name[i])
       }
     } else if (!input$sublocs_sensor | (nrow(Subloc_aqu_plots_sensor()) == 0)) {
@@ -460,10 +460,10 @@ function(input, output, session) {
                                     Subloc_aqu_plots_gauge()$Description[i],
                                     "<br><b>Type: </b>",
                                     Subloc_aqu_plots_gauge()$`General Type`[i]),
-                     group = "Sub Locations",
+                     group = "Sublocations",
                      layerId = Subloc_aqu_plots_gauge()$Name[i])
       }
-    } else if (!input$sublocs_sensor | (nrow(Subloc_aqu_plots_gauge()) == 0)) {
+    } else if (!input$sublocs_gauge | (nrow(Subloc_aqu_plots_gauge()) == 0)) {
       proxy %>% removeMarker(layerId = (FieldSite_locations_aqu %>% filter(`General Type` %in% "Staff gauge/camera"))$Name)
     }
   })
@@ -479,10 +479,10 @@ function(input, output, session) {
                                     Subloc_aqu_plots_reach()$Description[i],
                                     "<br><b>Type: </b>",
                                     Subloc_aqu_plots_reach()$`General Type`[i]),
-                     group = "Sub Locations",
+                     group = "Sublocations",
                      layerId = Subloc_aqu_plots_reach()$Name[i])
       }
-    } else if (!input$sublocs_sensor | (nrow(Subloc_aqu_plots_sensor()) == 0)) {
+    } else if (!input$sublocs_reach | (nrow(Subloc_aqu_plots_sensor()) == 0)) {
       proxy %>% removeMarker(layerId = (FieldSite_locations_aqu %>% filter(`General Type` %in% "Sampling Reach Boundary"))$Name)
     }
   })
@@ -498,10 +498,10 @@ function(input, output, session) {
                                     Subloc_aqu_plots_riparian()$Description[i],
                                     "<br><b>Type: </b>",
                                     Subloc_aqu_plots_riparian()$`General Type`[i]),
-                     group = "Sub Locations",
+                     group = "Sublocations",
                      layerId = Subloc_aqu_plots_riparian()$Name[i])
       }
-    } else if (!input$sublocs_sensor | (nrow(Subloc_aqu_plots_sensor()) == 0)) {
+    } else if (!input$sublocs_riparian | (nrow(Subloc_aqu_plots_sensor()) == 0)) {
       proxy %>% removeMarker(layerId = (FieldSite_locations_aqu %>% filter(`General Type` %in% "Riparian Assessment"))$Name)
     }
   })
@@ -561,6 +561,7 @@ function(input, output, session) {
                handlerExpr = {
                  leafletProxy('map') %>% showGroup(group = "Sub Locations")
                  updateTabsetPanel(session, inputId = "main", selected = "filter")
+                 updateRadioButtons(session, inputId = "map_features", selected = "fieldsites")
                  choices <- input$fieldsite_sublocs
                  updateSelectInput(session, inputId = "fieldsite_sublocs", selected = c(choices, input$NEONsite_zoom))
                })
@@ -633,6 +634,9 @@ function(input, output, session) {
                                                        selection = list(mode = 'single', target = 'cell')))
   observeEvent(eventExpr = input$NEONproductoptions_site_cells_selected,
                handlerExpr = {
+                 if (length(input$NEONproductoptions_site_cells_selected) > 0) {
+                   updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "single")
+                 }
                  updateTextInput(session = session, inputId = "NEONproductID_site", value = ifelse(length(input$NEONproductoptions_site_cells_selected)==0,NA,NEONproductlist_site()[[2]][[input$NEONproductoptions_site_cells_selected[1]]]))
                })
   # Display products: single
@@ -702,12 +706,115 @@ function(input, output, session) {
   output$NEONproductnotes_site <- renderPrint(req(ifelse(is.null(req(NEONproductinfo_site()$productRemarks)),
                                                          yes = NULL,
                                                          no = NEONproductinfo_site()$productRemarks)))
-  output$NEONproductdates_site <- renderPrint({
+  output$NEONproducttable_site <- renderDT({
     dates <- if (length(NEONproductinfo_site()$siteCodes) == 0) {
       NA
     } else {
       NEONproductinfo_site()$siteCodes[[1]]$availableMonths[NEONproductinfo_site()$siteCodes[[1]]$siteCode %in% input$NEONsite_site][[1]]}
-    req(dates)
+    if (sum(is.na(dates))) {
+      datatable(data = data.frame())
+    } else {
+      date_table_names <- c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
+      date_tables <- character(12)
+      years <- NULL
+      for (date in dates) {
+        years <- c(years, strsplit(date, "-")[[1]][1])
+      }
+      years <- unique(years)
+      years <- years[order(years)]
+      for (year in years) {
+        dates_year <- dates[grepl(year, dates)]
+        if (sum(dates %in% paste0(year, "-01"))) {
+          Jan <- "✅"
+        } else {
+          Jan <- NA
+        }
+        if (sum(dates %in% paste0(year, "-02"))) {
+          Feb <- "✅"
+        } else {
+          Feb <- NA
+        }
+        if (sum(dates %in% paste0(year, "-03"))) {
+          Mar <- "✅"
+        } else {
+          Mar <- NA
+        }
+        if (sum(dates %in% paste0(year, "-04"))) {
+          Apr <- "✅"
+        } else {
+          Apr <- NA
+        }
+        if (sum(dates %in% paste0(year, "-05"))) {
+          May <- "✅"
+        } else {
+          May <- NA
+        }
+        if (sum(dates %in% paste0(year, "-06"))) {
+          Jun <- "✅"
+        } else {
+          Jun <- NA
+        }
+        if (sum(dates %in% paste0(year, "-07"))) {
+          Jul <- "✅"
+        } else {
+          Jul <- NA
+        }
+        if (sum(dates %in% paste0(year, "-08"))) {
+          Aug <- "✅"
+        } else {
+          Aug <- NA
+        }
+        if (sum(dates %in% paste0(year, "-09"))) {
+          Sep <- "✅"
+        } else {
+          Sep <- NA
+        }
+        if (sum(dates %in% paste0(year, "-10"))) {
+          Oct <- "✅"
+        } else {
+          Oct <- NA
+        }
+        if (sum(dates %in% paste0(year, "-11"))) {
+          Nov <- "✅"
+        } else {
+          Nov <- NA
+        }
+        if (sum(dates %in% paste0(year, "-12"))) {
+          Dec <- "✅"
+        } else {
+          Dec <- NA
+        }
+        year_table <- data.frame(year = c(Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec))
+        date_tables <- cbind(date_tables, year_table)
+      }
+      datatable(date_tables[-1], colnames = years, rownames = date_table_names, extensions = 'ColReorder', class = 'cell-border stripe hover order-column compact',
+                options = list(dom = "t",
+                               pageLength = 12,
+                               colReorder = TRUE),
+                selection = list(mode = 'single', target = 'cell'))
+    }
+  })
+  output$NEONproductdates_site <- renderUI({
+    dates <- if (length(NEONproductinfo_site()$siteCodes) == 0) {
+      NA
+    } else {
+      NEONproductinfo_site()$siteCodes[[1]]$availableMonths[NEONproductinfo_site()$siteCodes[[1]]$siteCode %in% input$NEONsite_site][[1]]}
+    if (sum(is.na(dates))) {
+      req(dates)
+    } else {
+      years <- NULL
+      for (date in dates) {
+        years <- c(years, strsplit(date, "-")[[1]][1])
+      }
+      years <- unique(years)
+      years <- years[order(years)]
+      date_list <- c("<b>", years[1], ": ", "</b>", paste(dates[grepl(years[1], dates)], collapse = ", "))
+      for (year in years[-1]) {
+        date_list <- c(date_list, "<br>","<b>", year, ": ", "</b>", paste(dates[grepl(year, dates)], collapse = ", "))
+      }
+      date_list <- paste(date_list, collapse = "")
+      HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>", date_list, "</p>"))
+    }
   })
   output$NEONproductURL_site <- renderPrint({
     Urls <- if (length(NEONproductinfo_site()$siteCodes) == 0) {
@@ -758,6 +865,9 @@ function(input, output, session) {
                                                           selection = list(mode = 'single', target = 'cell')))
   observeEvent(eventExpr = input$NEONproductoptions_product_cells_selected,
                handlerExpr = {
+                 if (length(input$NEONproductoptions_product_cells_selected) > 0) {
+                   updateRadioButtons(session, inputId = "NEONbrowsingstep_product", selected = "single")
+                 }
                  updateTextInput(session = session, inputId = "NEONproductID_product", value = ifelse(length(input$NEONproductoptions_product_cells_selected)==0,NA,NEONproductlist_product()[[2]][[input$NEONproductoptions_product_cells_selected[1]]]))
                })
   # Display products: single
@@ -826,12 +936,115 @@ function(input, output, session) {
         sort(NEONproductinfo_product()$siteCodes[[1]]$siteCode)}
     selectInput(inputId = "NEONsite_product", label = "Available sites:", choices = req(sites))
   })
-  output$NEONproductdates_product <- renderPrint({
+  output$NEONproducttable_product <- renderDT({
     dates <- if (length(NEONproductinfo_product()$siteCodes) == 0) {
       NA
     } else { 
       NEONproductinfo_product()$siteCodes[[1]]$availableMonths[NEONproductinfo_product()$siteCodes[[1]]$siteCode %in% input$NEONsite_product][[1]]}
-    req(dates)
+    if (sum(is.na(dates)) | length(dates) == 0) {
+      datatable(data = data.frame())
+    } else {
+      date_table_names <- c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
+      date_tables <- character(12)
+      years <- NULL
+      for (date in dates) {
+        years <- c(years, strsplit(date, "-")[[1]][1])
+      }
+      years <- unique(years)
+      years <- years[order(years)]
+      for (year in years) {
+        dates_year <- dates[grepl(year, dates)]
+        if (sum(dates %in% paste0(year, "-01"))) {
+          Jan <- "✅"
+        } else {
+          Jan <- NA
+        }
+        if (sum(dates %in% paste0(year, "-02"))) {
+          Feb <- "✅"
+        } else {
+          Feb <- NA
+        }
+        if (sum(dates %in% paste0(year, "-03"))) {
+          Mar <- "✅"
+        } else {
+          Mar <- NA
+        }
+        if (sum(dates %in% paste0(year, "-04"))) {
+          Apr <- "✅"
+        } else {
+          Apr <- NA
+        }
+        if (sum(dates %in% paste0(year, "-05"))) {
+          May <- "✅"
+        } else {
+          May <- NA
+        }
+        if (sum(dates %in% paste0(year, "-06"))) {
+          Jun <- "✅"
+        } else {
+          Jun <- NA
+        }
+        if (sum(dates %in% paste0(year, "-07"))) {
+          Jul <- "✅"
+        } else {
+          Jul <- NA
+        }
+        if (sum(dates %in% paste0(year, "-08"))) {
+          Aug <- "✅"
+        } else {
+          Aug <- NA
+        }
+        if (sum(dates %in% paste0(year, "-09"))) {
+          Sep <- "✅"
+        } else {
+          Sep <- NA
+        }
+        if (sum(dates %in% paste0(year, "-10"))) {
+          Oct <- "✅"
+        } else {
+          Oct <- NA
+        }
+        if (sum(dates %in% paste0(year, "-11"))) {
+          Nov <- "✅"
+        } else {
+          Nov <- NA
+        }
+        if (sum(dates %in% paste0(year, "-12"))) {
+          Dec <- "✅"
+        } else {
+          Dec <- NA
+        }
+        year_table <- data.frame(year = c(Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec))
+        date_tables <- cbind(date_tables, year_table)
+      }
+      datatable(date_tables[-1], colnames = years, rownames = date_table_names, extensions = 'ColReorder', class = 'cell-border stripe hover order-column compact',
+                options = list(dom = "t",
+                               pageLength = 12,
+                               colReorder = TRUE),
+                selection = list(mode = 'single', target = 'cell'))
+    }
+  })
+  output$NEONproductdates_product <- renderUI({
+    dates <- if (length(NEONproductinfo_product()$siteCodes) == 0) {
+      NA
+    } else { 
+      NEONproductinfo_product()$siteCodes[[1]]$availableMonths[NEONproductinfo_product()$siteCodes[[1]]$siteCode %in% input$NEONsite_product][[1]]}
+    if (sum(is.na(dates)) | length(dates) == 0) {
+      NULL
+    } else {
+      years <- NULL
+      for (date in dates) {
+        years <- c(years, strsplit(date, "-")[[1]][1])
+      }
+      years <- unique(years)
+      years <- years[order(years)]
+      date_list <- c("<b>", years[1], ": ", "</b>", paste(dates[grepl(years[1], dates)], collapse = ", "))
+      for (year in years[-1]) {
+        date_list <- c(date_list, "<br>","<b>", year, ": ", "</b>", paste(dates[grepl(year, dates)], collapse = ", "))
+      }
+      date_list <- paste(date_list, collapse = "")
+      HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>", date_list, "</p>"))
+    }
   })
   output$NEONproductURL_product <- renderPrint({
     Urls <- if (length(NEONproductinfo_product()$siteCodes) == 0) {
