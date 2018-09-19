@@ -1082,6 +1082,7 @@ function(input, output, session) {
   
   ####—— Download NEON data: general ####
   downloadFunction_general <- function() {
+    disable(id = "download_NEON_general")
     disable(id = "transfer_NEON_general")
     #unlink(x = "/home/danielslee/NEON/*", recursive = TRUE, force = TRUE)
     showNotification(ui = "Downloading files…", duration = NULL, id = "download", type = "message")
@@ -1100,7 +1101,7 @@ function(input, output, session) {
         removeNotification(id = "stack")
         file.rename(from = paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general(), "/stackedFiles"), to = paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general(), "/", Folder_path_general()))
         assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
-        setwd(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/",Folder_general(), "/"))
+        setwd(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general(), "/"))
         showNotification(ui = "Transferring as zip…", duration = NULL, id = "zip", type = "message")
         zip(zipfile = paste0("NEON_", Field_Site_general(), "_", Product_ID_middle()), files = name)
         removeNotification(id = "zip")
@@ -1110,6 +1111,30 @@ function(input, output, session) {
     }
   }
   ####—— Download NEON data: general ####
+  # Calculate Download Size
+  observeEvent(eventExpr = input$get_general_size, ignoreInit = TRUE,
+               handlerExpr = {
+                 output$general_size <- renderPrint("")
+                 showNotification(ui = "Calculation in progress...", id = "calculation_general", type = "message")
+                 size <- try(getProductSize(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general()), silent = TRUE)
+                 if (class(size) == "try-error") {
+                   removeNotification(id = "calculation_general")
+                   sendSweetAlert(session, title = "Calculation failed", text = paste0("The product that you tried to calculate size for was invalid. Read the error message: ", size), type = 'error')
+                 } else {
+                   if (size < 1 & size != 0) {
+                     size_kb <- size * 10^3
+                     total_size <- paste0(as.character(size_kb), " KB")
+                   } else if (size > 1) {
+                     size_mb <- size
+                     total_size <- paste0(as.character(size_mb), " MB")
+                   } else if (size == 0) {
+                     total_size <- "No data available"
+                   }
+                 }
+                 removeNotification(id = "calculation_general")
+                 output$general_size <- renderPrint(total_size)
+               })
+  # Download
   observeEvent(eventExpr = input$download_NEON_general, ignoreInit = TRUE,
                handlerExpr = {
                  if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/"))) {
@@ -1118,6 +1143,7 @@ function(input, output, session) {
                        if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general()))) {
                          if (sum(grepl(paste0("NEON_", Field_Site_general(), "_", Product_ID_middle(), ".zip"), list.files(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general()))))) {
                            setwd(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general(), "/"))
+                           disable(id = "download_NEON_general")
                            enable(id = "transfer_NEON_general")
                            runjs("document.getElementById('transfer_NEON_general').click();")
                          } else {
@@ -1151,6 +1177,7 @@ function(input, output, session) {
     content = function(file) {
       file.copy(from = paste0("NEON_", Field_Site_general(), "_", Product_ID_middle(), ".zip"), to = file)
       setwd('/srv/shiny-server/NEON-Hosted-Browser')
+      enable(id = "download_NEON_general")
       disable(id = "transfer_NEON_general")
       showNotification(ui = "Download Complete!", type = "message")
     },
@@ -1211,7 +1238,7 @@ function(input, output, session) {
   observeEvent(eventExpr = input$get_AOP_size,
                handlerExpr = {
                  if (is_AOP() != "YES") {
-                   sendSweetAlert(session, title = "Download failed", text = "Please choose an AOP product", type = 'error')
+                   sendSweetAlert(session, title = "Calculation failed", text = "Please choose an AOP product", type = 'error')
                  } else {
                    showNotification(ui = "Calculation in progress...", id = "calculation_AOP", type = "message")
                    data_test <- try(nneo_data(product_code = Product_ID_AOP(), site_code = Field_Site_AOP(), year_month = paste0(Year_AOP(), "-01")))

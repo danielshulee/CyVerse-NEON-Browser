@@ -11,10 +11,10 @@ library(dplyr)
 library(jsonlite)
 library(neonUtilities)
 library(nneo)
-source('Functions/flight_function.R')
 source('Functions/filter_keyword_function.R')
 source('Functions/filter_site_function.R')
 source('Functions/keyword_lists_function.R')
+source('Functions/getProductSize_function.R')
 
 ####———MAP DATA———####
 
