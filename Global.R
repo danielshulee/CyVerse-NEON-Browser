@@ -11,6 +11,7 @@ library(dplyr)
 library(jsonlite)
 library(neonUtilities)
 library(nneo)
+source('Functions/flight_function.R')
 source('Functions/filter_keyword_function.R')
 source('Functions/filter_site_function.R')
 source('Functions/keyword_lists_function.R')
@@ -20,7 +21,7 @@ source('Functions/getProductSize_function.R')
 
 ####——NEON——####
 
-###NEON Field Sites####
+### NEON Field Sites####
 
 ## Retrieve point data for NEON Field Sites in JSON format
 FieldSite_point_JSON <- fromJSON('http://data.neonscience.org/api/v0/sites')
