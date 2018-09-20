@@ -1,5 +1,5 @@
 ##### Obtain a data product in its entirety
 
-Download NEON data products without filtering over time. This functionality requires a product ID from step 1 or the NEON <a href='http://data.neonscience.org/static/browse.html' target='_blank'>data portal</a>. Optionally, one NEON site can be selected.
+Download NEON data products from one site without filtering over time. A product ID from step 1 or the NEON <a href='http://data.neonscience.org/static/browse.html' target='_blank'>data portal</a> is required.
 
-These downloads will come unzipped and stacked, meaning that they will be already opened into folders and organized based on measurement variables. Due to restrictions with `R Shiny`'s download system, two buttons were necesary, one for the download and one to transfer it to the local browser. However, only the `Download items` button needs to be clicked; the rest is done automatically.
+These downloads will come unzipped and stacked, meaning that they will be already opened into folders and organized based on measurement variables (see the difference by downloading directly from NEON). Due to complications with `R Shiny`'s download system, two buttons were necesary; However, only the `Download items` button needs to be clicked, as the rest is done automatically.

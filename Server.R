@@ -1061,13 +1061,7 @@ function(input, output, session) {
   Folder_general <- reactive(req(paste0("filesToStack", Product_ID_middle())))
   Product_ID_specific <- reactive(req(gsub(pattern = " ", replacement = "", x = input$dpID_specific)))
   Product_ID_AOP <- reactive(req(gsub(pattern = " ", replacement = "", x = input$dpID_AOP)))
-  Field_Site_general <- reactive(req(
-    if (input$location_NEON_general == "All (default)") {
-      "all"
-    } else {
-      input$location_NEON_general
-    })
-  )
+  Field_Site_general <- reactive(req(input$location_NEON_general))
   Field_Site_specific <- reactive(req(input$location_NEON_specific))
   Field_Site_AOP <- reactive(req(input$location_NEON_AOP))
   Package_type_general <- reactive(req(input$package_type_general))
@@ -1081,6 +1075,33 @@ function(input, output, session) {
   Folder_path_specific <- reactive(req(paste0("../NEON Downloads/NEON_", Field_Site_specific(), "_", Date_specific())))
   
   ####—— Download NEON data: general ####
+  # Calculate Download Size
+  observeEvent(eventExpr = input$get_general_size, ignoreInit = TRUE,
+               handlerExpr = {
+                 if (input$dpID_general == "") {}
+                 else {
+                   output$general_size <- renderPrint("")
+                   showNotification(ui = "Calculation in progress...", id = "calculation_general", type = "message")
+                   size <- try(getProductSize(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general()), silent = TRUE)
+                   if (class(size) == "try-error") {
+                     removeNotification(id = "calculation_general")
+                     sendSweetAlert(session, title = "Calculation failed", text = paste0("The product that you tried to calculate size for was invalid. Read the error message: ", strsplit(size, ":")[[1]][2]), type = 'error')
+                   } else {
+                     if (size < 1 & size != 0) {
+                       size_kb <- size * 10^3
+                       total_size <- paste0(as.character(size_kb), " KB")
+                     } else if (size > 1) {
+                       size_mb <- size
+                       total_size <- paste0(as.character(size_mb), " MB")
+                     } else if (size == 0) {
+                       total_size <- "No data available"
+                     }
+                     output$general_size <- renderPrint(total_size)
+                   }
+                   removeNotification(id = "calculation_general")
+                 }
+               })
+  # Download Function
   downloadFunction_general <- function() {
     disable(id = "download_NEON_general")
     disable(id = "transfer_NEON_general")
@@ -1090,6 +1111,7 @@ function(input, output, session) {
     if (class(download) == "try-error") {
       removeNotification(id = "download")
       sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to a faulty request or a problem with the product itself. Read the error code message: ", strsplit(download, ":")[[1]][-1]), type = 'error')
+      enable(id = "download_NEON_general")
     } else {
       removeNotification(id = "download")
       showNotification(ui = "Stacking files…", duration = NULL, id = "stack", type = "message")
@@ -1097,6 +1119,7 @@ function(input, output, session) {
       if (class(stack) == "try-error") {
         removeNotification(id = "stack")
         sendSweetAlert(session, title = "Stack failed", text = "Something went wrong in the stacking process. Please submit an issue on Github.", type = "error")
+        enable(id = "download_NEON_general")
       } else {
         removeNotification(id = "stack")
         file.rename(from = paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general(), "/stackedFiles"), to = paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general(), "/", Folder_path_general()))
@@ -1110,30 +1133,6 @@ function(input, output, session) {
       }
     }
   }
-  ####—— Download NEON data: general ####
-  # Calculate Download Size
-  observeEvent(eventExpr = input$get_general_size, ignoreInit = TRUE,
-               handlerExpr = {
-                 output$general_size <- renderPrint("")
-                 showNotification(ui = "Calculation in progress...", id = "calculation_general", type = "message")
-                 size <- try(getProductSize(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general()), silent = TRUE)
-                 if (class(size) == "try-error") {
-                   removeNotification(id = "calculation_general")
-                   sendSweetAlert(session, title = "Calculation failed", text = paste0("The product that you tried to calculate size for was invalid. Read the error message: ", size), type = 'error')
-                 } else {
-                   if (size < 1 & size != 0) {
-                     size_kb <- size * 10^3
-                     total_size <- paste0(as.character(size_kb), " KB")
-                   } else if (size > 1) {
-                     size_mb <- size
-                     total_size <- paste0(as.character(size_mb), " MB")
-                   } else if (size == 0) {
-                     total_size <- "No data available"
-                   }
-                 }
-                 removeNotification(id = "calculation_general")
-                 output$general_size <- renderPrint(total_size)
-               })
   # Download
   observeEvent(eventExpr = input$download_NEON_general, ignoreInit = TRUE,
                handlerExpr = {
@@ -1282,9 +1281,9 @@ function(input, output, session) {
   ####FOR ME TAB####
   
   #Text for troublshooting
-  output$text_me <- renderText(Field_Site_general())
+  output$text_me <- renderText(input$dpID_general == "")
   #Text for troublshooting 2
-  output$text_me_two <- renderText(Product_ID_general())
+  output$text_me_two <- renderText(length(Product_ID_general()))
   #Table for troubleshooting
   #output$table_me <- shiny::renderDataTable()
 }
