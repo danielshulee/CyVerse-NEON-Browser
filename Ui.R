@@ -20,7 +20,7 @@ fluidPage(theme = shinytheme('cerulean'),
                                 sidebarPanel(width = 5,
                                              tabsetPanel(id = "main",
                                                          #### — NEON ####
-                                                         tabPanel(tags$h5("Data"), value = "data",
+                                                         tabPanel(tags$h5("Data Browser"), value = "data",
                                                                   tabsetPanel(id = "data",
                                                                               #### —— STEP 1: Find Data####
                                                                               tabPanel("Product Catalog", value = "find",
@@ -123,7 +123,7 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                               ),
                                                                               #### —— STEP 2: Download Data####
                                                                               tabPanel("Product Download",  value = "download",
-                                                                                       awesomeRadio(inputId = "NEON_download_type", label = tags$h5("Download method"), choices = list("General" = "general", "Specific" = "specific", "AOP" = "AOP","Manual" = "manual"), inline = TRUE, checkbox = TRUE),
+                                                                                       awesomeRadio(inputId = "NEON_download_type", label = tags$h5("Download method"), choices = list("General" = "general", "Specific" = "specific", "AOP" = "AOP"), inline = TRUE, checkbox = TRUE),
                                                                                        conditionalPanel("input.NEON_download_type == 'general'",
                                                                                                         includeMarkdown('Rmd/NEON_download_general.Rmd'),
                                                                                                         textInput(inputId = "dpID_general", label = "Product ID"),
@@ -140,7 +140,7 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                                         actionButton(inputId = "download_NEON_general", label = "Download Items"),
                                                                                                         disabled(downloadButton(outputId = "transfer_NEON_general", label = "Transfer Downloads"))
                                                                                        ),
-                                                                                       conditionalPanel("input.NEON_download_type == 'specific'",
+                                                                                       disabled(conditionalPanel("input.NEON_download_type == 'specific'",
                                                                                                         includeMarkdown('Rmd/NEON_download_specific.Rmd'),
                                                                                                         textInput(inputId = "dpID_specific", label = "Product ID"),
                                                                                                         selectInput(inputId = "location_NEON_specific", label = "Field Site", choices = FieldSite_abbs),
@@ -151,8 +151,8 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                                         includeMarkdown('Rmd/NEON_download_message.Rmd'),
                                                                                                         actionButton(inputId = "download_NEON_specific", label = "Download items"),
                                                                                                         disabled(downloadButton(outputId = "transfer_NEON_specific", label = "Transfer Downloads"))
-                                                                                       ),
-                                                                                       conditionalPanel("input.NEON_download_type == 'AOP'",
+                                                                                       )),
+                                                                                       disabled(conditionalPanel("input.NEON_download_type == 'AOP'",
                                                                                                         includeMarkdown('Rmd/NEON_download_AOP.Rmd'),
                                                                                                         textInput(inputId = "dpID_AOP", label = "Product ID"),
                                                                                                         tags$b("Is AOP?"),
@@ -164,15 +164,12 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                                                          actionLink(inputId = "get_AOP_size", label = "Calculate size"),
                                                                                                                          verbatimTextOutput(outputId = "AOP_size", placeholder = TRUE)),
                                                                                                         actionButton(inputId = "download_NEON_AOP", label = "Download items")
-                                                                                       ),
-                                                                                       conditionalPanel("input.NEON_download_type == 'manual'",
-                                                                                                        includeMarkdown('Rmd/NEON_download_manual.Rmd')
-                                                                                       )
+                                                                                       ))
                                                                               )
                                                                   )
                                                          ),
                                                          #### — MAP FEATURES ####
-                                                         tabPanel(title = tags$h5("Map"), value = "filter",
+                                                         tabPanel(title = tags$h5("Map Manager"), value = "filter",
                                                                   includeMarkdown('Rmd/NEON_map.Rmd'),
                                                                   radioButtons(inputId = "map_features", label = "Map feature:", choices = list("Field Sites"= "fieldsites", "Domains" = "domains", "Flight Boxes" = "flightpath"), inline = TRUE),
                                                                   conditionalPanel("input.map_features == 'fieldsites'",
