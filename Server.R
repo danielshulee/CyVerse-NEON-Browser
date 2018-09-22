@@ -1150,22 +1150,29 @@ function(input, output, session) {
       enable(id = "download_NEON_general")
     } else {
       removeNotification(id = "download")
-      showNotification(ui = "Stacking files…", duration = NULL, id = "stack", type = "message")
-      stack <- try(stackByTable(filepath = paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general()), folder = TRUE), silent = TRUE)
-      if (class(stack) == "try-error") {
-        removeNotification(id = "stack")
-        sendSweetAlert(session, title = "Stack failed", text = "Something went wrong in the stacking process. Please submit an issue on Github.", type = "error")
-        enable(id = "download_NEON_general")
-      } else {
-        removeNotification(id = "stack")
-        file.rename(from = paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general(), "/stackedFiles"), to = paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general(), "/", Folder_path_general()))
-        assign(x = "name", value = Folder_path_general(), envir = .GlobalEnv)
+      if (Product_ID_general() == "DP4.00200.001") {
         setwd(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general(), "/"))
-        showNotification(ui = "Transferring as zip…", duration = NULL, id = "zip", type = "message")
-        zip(zipfile = paste0("NEON_", Field_Site_general(), "_", Product_ID_middle()), files = name)
-        removeNotification(id = "zip")
+        file.rename(from = list.files(), to = paste0("NEON_", Field_Site_general(), "_", Product_ID_middle(), ".zip"))
         enable(id = "transfer_NEON_general")
         runjs("document.getElementById('transfer_NEON_general').click();")
+      }
+      else {
+        showNotification(ui = "Stacking files…", duration = NULL, id = "stack", type = "message")
+        stack <- try(stackByTable(filepath = paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general()), folder = TRUE), silent = TRUE)
+        if (class(stack) == "try-error") {
+          removeNotification(id = "stack")
+          sendSweetAlert(session, title = "Stack failed", text = "Something went wrong in the stacking process. Please submit an issue on Github.", type = "error")
+          enable(id = "download_NEON_general")
+        } else {
+          removeNotification(id = "stack")
+          file.rename(from = paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general(), "/stackedFiles"), to = paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general(), "/", Folder_path_general()))
+          setwd(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general(), "/"))
+          showNotification(ui = "Transferring as zip…", duration = NULL, id = "zip", type = "message")
+          zip(zipfile = paste0("NEON_", Field_Site_general(), "_", Product_ID_middle()), files = Folder_path_general())
+          removeNotification(id = "zip")
+          enable(id = "transfer_NEON_general")
+          runjs("document.getElementById('transfer_NEON_general').click();")
+        }
       }
     }
   }
