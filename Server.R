@@ -1273,23 +1273,23 @@ function(input, output, session) {
                            }
                          } else {
                            dir.create(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()), recursive = TRUE)
-                           downloadFunction_single()
+                           downloadFunction_specific()
                          }
                        } else {
                          dir.create(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()), recursive = TRUE)
-                         downloadFunction_single()
+                         downloadFunction_specific()
                        }
                      } else {
                        dir.create(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()), recursive = TRUE)
-                       downloadFunction_single()
+                       downloadFunction_specific()
                      }
                    } else {
                      dir.create(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()), recursive = TRUE)
-                     downloadFunction_single()
+                     downloadFunction_specific()
                    }
                  } else {
                    dir.create(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()), recursive = TRUE)
-                   downloadFunction_single()
+                   downloadFunction_specific()
                  }
                  updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "list")
                  updateRadioButtons(session, inputId = "NEONbrowsingstep_product", selected = "list")
