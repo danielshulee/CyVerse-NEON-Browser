@@ -1152,7 +1152,7 @@ function(input, output, session) {
       removeNotification(id = "download")
       if (Product_ID_general() == "DP4.00200.001") {
         setwd(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general(), "/"))
-        unzipEddy(site = Field_Site_general)
+        unzipEddy(site = Field_Site_general())
         removeNotification(id = "zip")
         enable(id = "transfer_NEON_general")
         runjs("document.getElementById('transfer_NEON_general').click();")
