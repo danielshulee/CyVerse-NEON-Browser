@@ -152,7 +152,7 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                                                          selectInput(inputId = "package_type_specific", label = "Package Type", choices = c("basic", "expanded"))),
                                                                                                         includeMarkdown('Rmd/NEON_download_message.Rmd'),
                                                                                                         actionButton(inputId = "download_NEON_specific", label = "Download items"),
-                                                                                                        disabled(downloadButton(outputId = "transfer_NEON_specific", label = "Transfer Downloads"))
+                                                                                                        downloadButton(outputId = "transfer_NEON_specific", label = "Transfer Downloads")
                                                                                        )),
                                                                                        disabled(conditionalPanel("input.NEON_download_type == 'AOP'",
                                                                                                         includeMarkdown('Rmd/NEON_download_AOP.Rmd'),
