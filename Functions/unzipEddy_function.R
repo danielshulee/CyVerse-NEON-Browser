@@ -1,4 +1,4 @@
-unzipEddy <- function() {
+unzipEddy <- function(site) {
   files <- list.files()
   showNotification(ui = "Transferring as zip…", duration = NULL, id = "zip", type = "message")
   for (file in files) {
@@ -6,5 +6,5 @@ unzipEddy <- function() {
     unzip(zipfile = file, exdir = date)
     unlink(file)
   }
-  zip(zipfile = paste0("NEON_", Field_Site_general(), "_", Product_ID_middle()), files = '.')
+  zip(zipfile = paste0("NEON_", site, "_00200"), files = '.')
 }
