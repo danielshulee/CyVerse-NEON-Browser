@@ -1247,7 +1247,7 @@ function(input, output, session) {
           file.rename(from = paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific(), "/stackedFiles"), to = paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific(), "/", Folder_path_specific()))
           setwd(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))
           showNotification(ui = "Transferring as zip…", duration = NULL, id = "zip", type = "message")
-          zip(zipfile = paste0("NEON_", Field_Site_specific(), "_", Product_ID_middle(), "_", Date_specific()), files = Folder_path_specific())
+          #zip(zipfile = paste0("NEON_", Field_Site_specific(), "_", Product_ID_middle(), "_", Date_specific()), files = Folder_path_specific())
           removeNotification(id = "zip")
           enable(id = "transfer_NEON_specific")
           runjs("document.getElementById('transfer_NEON_specific').click();")
