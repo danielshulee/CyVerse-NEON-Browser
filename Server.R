@@ -2,9 +2,6 @@
 function(input, output, session) {
   
   # Initialization
-  hideElement(id = "togglegeneral_site")
-  hideElement(id = "togglespecific_site")
-  hideElement(id = "toggleAOP_site")
   
   ####INTERACTIVE MAP TAB####
   
