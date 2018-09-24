@@ -1301,7 +1301,7 @@ function(input, output, session) {
       paste0(Folder_path_specific(),".zip")
     },
     content = function(file) {
-      file.copy(from = paste0("NEON_", Field_Site_specific(), "_", Specific_ID_middle, "_", Date_specific(), ".zip"), to = file)
+      file.copy(from = paste0("NEON_", Field_Site_specific(), "_", Specific_ID_middle(), "_", Date_specific(), ".zip"), to = file)
       setwd('/srv/shiny-server/NEON-Hosted-Browser')
       enable(id = "download_NEON_specific")
       disable(id = "transfer_NEON_specific")
