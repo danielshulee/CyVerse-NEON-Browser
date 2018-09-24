@@ -1247,7 +1247,7 @@ function(input, output, session) {
           file.rename(from = paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific(), "/stackedFiles"), to = paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific(), "/", Folder_path_specific()))
           setwd(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))
           showNotification(ui = "Transferring as zip…", duration = NULL, id = "zip", type = "message")
-          zip(zipfile = paste0("NEON_", Field_Site_specific(), "_", Product_ID_middle(), "_", Date_specific()), files = Folder_path_specific())
+          zip(zipfile = paste0("NEON_", Field_Site_specific(), "_", Product_ID_specific(), "_", Date_specific()), files = Folder_path_specific())
           removeNotification(id = "zip")
           enable(id = "transfer_NEON_specific")
           runjs("document.getElementById('transfer_NEON_specific').click();")
@@ -1300,7 +1300,7 @@ function(input, output, session) {
       paste0(Folder_path_specific(),".zip")
     },
     content = function(file) {
-      file.copy(from = paste0("NEON_", Field_Site_specific(), "_", Product_ID_middle(), "_", Date_specific(), ".zip"), to = file)
+      file.copy(from = paste0("NEON_", Field_Site_specific(), "_", Product_ID_specific(), "_", Date_specific(), ".zip"), to = file)
       setwd('/srv/shiny-server/NEON-Hosted-Browser')
       enable(id = "download_NEON_specific")
       disable(id = "transfer_NEON_specific")
@@ -1375,7 +1375,7 @@ function(input, output, session) {
   #Text for troublshooting
   output$text_me <- renderText(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))
   #Text for troublshooting 2
-  output$text_me_two <- renderText(paste0("NEON_", Field_Site_specific(), "_", Product_ID_middle(), "_", Date_specific(), "||", Folder_path_specific()))
+  output$text_me_two <- renderText(paste0("NEON_", Field_Site_specific(), "_", Product_ID_specific(), "_", Date_specific(), "||", Folder_path_specific()))
   #Table for troubleshooting
   #output$table_me <- shiny::renderDataTable()
 }
