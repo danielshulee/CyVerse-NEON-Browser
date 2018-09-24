@@ -142,7 +142,7 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                                         actionButton(inputId = "download_NEON_general", label = "Download Items"),
                                                                                                         disabled(downloadButton(outputId = "transfer_NEON_general", label = "Transfer Downloads"))
                                                                                        ),
-                                                                                       disabled(
+                                                                                      # disabled(
                                                                                        conditionalPanel("input.NEON_download_type == 'specific'",
                                                                                                         includeMarkdown('Rmd/NEON_download_specific.Rmd'),
                                                                                                         textInput(inputId = "dpID_specific", label = "Product ID"),
@@ -154,7 +154,7 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                                         includeMarkdown('Rmd/NEON_download_message.Rmd'),
                                                                                                         actionButton(inputId = "download_NEON_specific", label = "Download items"),
                                                                                                         disabled(downloadButton(outputId = "transfer_NEON_specific", label = "Transfer Downloads"))
-                                                                                       )
+                                                                                      # )
                                                                                        ),
                                                                                        disabled(conditionalPanel("input.NEON_download_type == 'AOP'",
                                                                                                         includeMarkdown('Rmd/NEON_download_AOP.Rmd'),

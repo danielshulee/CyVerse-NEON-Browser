@@ -1373,9 +1373,9 @@ function(input, output, session) {
   ####FOR ME TAB####
   
   #Text for troublshooting
-  output$text_me <- renderText("")
+  output$text_me <- renderText(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))
   #Text for troublshooting 2
-  output$text_me_two <- renderText("")
+  output$text_me_two <- renderText(paste0("NEON_", Field_Site_specific(), "_", Product_ID_middle(), "_", Date_specific(), "||", Folder_path_specific()))
   #Table for troubleshooting
   #output$table_me <- shiny::renderDataTable()
 }
