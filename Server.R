@@ -1090,9 +1090,10 @@ function(input, output, session) {
   ####— NEON: Step 2- Download Data####
   ####—— Variables####
   Product_ID_general <- reactive(req(gsub(pattern = " ", replacement = "", x = input$dpID_general)))
-  Product_ID_middle <- reactive(req(strsplit(Product_ID_general(), "[.]")[[1]][2]))
-  Folder_general <- reactive(req(paste0("filesToStack", Product_ID_middle())))
+  General_ID_middle <- reactive(req(strsplit(Product_ID_general(), "[.]")[[1]][2]))
+  Folder_general <- reactive(req(paste0("filesToStack", General_ID_middle())))
   Product_ID_specific <- reactive(req(gsub(pattern = " ", replacement = "", x = input$dpID_specific)))
+  Specific_ID_middle <- reactive(req(strsplit(Product_ID_specific(), "[.]")[[1]][2]))
   Product_ID_AOP <- reactive(req(gsub(pattern = " ", replacement = "", x = input$dpID_AOP)))
   Field_Site_general <- reactive(req(input$location_NEON_general))
   Field_Site_specific <- reactive(req(input$location_NEON_specific))
@@ -1164,7 +1165,7 @@ function(input, output, session) {
           file.rename(from = paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general(), "/stackedFiles"), to = paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general(), "/", Folder_path_general()))
           setwd(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general(), "/"))
           showNotification(ui = "Transferring as zip…", duration = NULL, id = "zip", type = "message")
-          zip(zipfile = paste0("NEON_", Field_Site_general(), "_", Product_ID_middle()), files = Folder_path_general())
+          zip(zipfile = paste0("NEON_", Field_Site_general(), "_", General_ID_middle()), files = Folder_path_general())
           removeNotification(id = "zip")
           enable(id = "transfer_NEON_general")
           runjs("document.getElementById('transfer_NEON_general').click();")
@@ -1179,7 +1180,7 @@ function(input, output, session) {
                    if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/"))) {
                      if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general()))) {
                        if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general()))) {
-                         if (sum(grepl(paste0("NEON_", Field_Site_general(), "_", Product_ID_middle(), ".zip"), list.files(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general()))))) {
+                         if (sum(grepl(paste0("NEON_", Field_Site_general(), "_", General_ID_middle(), ".zip"), list.files(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general()))))) {
                            setwd(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general(), "/"))
                            disable(id = "download_NEON_general")
                            enable(id = "transfer_NEON_general")
@@ -1212,7 +1213,7 @@ function(input, output, session) {
       paste0(Folder_path_general(),".zip")
     },
     content = function(file) {
-      file.copy(from = paste0("NEON_", Field_Site_general(), "_", Product_ID_middle(), ".zip"), to = file)
+      file.copy(from = paste0("NEON_", Field_Site_general(), "_", General_ID_middle(), ".zip"), to = file)
       setwd('/srv/shiny-server/NEON-Hosted-Browser')
       enable(id = "download_NEON_general")
       disable(id = "transfer_NEON_general")
@@ -1247,7 +1248,7 @@ function(input, output, session) {
           file.rename(from = paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific(), "/stackedFiles"), to = paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific(), "/", Folder_path_specific()))
           setwd(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))
           showNotification(ui = "Transferring as zip…", duration = NULL, id = "zip", type = "message")
-          zip(zipfile = paste0("NEON_", Field_Site_specific(), "_", Product_ID_specific(), "_", Date_specific()), files = Folder_path_specific())
+          zip(zipfile = paste0("NEON_", Field_Site_specific(), "_", Specific_ID_middle(), "_", Date_specific()), files = Folder_path_specific())
           removeNotification(id = "zip")
           enable(id = "transfer_NEON_specific")
           runjs("document.getElementById('transfer_NEON_specific').click();")
@@ -1262,7 +1263,7 @@ function(input, output, session) {
                      if (dir.exists(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/"))) {
                        if (dir.exists(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific()))) {
                          if (dir.exists(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))) {
-                           if (sum(grepl(paste0("NEON_", Field_Site_specific(), "_", Product_ID_middle(), "_", Date_specific(), ".zip"), list.files(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))))) {
+                           if (sum(grepl(paste0("NEON_", Field_Site_specific(), "_", General_ID_middle(), "_", Date_specific(), ".zip"), list.files(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))))) {
                              setwd(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))
                              disable(id = "download_NEON_specific")
                              enable(id = "transfer_NEON_specific")
@@ -1300,7 +1301,7 @@ function(input, output, session) {
       paste0(Folder_path_specific(),".zip")
     },
     content = function(file) {
-      file.copy(from = paste0("NEON_", Field_Site_specific(), "_", Product_ID_specific(), "_", Date_specific(), ".zip"), to = file)
+      file.copy(from = paste0("NEON_", Field_Site_specific(), "_", Specific_ID_middle, "_", Date_specific(), ".zip"), to = file)
       setwd('/srv/shiny-server/NEON-Hosted-Browser')
       enable(id = "download_NEON_specific")
       disable(id = "transfer_NEON_specific")
@@ -1375,7 +1376,7 @@ function(input, output, session) {
   #Text for troublshooting
   output$text_me <- renderText(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))
   #Text for troublshooting 2
-  output$text_me_two <- renderText(paste0("NEON_", Field_Site_specific(), "_", Product_ID_specific(), "_", Date_specific(), "||", Folder_path_specific()))
+  output$text_me_two <- renderText(paste0("NEON_", Field_Site_specific(), "_", Specific_ID_middle(), "_", Date_specific(), "||", Folder_path_specific()))
   #Table for troubleshooting
   #output$table_me <- shiny::renderDataTable()
 }
