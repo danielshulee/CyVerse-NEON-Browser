@@ -2,7 +2,8 @@
 function(input, output, session) {
   
   # Initialization
-  
+  source('Functions/datesTable_function.R')
+    
   ####INTERACTIVE MAP TAB####
   
   # Reactive value for layer control
@@ -707,7 +708,6 @@ function(input, output, session) {
                                                          yes = NULL,
                                                          no = NEONproductinfo_site()$productRemarks)))
   output$NEONproducttable_site <- renderDT({
-    source('Functions/datesTable_function.R')
     dates <- if (length(NEONproductinfo_site()$siteCodes) == 0) {
       NA
     } else {
