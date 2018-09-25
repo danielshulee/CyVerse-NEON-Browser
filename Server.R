@@ -2,7 +2,8 @@
 function(input, output, session) {
   
   # Initialization
-  
+  source('Functions/datesTable_function.R')
+    
   ####INTERACTIVE MAP TAB####
   
   # Reactive value for layer control
