@@ -1110,6 +1110,8 @@ function(input, output, session) {
     } else {
       removeNotification(id = "download")
       if (Product_ID_specific() == "DP4.00200.001") {
+        setwd(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))
+        file.rename(from = list.files(), to = paste0("NEON_", Field_Site_specific(), "_", Specific_ID_middle(), "_", Date_specific(), ".zip"))
         enable(id = "transfer_NEON_specific")
         runjs("document.getElementById('transfer_NEON_specific').click();")
       } else {
