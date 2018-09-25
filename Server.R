@@ -707,6 +707,7 @@ function(input, output, session) {
                                                          yes = NULL,
                                                          no = NEONproductinfo_site()$productRemarks)))
   output$NEONproducttable_site <- renderDT({
+    source('Functions/datesTable_function.R')
     dates <- if (length(NEONproductinfo_site()$siteCodes) == 0) {
       NA
     } else {
