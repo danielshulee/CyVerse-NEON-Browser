@@ -17,6 +17,7 @@ source('Functions/filter_site_function.R')
 source('Functions/keyword_lists_function.R')
 source('Functions/getProductSize_function.R')
 source('Functions/unzipEddy_function.R')
+source('Functions/datesTable_function.R')
 
 ####———MAP DATA———####
 
