@@ -1294,7 +1294,7 @@ function(input, output, session) {
   # Download
   observeEvent(eventExpr = input$download_NEON_AOP,
                handlerExpr = {
-                 if (is_AOP() != "Yes") {
+                 if (is_AOP() != "YES") {
                    sendSweetAlert(session, title = "Download failed", text = "Please choose an AOP product", type = 'error')
                  } else {
                    if (dir.exists(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP()))) {
