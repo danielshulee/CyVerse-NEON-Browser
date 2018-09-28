@@ -622,7 +622,7 @@ function(input, output, session) {
   NEONproductinfo_site <- reactive(req(filter(.data = NEONproducts_site(), productCode == NEONproductID_site())))
   # Display products: list
   output$NEONproductoptions_site <- renderDT(datatable(data.frame(unlist(NEONproductlist_site()[1]), unlist(NEONproductlist_site()[2])),
-                                                       colnames = c("Product Name", "Product Code"), rownames = FALSE, extensions = 'Scroller', class = 'cell-border stripe hover order-column',
+                                                       colnames = c("Product Name", "Product ID"), rownames = FALSE, extensions = 'Scroller', class = 'cell-border stripe hover order-column',
                                                        options = list(dom = 'tlfipr',
                                                                       lengthMenu = c(10,25,50),
                                                                       pageLength = 10,
@@ -1242,7 +1242,7 @@ function(input, output, session) {
                    } else {
                      total_size <- 0
                      for (i in c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")) {
-                       data <- nneo_data(product_code = Product_ID_AOP(), site_code = Field_Site_AOP(), year_month = paste0(Year_AOP(), "-", i))$data$files
+                       data <- try(nneo_data(product_code = Product_ID_AOP(), site_code = Field_Site_AOP(), year_month = paste0(Year_AOP(), "-", i))$data$files)
                        size <- as.numeric(data$size)
                        total_size <- total_size + sum(size)
                      }
@@ -1258,18 +1258,6 @@ function(input, output, session) {
                      removeNotification(id = "calculation_AOP")
                      output$AOP_size <- renderPrint(total_size)
                    }
-                 }
-               })
-  observeEvent(eventExpr = input$download_NEON_AOP,
-               handlerExpr = {
-                 showNotification(ui = "Download in progess…", id = "download_AOP", type = "message")
-                 download <- try(byFileAOP(dpID = Product_ID_AOP(), site = Field_Site_AOP(), year = Year_AOP(), check.size = FALSE, savepath = '..'), silent = TRUE)
-                 if (class(download) == "try-error") {
-                   removeNotification("download_AOP")
-                   sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to the data package you tried to obtain or the neonUtlities package used to pull data. Read the error message: ", strsplit(download, ":")[[1]][2]), type = 'error')
-                 } else {
-                   removeNotification("download_AOP")
-                   sendSweetAlert(session, title = "File downloaded", text = "Check the 'NEON Download' directory. Go to step 2 to unzip files and make them more accesible.", type = 'success')
                  }
                })
   # Download Function
