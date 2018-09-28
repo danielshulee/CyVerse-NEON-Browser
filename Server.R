@@ -1020,6 +1020,7 @@ function(input, output, session) {
   Product_ID_specific <- reactive(req(gsub(pattern = " ", replacement = "", x = input$dpID_specific)))
   Specific_ID_middle <- reactive(req(strsplit(Product_ID_specific(), "[.]")[[1]][2]))
   Product_ID_AOP <- reactive(req(gsub(pattern = " ", replacement = "", x = input$dpID_AOP)))
+  AOP_ID_middle <- reactive(req(strsplit(Product_ID_AOP(), "[.]")[[1]][2]))
   Field_Site_general <- reactive(req(input$location_NEON_general))
   Field_Site_specific <- reactive(req(input$location_NEON_specific))
   Field_Site_AOP <- reactive(req(input$location_NEON_AOP))
@@ -1029,9 +1030,9 @@ function(input, output, session) {
   Date_specific_parts <- reactive(req(strsplit(Date_specific_long(), "-")[[1]]))
   Date_specific <- reactive(req(paste0(Date_specific_parts()[1], "-", Date_specific_parts()[2])))
   Year_AOP <- reactive(req(strsplit(as.character(input$year_AOP), "-")[[1]][1]))
-  Current_date <- reactivePoll(intervalMillis = 10000, session, checkFunc = Sys.Date, valueFunc = Sys.Date)
   Folder_path_general <- reactive(req(paste0("NEON_", Field_Site_general(), "_", Product_ID_general())))
   Folder_path_specific <- reactive(req(paste0("NEON_", Field_Site_specific(), "_", Product_ID_specific(), "_", Date_specific())))
+  Folder_path_AOP <- reactive(req(paste0("NEON_", Field_Site_AOP(), "_", Product_ID_AOP(), "_", Year_AOP())))
   
   ####—— Download NEON data: general ####
   # Calculate Download Size
@@ -1101,8 +1102,6 @@ function(input, output, session) {
   # Download
   observeEvent(eventExpr = input$download_NEON_general, ignoreInit = TRUE,
                handlerExpr = {
-                 if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/"))) {
-                   if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/"))) {
                      if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general()))) {
                        if (dir.exists(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general()))) {
                          if (sum(grepl(paste0("NEON_", Field_Site_general(), "_", General_ID_middle(), ".zip"), list.files(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general()))))) {
@@ -1121,18 +1120,11 @@ function(input, output, session) {
                        dir.create(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general()), recursive = TRUE)
                        downloadFunction_general()
                      }
-                   } else {
-                     dir.create(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general()), recursive = TRUE)
-                     downloadFunction_general()
-                   }
-                 } else {
-                   dir.create(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general()), recursive = TRUE)
-                   downloadFunction_general()
-                 }
                  updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "list")
                  updateRadioButtons(session, inputId = "NEONbrowsingstep_product", selected = "list")
                  updateSelectInput(session, inputId = "package_type_general", selected = "basic")
                })
+  # Transfer
   output$transfer_NEON_general <- downloadHandler(
     filename = function() {
       paste0(Folder_path_general(),".zip")
@@ -1183,11 +1175,9 @@ function(input, output, session) {
       }
     }
   }
+  # Download
   observeEvent(eventExpr = input$download_NEON_specific, ignoreInit = TRUE,
                handlerExpr = {
-                 if (dir.exists(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/"))) {
-                   if (dir.exists(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/"))) {
-                     if (dir.exists(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/"))) {
                        if (dir.exists(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific()))) {
                          if (dir.exists(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))) {
                            if (sum(grepl(paste0("NEON_", Field_Site_specific(), "_", Specific_ID_middle(), "_", Date_specific(), ".zip"), list.files(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))))) {
@@ -1203,26 +1193,11 @@ function(input, output, session) {
                            dir.create(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()), recursive = TRUE)
                            downloadFunction_specific()
                          }
-                       } else {
-                         dir.create(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()), recursive = TRUE)
-                         downloadFunction_specific()
                        }
-                     } else {
-                       dir.create(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()), recursive = TRUE)
-                       downloadFunction_specific()
-                     }
-                   } else {
-                     dir.create(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()), recursive = TRUE)
-                     downloadFunction_specific()
-                   }
-                 } else {
-                   dir.create(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()), recursive = TRUE)
-                   downloadFunction_specific()
-                 }
                  updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "list")
                  updateRadioButtons(session, inputId = "NEONbrowsingstep_product", selected = "list")
-               }
-  )
+               })
+  # Transfer
   output$transfer_NEON_specific <- downloadHandler(
     filename = function() {
       paste0(Folder_path_specific(),".zip")
@@ -1297,6 +1272,62 @@ function(input, output, session) {
                    sendSweetAlert(session, title = "File downloaded", text = "Check the 'NEON Download' directory. Go to step 2 to unzip files and make them more accesible.", type = 'success')
                  }
                })
+  # Download Function
+  downloadFunction_AOP <- function() {
+    disable(id = "download_NEON_AOP")
+    disable(id = "transfer_NEON_AOP")
+    showNotification(ui = "Downloading files— This may take a long time", duration = NULL, id = "download", type = "message")
+    download <- try(byFileAOP(dpID = Product_ID_AOP(), site = Field_Site_AOP(), year = Year_AOP(), check.size = FALSE, savepath = paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP())), silent = TRUE)
+    if (class(download) == "try-error") {
+      removeNotification(id = "download")
+      sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to a faulty request or a problem with the product itself. Read the error code message: ", strsplit(download, ":")[[1]][-1]), type = 'error')
+      enable(id = "download_NEON_AOP")
+    } else {
+      setwd(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))
+      showNotification(ui = "Transferring as zip…", duration = NULL, id = "zip", type = "message")
+      zip(zipfile = paste0("NEON_", Field_Site_AOP(), "_", AOP_ID_middle(), "_", Year_AOP()), files = Product_ID_AOP())
+      removeNotification(id = "zip")
+      enable(id = "transfer_NEON_AOP")
+      runjs("document.getElementById('transfer_NEON_AOP').click();")
+    }
+  }
+  # Download
+  observeEvent(eventExpr = input$download_NEON_AOP,
+               handlerExpr = {
+                 if (is_AOP() != "Yes") {
+                   sendSweetAlert(session, title = "Download failed", text = "Please choose an AOP product", type = 'error')
+                 } else {
+                   if (dir.exists(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP()))) {
+                     if (dir.exists(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))) {
+                       if (sum(grepl(paste0("NEON_", Field_Site_AOP(), "_", AOP_ID_middle(), "_", Year_AOP(), ".zip"), list.files(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))))) {
+                         setwd(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))
+                         disable(id = "download_NEON_AOP")
+                         enable(id = "transfer_NEON_AOP")
+                         runjs("document.getElementById('transfer_NEON_AOP').click();")
+                       } else {
+                         unlink(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP(), "/*"))
+                         downloadFunction_AOP()
+                       }
+                     }
+                   } else {
+                     dir.create(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()), recursive = TRUE)
+                     downloadFunction_AOP()
+                   }
+                 }
+               })
+  # Transfer
+  output$transfer_NEON_AOP <- downloadHandler(
+    filename = function() {
+      paste0(Folder_path_AOP(),".zip")
+    },
+    content = function(file) {
+      file.copy(from = paste0("NEON_", Field_Site_AOP(), "_", AOP_ID_middle(), "_", Year_AOP(), ".zip"), to = file)
+      setwd('/srv/shiny-server/NEON-Hosted-Browser')
+      enable(id = "download_NEON_AOP")
+      disable(id = "transfer_NEON_AOP")
+      showNotification(ui = "Download Complete!", type = "message")
+    },
+    contentType = "application/zip")
   
   ####FOR ME TAB####
   
