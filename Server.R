@@ -1146,7 +1146,7 @@ function(input, output, session) {
     download <- try(getPackage(dpID = Product_ID_specific(), site_code = Field_Site_specific(), year_month = Date_specific(), package = Package_type_specific(), savepath = paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific())), silent = TRUE)
     if (class(download) == "try-error") {
       removeNotification(id = "download")
-      sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to a faulty request or a problem with the product itself. Read the error code message: ", strsplit(download, ":")[[1]][-1]), type = 'error')
+      sendSweetAlert(session, title = "Download failed", text = "This could be due to a faulty request or a problem with the product itself.", type = 'error')
       enable(id = "download_NEON_specific")
     } else {
       removeNotification(id = "download")
