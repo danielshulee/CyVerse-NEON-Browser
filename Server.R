@@ -1242,9 +1242,11 @@ function(input, output, session) {
                    } else {
                      total_size <- 0
                      for (i in c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")) {
-                       data <- try(nneo_data(product_code = Product_ID_AOP(), site_code = Field_Site_AOP(), year_month = paste0(Year_AOP(), "-", i))$data$files)
-                       size <- as.numeric(data$size)
-                       total_size <- total_size + sum(size)
+                       data <- try(nneo_data(product_code = Product_ID_AOP(), site_code = Field_Site_AOP(), year_month = paste0(Year_AOP(), "-", i))$data$files, silent = TRUE)
+                       if (class(data) != "try-error") {
+                         size <- as.numeric(data$size)
+                         total_size <- total_size + sum(size)
+                       }
                      }
                      if (total_size < 10^9 & total_size != 0) {
                        size_mb <- total_size * 10^-6
@@ -1264,7 +1266,7 @@ function(input, output, session) {
   downloadFunction_AOP <- function() {
     disable(id = "download_NEON_AOP")
     disable(id = "transfer_NEON_AOP")
-    showNotification(ui = "Downloading files— This may take a long time", duration = NULL, id = "download", type = "message")
+    showNotification(ui = "Downloading files (This may take a long time)…", duration = NULL, id = "download", type = "message")
     download <- try(byFileAOP(dpID = Product_ID_AOP(), site = Field_Site_AOP(), year = Year_AOP(), check.size = FALSE, savepath = paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP())), silent = TRUE)
     if (class(download) == "try-error") {
       removeNotification(id = "download")
@@ -1272,8 +1274,9 @@ function(input, output, session) {
       enable(id = "download_NEON_AOP")
     } else {
       setwd(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))
+      file.rename(from = Product_ID_AOP(), to = Folder_path_AOP())
       showNotification(ui = "Transferring as zip…", duration = NULL, id = "zip", type = "message")
-      zip(zipfile = paste0("NEON_", Field_Site_AOP(), "_", AOP_ID_middle(), "_", Year_AOP()), files = Product_ID_AOP())
+      zip(zipfile = paste0("NEON_", Field_Site_AOP(), "_", AOP_ID_middle(), "_", Year_AOP()), files = Folder_path_AOP())
       removeNotification(id = "zip")
       enable(id = "transfer_NEON_AOP")
       runjs("document.getElementById('transfer_NEON_AOP').click();")
