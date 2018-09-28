@@ -1178,22 +1178,22 @@ function(input, output, session) {
   # Download
   observeEvent(eventExpr = input$download_NEON_specific, ignoreInit = TRUE,
                handlerExpr = {
-                       if (dir.exists(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific()))) {
-                         if (dir.exists(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))) {
-                           if (sum(grepl(paste0("NEON_", Field_Site_specific(), "_", Specific_ID_middle(), "_", Date_specific(), ".zip"), list.files(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))))) {
-                             setwd(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))
-                             disable(id = "download_NEON_specific")
-                             enable(id = "transfer_NEON_specific")
-                             runjs("document.getElementById('transfer_NEON_specific').click();")
-                           } else {
-                             unlink(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific(), "/*"))
-                             downloadFunction_specific()
-                           }
-                         } else {
-                           dir.create(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()), recursive = TRUE)
-                           downloadFunction_specific()
-                         }
-                       }
+                 if (dir.exists(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific()))) {
+                   if (dir.exists(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))) {
+                     if (sum(grepl(paste0("NEON_", Field_Site_specific(), "_", Specific_ID_middle(), "_", Date_specific(), ".zip"), list.files(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))))) {
+                       setwd(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))
+                       disable(id = "download_NEON_specific")
+                       enable(id = "transfer_NEON_specific")
+                       runjs("document.getElementById('transfer_NEON_specific').click();")
+                     } else {
+                       unlink(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific(), "/*"))
+                       downloadFunction_specific()
+                     }
+                   }
+                 } else {
+                   dir.create(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()), recursive = TRUE)
+                   downloadFunction_specific()
+                 }
                  updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "list")
                  updateRadioButtons(session, inputId = "NEONbrowsingstep_product", selected = "list")
                })
