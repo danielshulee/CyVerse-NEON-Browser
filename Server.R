@@ -1071,7 +1071,7 @@ function(input, output, session) {
       removeNotification(id = "download")
       sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to a faulty request or a problem with the product itself. Read the error code message: ", strsplit(download, ":")[[1]][-1]), type = 'error')
       enable(id = "download_NEON_general")
-      unlink(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general()), recursive = TRUE)
+      unlink(paste0("/home/danielslee/NEON/", Field_Site_general(), "/", Product_ID_general()), recursive = TRUE, force = TRUE)
     } else {
       removeNotification(id = "download")
       if (Product_ID_general() == "DP4.00200.001") {
@@ -1149,7 +1149,7 @@ function(input, output, session) {
       removeNotification(id = "download")
       sendSweetAlert(session, title = "Download failed", text = "This could be due to a faulty request or a problem with the product itself.", type = 'error')
       enable(id = "download_NEON_specific")
-      unlink(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()), recursive = TRUE)
+      unlink(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific()), recursive = TRUE, force = TRUE)
     } else {
       removeNotification(id = "download")
       if (Product_ID_specific() == "DP4.00200.001") {
