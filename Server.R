@@ -1344,9 +1344,9 @@ function(input, output, session) {
   ####FOR ME TAB####
   
   #Text for troublshooting
-  output$text_me <- renderText(input$NEONproducttable_site_cells_selected)
+  output$text_me <- renderText(input$confirm_AOP == TRUE)
   #Text for troublshooting 2
-  output$text_me_two <- renderText(input$NEONproducttable_site_cells_selected[1])
+  output$text_me_two <- renderText("")
   #Table for troubleshooting
   #output$table_me <- shiny::renderDataTable()
 }
