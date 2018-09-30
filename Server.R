@@ -1301,26 +1301,29 @@ function(input, output, session) {
     }
   }
   # Download
-  observeEvent(eventExpr = input$download_NEON_AOP,
+  observeEvent(eventExpr = input$download_NEON_AOP, handlerExpr = confirmSweetAlert(session, inputId = "confirm_AOP", title = "Confirm Download", text = "This download is very large and will take a long time. Make sure to calculate download size before proceeding.", type = "info", closeOnClickOutside = TRUE))
+  observeEvent(eventExpr = input$confirm_AOP,
                handlerExpr = {
-                 if (is_AOP() != "YES") {
-                   sendSweetAlert(session, title = "Download failed", text = "Please choose an AOP product", type = 'error')
-                 } else {
-                   if (dir.exists(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP()))) {
-                     if (dir.exists(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))) {
-                       if (sum(grepl(paste0("NEON_", Field_Site_AOP(), "_", AOP_ID_middle(), "_", Year_AOP(), ".zip"), list.files(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))))) {
-                         setwd(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))
-                         disable(id = "download_NEON_AOP")
-                         enable(id = "transfer_NEON_AOP")
-                         runjs("document.getElementById('transfer_NEON_AOP').click();")
-                       } else {
-                         unlink(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP(), "/*"))
-                         downloadFunction_AOP()
-                       }
-                     }
+                 if (input$confirm_AOP == TRUE) {
+                   if (is_AOP() != "YES") {
+                     sendSweetAlert(session, title = "Download failed", text = "Please choose an AOP product", type = 'error')
                    } else {
-                     dir.create(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()), recursive = TRUE)
-                     downloadFunction_AOP()
+                     if (dir.exists(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP()))) {
+                       if (dir.exists(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))) {
+                         if (sum(grepl(paste0("NEON_", Field_Site_AOP(), "_", AOP_ID_middle(), "_", Year_AOP(), ".zip"), list.files(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))))) {
+                           setwd(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))
+                           disable(id = "download_NEON_AOP")
+                           enable(id = "transfer_NEON_AOP")
+                           runjs("document.getElementById('transfer_NEON_AOP').click();")
+                         } else {
+                           unlink(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP(), "/*"))
+                           downloadFunction_AOP()
+                         }
+                       }
+                     } else {
+                       dir.create(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()), recursive = TRUE)
+                       downloadFunction_AOP()
+                     }
                    }
                  }
                })
