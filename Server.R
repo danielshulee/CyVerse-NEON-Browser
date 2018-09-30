@@ -34,6 +34,7 @@ function(input, output, session) {
                          overlayGroups = legend$group,
                          options = layersControlOptions(collapsed = FALSE)
         ) %>%
+        showGroup("Satellite") %>%
         # Add option for fullscreen
         leaflet.extras::addFullscreenControl(pseudoFullscreen = TRUE)
     )
@@ -1289,6 +1290,7 @@ function(input, output, session) {
       sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to a faulty request or a problem with the product itself. Read the error code message: ", strsplit(download, ":")[[1]][-1]), type = 'error')
       enable(id = "download_NEON_AOP")
     } else {
+      removeNotification(id = "download")
       setwd(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))
       file.rename(from = Product_ID_AOP(), to = Folder_path_AOP())
       showNotification(ui = "Transferring as zip…", duration = NULL, id = "zip", type = "message")
