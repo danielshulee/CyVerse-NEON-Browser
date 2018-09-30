@@ -702,6 +702,10 @@ function(input, output, session) {
                handlerExpr = {
                  updateTextInput(session, inputId = "dpID_AOP", value = input$NEONproductID_site)
                  updateSelectInput(session, inputId = "location_NEON_AOP", selected = input$NEONsite_site)
+                 if (length(input$NEONproducttable_site_cells_selected) > 0 & input$NEONproducttable_site_cells_selected[2] > 0) {
+                   month_date <- datesTable(dates = NEONproductinfo_site()$siteCodes[[1]]$availableMonths[NEONproductinfo_site()$siteCodes[[1]]$siteCode %in% input$NEONsite_site][[1]], process = "cell", cells = input$NEONproducttable_site_cells_selected)
+                   updateAirDateInput(session, inputId = "year_AOP", value = month_date)
+                 }
                  updateTabsetPanel(session, inputId = "data", selected = "download")
                  updateRadioButtons(session, inputId = "NEON_download_type", selected = "AOP")
                  updateCheckboxInput(session, inputId = "toggledownload_site", value = FALSE)
@@ -904,6 +908,10 @@ function(input, output, session) {
                handlerExpr = {
                  updateTextInput(session, inputId = "dpID_AOP", value = input$NEONproductID_product)
                  updateSelectInput(session, inputId = "location_NEON_AOP", selected = input$NEONsite_product)
+                 if (length(input$NEONproducttable_product_cells_selected) > 0 & input$NEONproducttable_product_cells_selected[2] > 0) {
+                   month_date <- datesTable(dates = NEONproductinfo_product()$siteCodes[[1]]$availableMonths[NEONproductinfo_product()$siteCodes[[1]]$siteCode %in% input$NEONsite_product][[1]], process = "cell", cells = input$NEONproducttable_product_cells_selected)
+                   updateAirDateInput(session, inputId = "year_AOP", value = month_date)
+                 }
                  updateTabsetPanel(session, inputId = "data", selected = "download")
                  updateRadioButtons(session, inputId = "NEON_download_type", selected = "AOP")
                  updateCheckboxInput(session, inputId = "toggledownload_product", value = FALSE)
