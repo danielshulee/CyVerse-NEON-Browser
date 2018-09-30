@@ -3,6 +3,9 @@ checkDownload <- function(dpID, site, year_month) {
     return(paste0(dpID, "is not a properly formatted data product ID. The correct format is DP#.#####.001", 
                sep = " "))
   }
+  if (length(year_month) == 0) {
+    return("Please enter a month.")
+  }
   data <- try(nneo_data(product_code = dpID, site_code = site, year_month = year_month)$data$files, silent = TRUE)
   if (class(data) == "try-error") {
     return(data)
