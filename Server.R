@@ -1303,7 +1303,6 @@ function(input, output, session) {
   # Download
   observeEvent(eventExpr = input$download_NEON_AOP,
                handlerExpr = {
-                 if (input$confirm_AOP == TRUE) {
                    if (is_AOP() != "YES") {
                      sendSweetAlert(session, title = "Download failed", text = "Please choose an AOP product", type = 'error')
                    } else {
@@ -1324,7 +1323,6 @@ function(input, output, session) {
                        downloadFunction_AOP()
                      }
                    }
-                 }
                })
   # Transfer
   output$transfer_NEON_AOP <- downloadHandler(
