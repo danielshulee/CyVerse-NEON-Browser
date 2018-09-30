@@ -1301,8 +1301,7 @@ function(input, output, session) {
     }
   }
   # Download
-  observeEvent(eventExpr = input$download_NEON_AOP, handlerExpr = confirmSweetAlert(session, inputId = "confirm_AOP", title = "Confirm Download", text = "This download is very large and will take a long time. Make sure to calculate download size before proceeding.", type = "info", closeOnClickOutside = TRUE))
-  observeEvent(eventExpr = input$confirm_AOP,
+  observeEvent(eventExpr = input$download_NEON_AOP,
                handlerExpr = {
                  if (input$confirm_AOP == TRUE) {
                    if (is_AOP() != "YES") {
