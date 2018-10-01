@@ -1,5 +1,5 @@
 ##### Obtain a specific instance of a data product
 
-Download files for a single NEON data product, site, and year-month combination to obtain smaller and more specific NEON datasets. This functionality requires a product ID from step 1 or the NEON <a href='http://data.neonscience.org/static/browse.html' target='_blank'>data portal</a>.
+Download files for a single NEON data product, site, and year-month. A product ID from step 1 or the NEON <a href='http://data.neonscience.org/static/browse.html' target='_blank'>data portal</a> is required.
 
-The downloads will appear in a new folder of the form **NEON\_\<site\>\_\<time range\>**, located in the **NEON Downloads** folder. These items are zipped and need to be put through step 2.
+These downloads will come unzipped and stacked, meaning that they will be already opened into folders and organized based on measurement variables (see the difference by downloading directly from NEON). Due to complications with `R Shiny`'s download system, two buttons were necesary; However, only the `Download items` button needs to be clicked, as the rest is done automatically.
