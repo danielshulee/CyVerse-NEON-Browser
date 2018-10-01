@@ -1289,6 +1289,7 @@ function(input, output, session) {
       removeNotification(id = "download")
       sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to a faulty request or a problem with the product itself. Read the error code message: ", strsplit(download, ":")[[1]][-1]), type = 'error')
       enable(id = "download_NEON_AOP")
+      unlink(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()), recursive = TRUE)
     } else {
       removeNotification(id = "download")
       setwd(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))
@@ -1308,14 +1309,18 @@ function(input, output, session) {
                  } else {
                    if (dir.exists(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP()))) {
                      if (dir.exists(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))) {
-                       if (sum(grepl(paste0("NEON_", Field_Site_AOP(), "_", AOP_ID_middle(), "_", Year_AOP(), ".zip"), list.files(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))))) {
-                         setwd(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))
-                         disable(id = "download_NEON_AOP")
-                         enable(id = "transfer_NEON_AOP")
-                         runjs("document.getElementById('transfer_NEON_AOP').click();")
+                       if () {
+                         
                        } else {
-                         unlink(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP(), "/*"))
-                         downloadFunction_AOP()
+                         if (sum(grepl(paste0("NEON_", Field_Site_AOP(), "_", AOP_ID_middle(), "_", Year_AOP(), ".zip"), list.files(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))))) {
+                           setwd(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))
+                           disable(id = "download_NEON_AOP")
+                           enable(id = "transfer_NEON_AOP")
+                           runjs("document.getElementById('transfer_NEON_AOP').click();")
+                         } else {
+                           unlink(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP(), "/*"))
+                           downloadFunction_AOP()
+                         }
                        }
                      }
                    } else {
