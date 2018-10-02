@@ -1194,17 +1194,15 @@ function(input, output, session) {
                    sendSweetAlert(session, title = "Download failed", text = check, type = 'error')
                    enable(id = "download_NEON_specific")
                  } else {
-                   if (dir.exists(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific()))) {
-                     if (dir.exists(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))) {
-                       if (sum(grepl(paste0("NEON_", Field_Site_specific(), "_", Specific_ID_middle(), "_", Date_specific(), ".zip"), list.files(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))))) {
-                         setwd(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))
-                         disable(id = "download_NEON_specific")
-                         enable(id = "transfer_NEON_specific")
-                         runjs("document.getElementById('transfer_NEON_specific').click();")
-                       } else {
-                         unlink(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific(), "/*"))
-                         downloadFunction_specific()
-                       }
+                   if (dir.exists(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))) {
+                     if (sum(grepl(paste0("NEON_", Field_Site_specific(), "_", Specific_ID_middle(), "_", Date_specific(), ".zip"), list.files(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))))) {
+                       setwd(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))
+                       disable(id = "download_NEON_specific")
+                       enable(id = "transfer_NEON_specific")
+                       runjs("document.getElementById('transfer_NEON_specific').click();")
+                     } else {
+                       unlink(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific(), "/*"))
+                       downloadFunction_specific()
                      }
                    } else {
                      dir.create(paste0("/home/danielslee/NEON_single/", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()), recursive = TRUE)
@@ -1212,6 +1210,7 @@ function(input, output, session) {
                    }
                    updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "list")
                    updateRadioButtons(session, inputId = "NEONbrowsingstep_product", selected = "list")
+                   updateSelectInput(session, inputId = "package_type_specific", selected = "basic")
                  }
                })
   # Transfer
@@ -1307,23 +1306,18 @@ function(input, output, session) {
                  if (is_AOP() != "YES") {
                    sendSweetAlert(session, title = "Download failed", text = "Please choose an AOP product", type = 'error')
                  } else {
-                   if (dir.exists(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP()))) {
-                     if (dir.exists(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))) {
-                       if (length(list.files(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))) == 0) {
-                         downloadFunction_AOP()
+                   if (dir.exists(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))) {
+                       if (sum(grepl(paste0("NEON_", Field_Site_AOP(), "_", AOP_ID_middle(), "_", Year_AOP(), ".zip"), list.files(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))))) {
+                         setwd(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))
+                         disable(id = "download_NEON_AOP")
+                         enable(id = "transfer_NEON_AOP")
+                         runjs("document.getElementById('transfer_NEON_AOP').click();")
                        } else {
-                         if (sum(grepl(paste0("NEON_", Field_Site_AOP(), "_", AOP_ID_middle(), "_", Year_AOP(), ".zip"), list.files(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))))) {
-                           setwd(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))
-                           disable(id = "download_NEON_AOP")
-                           enable(id = "transfer_NEON_AOP")
-                           runjs("document.getElementById('transfer_NEON_AOP').click();")
-                         } else {
-                           unlink(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP(), "/*"))
-                           downloadFunction_AOP()
-                         }
+                         unlink(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP(), "/*"))
+                         downloadFunction_AOP()
                        }
-                     }
-                   } else {
+                   }
+                   else {
                      dir.create(paste0("/home/danielslee/NEON_AOP/", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()), recursive = TRUE)
                      downloadFunction_AOP()
                    }
