@@ -216,7 +216,7 @@ function(input, output, session) {
                                     Subloc_tes_plots_base()$Type[i],
                                     "<br><b>Dimensions: </b>",
                                     Subloc_tes_plots_base()$Plot.Size[i]),
-                     group = "Sublocations",
+                     group = "Sub Locations",
                      layerId = Subloc_tes_plots_base()$Name[i]) %>%
           addRectangles(lng1 = geosphere::destPoint(p = c(Subloc_tes_plots_base()$Longitude[i], Subloc_tes_plots_base()$Latitude[i]), b = 225, d = 20*sqrt(2))[1],
                         lat1 = geosphere::destPoint(p = c(Subloc_tes_plots_base()$Longitude[i], Subloc_tes_plots_base()$Latitude[i]), b = 225, d = 20*sqrt(2))[2],
@@ -246,7 +246,7 @@ function(input, output, session) {
                         lat1 = geosphere::destPoint(p = c(Subloc_tes_plots_bird()$Longitude[i], Subloc_tes_plots_bird()$Latitude[i]), b = 225, d = 250*sqrt(2))[2],
                         lng2 = geosphere::destPoint(p = c(Subloc_tes_plots_bird()$Longitude[i], Subloc_tes_plots_bird()$Latitude[i]), b = 45, d = 250*sqrt(2))[1],
                         lat2 = geosphere::destPoint(p = c(Subloc_tes_plots_bird()$Longitude[i], Subloc_tes_plots_bird()$Latitude[i]), b = 45, d = 250*sqrt(2))[2],
-                        group = "Sublocations",
+                        group = "Sub Locations",
                         color = "#155AA8",
                         opacity = 1,
                         fillOpacity = 0,
@@ -279,7 +279,7 @@ function(input, output, session) {
                                     Subloc_tes_plots_mam()$Type[i],
                                     "<br><b>Dimensions: </b>",
                                     Subloc_tes_plots_mam()$Plot.Size[i]),
-                     group = "Sublocations",
+                     group = "Sub Locations",
                      layerId = Subloc_tes_plots_mam()$Name[i]) %>%
           addRectangles(lng1 = geosphere::destPoint(p = c(Subloc_tes_plots_mam()$Longitude[i], Subloc_tes_plots_mam()$Latitude[i]), b = 225, d = 45*sqrt(2))[1],
                         lat1 = geosphere::destPoint(p = c(Subloc_tes_plots_mam()$Longitude[i], Subloc_tes_plots_mam()$Latitude[i]), b = 225, d = 45*sqrt(2))[2],
@@ -313,7 +313,7 @@ function(input, output, session) {
                                     Subloc_tes_plots_mos()$Type[i],
                                     "<br><b>Dimensions: </b>",
                                     Subloc_tes_plots_mos()$Plot.Size[i]),
-                     group = "Sublocations",
+                     group = "Sub Locations",
                      layerId = Subloc_tes_plots_mos()$Name[i])
       }
     }
@@ -335,7 +335,7 @@ function(input, output, session) {
                                     Subloc_tes_plots_tick()$Type[i],
                                     "<br><b>Dimensions: </b>",
                                     Subloc_tes_plots_tick()$Plot.Size[i]),
-                     group = "Sublocations",
+                     group = "Sub Locations",
                      layerId = Subloc_tes_plots_tick()$Name[i]) %>%
           addRectangles(lng1 = geosphere::destPoint(p = c(Subloc_tes_plots_tick()$Longitude[i], Subloc_tes_plots_tick()$Latitude[i]), b = 225, d = 20*sqrt(2))[1],
                         lat1 = geosphere::destPoint(p = c(Subloc_tes_plots_tick()$Longitude[i], Subloc_tes_plots_tick()$Latitude[i]), b = 225, d = 20*sqrt(2))[2],
@@ -369,7 +369,7 @@ function(input, output, session) {
                                     Subloc_tes_plots_phe()$Type[i],
                                     "<br><b>Dimensions: </b>",
                                     Subloc_tes_plots_phe()$Plot.Size[i]),
-                     group = "Sublocations",
+                     group = "Sub Locations",
                      layerId = Subloc_tes_plots_phe()$Name[i]) %>%
           addRectangles(lng1 = geosphere::destPoint(p = c(Subloc_tes_plots_phe()$Longitude[i], Subloc_tes_plots_phe()$Latitude[i]), b = 225, d = 100*sqrt(2))[1],
                         lat1 = geosphere::destPoint(p = c(Subloc_tes_plots_phe()$Longitude[i], Subloc_tes_plots_phe()$Latitude[i]), b = 225, d = 100*sqrt(2))[2],
@@ -402,7 +402,7 @@ function(input, output, session) {
                                     Subloc_aqu_plots_well()$Description[i],
                                     "<br><b>Type: </b>",
                                     Subloc_aqu_plots_well()$`General Type`[i]),
-                     group = "Sublocations",
+                     group = "Sub Locations",
                      layerId = Subloc_aqu_plots_well()$Name[i])
       }
     } else if (!input$sublocs_well | (nrow(Subloc_aqu_plots_well()) == 0)) {
@@ -421,7 +421,7 @@ function(input, output, session) {
                                     Subloc_aqu_plots_metstn()$Description[i],
                                     "<br><b>Type: </b>",
                                     Subloc_aqu_plots_metstn()$`General Type`[i]),
-                     group = "Sublocations",
+                     group = "Sub Locations",
                      layerId = Subloc_aqu_plots_metstn()$Name[i])
       }
     } else if (!input$sublocs_metstn | (nrow(Subloc_aqu_plots_well()) == 0)) {
@@ -440,7 +440,7 @@ function(input, output, session) {
                                     Subloc_aqu_plots_sensor()$Description[i],
                                     "<br><b>Type: </b>",
                                     Subloc_aqu_plots_sensor()$`General Type`[i]),
-                     group = "Sublocations",
+                     group = "Sub Locations",
                      layerId = Subloc_aqu_plots_sensor()$Name[i])
       }
     } else if (!input$sublocs_sensor | (nrow(Subloc_aqu_plots_sensor()) == 0)) {
@@ -459,7 +459,7 @@ function(input, output, session) {
                                     Subloc_aqu_plots_gauge()$Description[i],
                                     "<br><b>Type: </b>",
                                     Subloc_aqu_plots_gauge()$`General Type`[i]),
-                     group = "Sublocations",
+                     group = "Sub Locations",
                      layerId = Subloc_aqu_plots_gauge()$Name[i])
       }
     } else if (!input$sublocs_gauge | (nrow(Subloc_aqu_plots_gauge()) == 0)) {
@@ -478,7 +478,7 @@ function(input, output, session) {
                                     Subloc_aqu_plots_reach()$Description[i],
                                     "<br><b>Type: </b>",
                                     Subloc_aqu_plots_reach()$`General Type`[i]),
-                     group = "Sublocations",
+                     group = "Sub Locations",
                      layerId = Subloc_aqu_plots_reach()$Name[i])
       }
     } else if (!input$sublocs_reach | (nrow(Subloc_aqu_plots_sensor()) == 0)) {
@@ -497,7 +497,7 @@ function(input, output, session) {
                                     Subloc_aqu_plots_riparian()$Description[i],
                                     "<br><b>Type: </b>",
                                     Subloc_aqu_plots_riparian()$`General Type`[i]),
-                     group = "Sublocations",
+                     group = "Sub Locations",
                      layerId = Subloc_aqu_plots_riparian()$Name[i])
       }
     } else if (!input$sublocs_riparian | (nrow(Subloc_aqu_plots_sensor()) == 0)) {
