@@ -45,7 +45,8 @@ function(input, output, session) {
   Domain_IDs <- reactive(domains$DomainID[domains$Domain %in% input$fieldsite_domain])
   Field_sites_point_filtered <- reactive(FieldSite_point %>% filter(siteType %in% input$fieldsite_type) %>%
                                            filter(domainCode %in% Domain_IDs()) %>%
-                                           filter(Habitat %in% input$fieldsite_habitat))
+                                           filter(Habitat %in% input$fieldsite_habitat) %>%
+                                           filter(stateCode %in% input$fieldsite_state))
   Field_sites_poly_filtered <- reactive(FieldSite_poly %>% filter(code %in% Field_sites_point_filtered()$siteCode))
   Domain_included <- reactive(domain_data %>% filter(DomainName %in% input$fieldsite_domain))
   Domain_unincluded <- reactive(domain_data %>% filter(!(DomainName %in% input$fieldsite_domain)))
