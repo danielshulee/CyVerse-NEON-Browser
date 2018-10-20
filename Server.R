@@ -1447,4 +1447,5 @@ function(input, output, session) {
   #Text for troublshooting 2
   output$text_me_two <- renderText(as.numeric(as.character(input$map_marker_click)[4]))
   #Table for troubleshooting
-  output$table_me <- shiny::renderDataTable(NEONproductinfo_site())
+  #output$table_me <- shiny::renderDataTable()
+}
