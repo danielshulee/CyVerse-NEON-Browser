@@ -795,7 +795,7 @@ function(input, output, session) {
     filename = function() {
       paste0(input$NEONproductID_site, "_fullinfo")
     },
-    content = function() {
+    content = function(file) {
       write.csv(x = NEONproductinfo_site(), file = file)
     })
   output$NEONproducttable_site <- renderDT({
@@ -1029,7 +1029,7 @@ function(input, output, session) {
     filename = function() {
       paste0(input$NEONproductID_product, "_fullinfo")
     },
-    content = function() {
+    content = function(file) {
       write.csv(x = NEONproductinfo_product(), file = file)
     })
   output$ui_selectsite<- renderUI({
