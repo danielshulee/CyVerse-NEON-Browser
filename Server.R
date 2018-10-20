@@ -793,7 +793,7 @@ function(input, output, session) {
   # Download full table
   output$fullinfo_site <- downloadHandler(
     filename = function() {
-      paste0(input$NEONproductID_site, "_fullinfo")
+      paste0(input$NEONproductID_site, "_fullinfo.csv")
     },
     content = function(file) {
       table <- NEONproductinfo_site()
@@ -1031,7 +1031,7 @@ function(input, output, session) {
   # Download full table
   output$fullinfo_product <- downloadHandler(
     filename = function() {
-      paste0(input$NEONproductID_product, "_fullinfo")
+      paste0(input$NEONproductID_product, "_fullinfo.csv")
     },
     content = function(file) {
       table <- NEONproductinfo_product()
