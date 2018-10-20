@@ -796,7 +796,11 @@ function(input, output, session) {
       paste0(input$NEONproductID_site, "_fullinfo")
     },
     content = function(file) {
-      write.csv(x = NEONproductinfo_site(), file = file)
+      table <- NEONproductinfo_site()
+      for (i in 1:ncol(table)) {
+        table[i] <- as.character(table[i])
+      }
+      write.csv(x = table, file = file)
     })
   output$NEONproducttable_site <- renderDT({
     dates <- if (length(NEONproductinfo_site()$siteCodes) == 0) {
@@ -1030,7 +1034,11 @@ function(input, output, session) {
       paste0(input$NEONproductID_product, "_fullinfo")
     },
     content = function(file) {
-      write.csv(x = NEONproductinfo_product(), file = file)
+      table <- NEONproductinfo_product()
+      for (i in 1:ncol(table)) {
+        table[i] <- as.character(table[i])
+      }
+      write.csv(x = table, file = file)
     })
   output$ui_selectsite<- renderUI({
     sites <- if (length(NEONproductinfo_product()$siteCodes) == 0) {
@@ -1435,9 +1443,8 @@ function(input, output, session) {
   ####FOR ME TAB####
   
   #Text for troublshooting
-  output$text_me <- renderText(paste0(actionLink(inputId = "Asf", label = "Sdfsdf")))
+  output$text_me <- renderText(input$NEONproductID_site)
   #Text for troublshooting 2
   output$text_me_two <- renderText(as.numeric(as.character(input$map_marker_click)[4]))
   #Table for troubleshooting
-  #output$table_me <- shiny::renderDataTable()
-}
+  output$table_me <- shiny::renderDataTable(NEONproductinfo_site())
