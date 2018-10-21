@@ -3,6 +3,12 @@ function(input, output, session) {
   
   # Initialization
   source('Functions/datesTable_function.R')
+  delay(ms = 5000, expr = showNotification(ui = "First time here?", action = actionLink(inputId = "firsttime", label = "Yes"), duration = 15, type = "message", id = "first"))
+  observeEvent(input$firsttime, handlerExpr = {
+    updateNavbarPage(session, inputId = "main", selected = "Help/Tutorials")
+    removeNotification(id = "first", session)
+  })
+  
   # Script to add buttons to leaflet popups
   output$script <- renderUI({
     tags$script(HTML('
@@ -267,6 +273,7 @@ function(input, output, session) {
                         color = "#49E2BD",
                         fillOpacity = 0,
                         weight = 3,
+                        group = "Sub Locations",
                         layerId = Subloc_tes_plots_base()$Name[i],
                         popup = paste0("Boundaries for ",
                                        Subloc_tes_plots_base()$Description[i])
@@ -330,6 +337,7 @@ function(input, output, session) {
                         color = "#49E2BD",
                         fillOpacity = 0,
                         weight = 3,
+                        group = "Sub Locations",
                         layerId = Subloc_tes_plots_mam()$Name[i],
                         popup = paste0("Boundaries for ",
                                        Subloc_tes_plots_mam()$Description[i])
@@ -386,6 +394,7 @@ function(input, output, session) {
                         color = "#49E2BD",
                         fillOpacity = 0,
                         weight = 3,
+                        group = "Sub Locations",
                         layerId = Subloc_tes_plots_tick()$Name[i],
                         popup = paste0("Boundaries for ",
                                        Subloc_tes_plots_tick()$Description[i])
@@ -420,6 +429,7 @@ function(input, output, session) {
                         color = "#49E2BD",
                         fillOpacity = 0,
                         weight = 3,
+                        group = "Sub Locations",
                         layerId = Subloc_tes_plots_phe()$Name[i],
                         popup = paste0("Boundaries for ",
                                        Subloc_tes_plots_phe()$Description[i])
@@ -601,7 +611,7 @@ function(input, output, session) {
   observeEvent(eventExpr = input$addsublocs,
                handlerExpr = {
                  leafletProxy('map') %>% showGroup(group = "Sub Locations")
-                 updateTabsetPanel(session, inputId = "main", selected = "filter")
+                 updateTabsetPanel(session, inputId = "main_data", selected = "filter")
                  updateRadioButtons(session, inputId = "map_features", selected = "fieldsites")
                  choices <- input$fieldsite_sublocs
                  updateSelectInput(session, inputId = "fieldsite_sublocs", selected = c(choices, input$NEONsite_zoom))
@@ -620,13 +630,18 @@ function(input, output, session) {
                  leafletProxy('map') %>% showGroup(group = "Sub Locations")
                  choices <- input$fieldsite_sublocs
                  updateSelectInput(session, inputId = "fieldsite_sublocs", selected = c(choices, input$NEONsite_zoom))
-                 updateTabsetPanel(session, inputId = "main", selected = "data")
+                 updateTabsetPanel(session, inputId = "main_data", selected = "data")
                  updateTabsetPanel(session, inputId = "data", selected = "find")
                  updateRadioButtons(session, inputId = "NEON_browsing_type", selected = "site")
                  updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "list")
                  updateSelectInput(session, inputId = "NEONsite_site", selected = input$NEONsite_zoom)
                })
   ####— NEON: Step 1- Find data ####
+  ## for dropdown
+  output$dropdown_site <- renderPrint(paste0(FieldSite_point$siteName[FieldSite_point$siteCode %in% input$NEONsite_zoom], " ", FieldSite_point$`Habitat Specific`[FieldSite_point$siteCode %in% input$NEONsite_zoom]))
+  output$dropdown_state <- renderPrint(FieldSite_point$stateName[FieldSite_point$siteCode %in% input$NEONsite_zoom])
+  output$dataproduct_number <- renderPrint(nrow(NEONproducts_product[filter_site(site = input$NEONsite_zoom),]))
+  
   ####—— 1a: By Site####
   # Variables
   NEONproducts_product <<- nneo_products() # Added this variable up here because one item in finding by "site" needed it
@@ -635,7 +650,7 @@ function(input, output, session) {
   # Filter by keywords, type, theme
   keyword_lists(list = FieldSite_abbs)
   output$ui_selectkeywords_site <- renderUI({
-    selectInput(inputId = "NEONproductkeywords_site", label = "Keywords (products have multiple)", choices = get(x = input$NEONsite_site, envir = .NEON_keywords), multiple = TRUE)
+    selectInput(inputId = "NEONproductkeywords_site", label = "Keywords", choices = get(x = input$NEONsite_site, envir = .NEON_keywords), multiple = TRUE)
   })
   NEONproducts_site_filter <- reactive(as.data.frame(cbind("Product Name" = NEONproducts_site()$productName, "Product ID" = NEONproducts_site()$productCode, "keywords" = NEONproducts_site()$keywords, "producttype" = NEONproducts_site()$productScienceTeam, "themes" = NEONproducts_site()$themes))[order(NEONproducts_site()$productName),])
   keyword_filters_site <- reactive(filter_keyword(column = NEONproducts_site_filter()$keywords, keywords = input$NEONproductkeywords_site) & filter_keyword(column = NEONproducts_site_filter()$themes, keywords = input$selectproducttheme_site))
@@ -651,35 +666,21 @@ function(input, output, session) {
   # Filters
   observe({
     if (input$showfilterinfo_site == TRUE) {
-      addTooltip(session, id = "NEONproductkeywords_site", title = HTML("Filter data products by keywords describing their contents. Each product can have more than one, so only products that have <u>all</u> of the keywords chosen will appear."), placement = "top")
+      addTooltip(session, id = "NEONproductkeywords_site", title = HTML("Filter data products by keywords describing their contents. Each product can have more than one, so only products that have <u>all</u> of the keywords chosen will appear."), trigger = "focus", placement = "top")
       addTooltip(session, id = "selectproducttype_site", title = HTML("Filter data products by their data collection method. Each product has one type, so the filter includes all products with the chosen types. Learn more about what each method means <a href='https://www.neonscience.org/data-collection' target='_blank'>here</a>."), trigger = "focus", placement = "top")
-      addTooltip(session, id = "selectproducttheme_site", title = HTML("Filter data products by their theme. Each product can have more than one, so only products that have <u>all</u> of the themes chosen will appear."))
+      addTooltip(session, id = "selectproducttheme_site", title = HTML("Filter data products by their theme. Each product can have more than one, so only products that have <u>all</u> of the themes chosen will appear. Learn more about each theme <a href='https://www.neonscience.org/data/data-themes' target='_blank'>here</a>"), trigger = "focus", placement = "top")
     } else {
       removeTooltip(session, id = "NEONproductkeywords_site")
       removeTooltip(session, id = "selectproducttype_site")
       removeTooltip(session, id = "selectproducttheme_site")
     }
   })
-  ## for dropdown
-  output$dropdown_site <- renderPrint(paste0(FieldSite_point$siteName[FieldSite_point$siteCode %in% input$NEONsite_zoom], " ", FieldSite_point$`Habitat Specific`[FieldSite_point$siteCode %in% input$NEONsite_zoom]))
-  output$dropdown_state <- renderPrint(FieldSite_point$stateName[FieldSite_point$siteCode %in% input$NEONsite_zoom])
-  output$dataproduct_number <- renderPrint(nrow(NEONproducts_product[filter_site(site = input$NEONsite_zoom),]))
-  
-  # single: filtering column of products for one site through ID
-  NEONproductID_site <- reactive(req(
-    if (gsub(pattern = " ", replacement = "", x = input$NEONproductID_site) == "") {
-      "random string that will not match to anything"
-    } else {
-      gsub(pattern = " ", replacement = "", x = input$NEONproductID_site)
-    }
-  ))
-  NEONproductinfo_site <- reactive(req(filter(.data = NEONproducts_site(), productCode == NEONproductID_site())))
   # Display products: list
   output$NEONproductoptions_site <- renderDT(datatable(data.frame(unlist(NEONproductlist_site()[1]), unlist(NEONproductlist_site()[2])),
                                                        colnames = c("Product Name", "Product ID"), rownames = FALSE, extensions = 'Scroller', class = 'cell-border stripe hover order-column',
                                                        options = list(dom = 'tlfipr',
                                                                       lengthMenu = c(10,25,50),
-                                                                      pageLength = 10,
+                                                                      pageLength = 25,
                                                                       deferRender = TRUE,
                                                                       scrollY = '40vh'
                                                        ),
@@ -691,6 +692,73 @@ function(input, output, session) {
                  }
                  updateTextInput(session = session, inputId = "NEONproductID_site", value = ifelse(length(input$NEONproductoptions_site_cells_selected)==0,NA,NEONproductlist_site()[[2]][[input$NEONproductoptions_site_cells_selected[1]]]))
                })
+  # Modal
+  output$NEONproductoptions_site2 <- renderDT(datatable(data.frame(unlist(NEONproductlist_site()[1]), unlist(NEONproductlist_site()[2])),
+                                                        colnames = c("Product Name", "Product ID"), rownames = FALSE, extensions = 'Scroller', class = 'cell-border stripe hover order-column',
+                                                        options = list(dom = 'tlfipr',
+                                                                       lengthMenu = c(10,25,50),
+                                                                       pageLength = 25,
+                                                                       deferRender = TRUE,
+                                                                       scrollY = '50vh'
+                                                        ), caption = HTML("<center>Click on a product to view it</center>"),
+                                                        selection = list(mode = 'single', target = 'cell')))
+  output$ui_selectkeywords_site2 <- renderUI({
+    selectInput(inputId = "NEONproductkeywords_site2", label = "Keywords", choices = get(x = input$NEONsite_site, envir = .NEON_keywords), multiple = TRUE)
+  })
+  observeEvent(input$NEONproductkeywords_site2, updateSelectInput(session, inputId = "NEONproductkeywords_site", selected = input$NEONproductkeywords_site2))
+  observe({
+   if (length(input$NEONproductkeywords_site2) == 0) {
+     updateSelectInput(session, inputId = "NEONproductkeywords_site", selected = NA)
+   }
+  })
+  observeEvent(input$selectproducttype_site2, updateSelectInput(session, inputId = "selectproducttype_site", selected = input$selectproducttype_site2))
+  observe({
+    if (length(input$selectproducttype_site2) == 0) {
+      updateSelectInput(session, inputId = "selectproducttype_site", selected = NA)
+    }
+  })
+  observeEvent(input$selectproducttheme_site2, updateSelectInput(session, inputId = "selectproducttheme_site", selected = input$selectproducttheme_site2))
+  observe({
+    if (length(input$selectproducttheme_site2) == 0) {
+      updateSelectInput(session, inputId = "selectproducttheme_site", selected = NA)
+    }
+  })
+  observe({
+    if (input$showfilterinfo_site2 == TRUE) {
+      addTooltip(session, id = "NEONproductkeywords_site2", title = HTML("Filter data products by keywords describing their contents. Each product can have more than one, so only products that have <u>all</u> of the keywords chosen will appear."), trigger = "focus", placement = "top")
+      addTooltip(session, id = "selectproducttype_site2", title = HTML("Filter data products by their data collection method. Each product has one type, so the filter includes all products with the chosen types. Learn more about what each method means <a href='https://www.neonscience.org/data-collection' target='_blank'>here</a>."), trigger = "focus", placement = "top")
+      addTooltip(session, id = "selectproducttheme_site2", title = HTML("Filter data products by their theme. Each product can have more than one, so only products that have <u>all</u> of the themes chosen will appear. Learn more about each theme <a href='https://www.neonscience.org/data/data-themes' target='_blank'>here</a>"), trigger = "focus", placement = "top")
+    } else {
+      removeTooltip(session, id = "NEONproductkeywords_site2")
+      removeTooltip(session, id = "selectproducttype_site2")
+      removeTooltip(session, id = "selectproducttheme_site2")
+    }
+  })
+  observeEvent(eventExpr = input$NEONproductoptions_site2_cells_selected,
+               handlerExpr = {
+                 if (length(input$NEONproductoptions_site2_cells_selected) > 0) {
+                   updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "single")
+                   toggleModal(session, modalId = "tableexpand_site", toggle = "close")
+                 }
+                 updateTextInput(session = session, inputId = "NEONproductID_site", value = ifelse(length(input$NEONproductoptions_site2_cells_selected)==0, NA, NEONproductlist_site()[[2]][[input$NEONproductoptions_site2_cells_selected[1]]]))
+               })
+  modal_clicked_site <- 0
+  observeEvent(input$expandtable_site, handlerExpr = {
+    modal_clicked_site <<- modal_clicked_site + 1
+    if (modal_clicked_site < 2) {
+      toggleDropdownButton(inputId = "filter_site")
+      delay(ms = 2000, expr = toggleDropdownButton(inputId = "filter_site"))
+    }
+  })
+  # Single: filtering column of products for one site through ID
+  NEONproductID_site <- reactive(req(
+    if (gsub(pattern = " ", replacement = "", x = input$NEONproductID_site) == "") {
+      "random string that will not match to anything"
+    } else {
+      gsub(pattern = " ", replacement = "", x = input$NEONproductID_site)
+    }
+  ))
+  NEONproductinfo_site <- reactive(req(filter(.data = NEONproducts_site(), productCode == NEONproductID_site())))
   # Display products: single
   output$NEONproductsite_site <- renderUI({
     site <- input$NEONsite_site
@@ -866,7 +934,7 @@ function(input, output, session) {
   keywords <- unique(keywords)
   keywords <- sort(keywords)
   output$ui_selectkeywords_product <- renderUI({
-    selectInput(inputId = "NEONproductkeywords_product", label = "Keywords (products have multiple)", choices = keywords, multiple = TRUE)
+    selectInput(inputId = "NEONproductkeywords_product", label = "Keywords", choices = keywords, multiple = TRUE)
     })
   NEONproduct_products_filter <- NEONproducts_product[c("productName", "productCode", "keywords", "productScienceTeam", "themes")]
   names(NEONproduct_products_filter) <- c('Product Name', 'Product ID', 'keywords', "producttype", "themes")
@@ -883,22 +951,15 @@ function(input, output, session) {
   # Filters
   observe({
     if (input$showfilterinfo_product == TRUE) {
-      addTooltip(session, id = "NEONproductkeywords_product", title = HTML("Filter data products by keywords describing their contents. Each product can have more than one, so only products that have <u>all</u> of the keywords chosen will appear."), placement = "top")
+      addTooltip(session, id = "NEONproductkeywords_product", title = HTML("Filter data products by keywords describing their contents. Each product can have more than one, so only products that have <u>all</u> of the keywords chosen will appear."), trigger = "focus", placement = "top")
       addTooltip(session, id = "selectproducttype_product", title = HTML("Filter data products by their data collection method. Each product has one type, so the filter includes all products with the chosen types. Learn more about what each method means <a href='https://www.neonscience.org/data-collection' target='_blank'>here</a>."), trigger = "focus", placement = "top")
-      addTooltip(session, id = "selectproducttheme_product", title = HTML("Filter data products by their theme. Each product can have more than one, so only products that have <u>all</u> of the themes chosen will appear."))
+      addTooltip(session, id = "selectproducttheme_product", title = HTML("Filter data products by their theme. Each product can have more than one, so only products that have <u>all</u> of the themes chosen will appear. Learn more about each theme <a href='https://www.neonscience.org/data/data-themes' target='_blank'>here</a>"), trigger = "focus", placement = "top")
     } else {
       removeTooltip(session, id = "NEONproductkeywords_product")
       removeTooltip(session, id = "selectproducttype_product")
       removeTooltip(session, id = "selectproducttheme_product")
     }
   })
-  # single: filtering one row of parent NEON products table through ID
-  NEONproductID_product <- reactive(req(
-    ifelse(gsub(pattern = " ", replacement = "", x = input$NEONproductID_product) == "",
-           yes = "random string that will not match to anything",
-           no = gsub(pattern = " ", replacement = "", x = input$NEONproductID_product))
-  ))
-  NEONproductinfo_product <- reactive(req(filter(.data = NEONproducts_product, productCode == NEONproductID_product())))
   # Display products: list
   output$NEONproductoptions_product <- renderDT(datatable(NEONproductlist_product()[1:2], class = 'cell-border stripe hover order-column', rownames = FALSE,
                                                           options = list(dom = 'tlfipr',
@@ -915,6 +976,70 @@ function(input, output, session) {
                  }
                  updateTextInput(session = session, inputId = "NEONproductID_product", value = ifelse(length(input$NEONproductoptions_product_cells_selected)==0,NA,NEONproductlist_product()[[2]][[input$NEONproductoptions_product_cells_selected[1]]]))
                })
+  # Modal
+  output$NEONproductoptions_product2 <- renderDT(datatable(NEONproductlist_product()[1:2], class = 'cell-border stripe hover order-column', rownames = FALSE,
+                                                           options = list(dom = 'tlfipr',
+                                                                          lengthMenu = c(10,25,50),
+                                                                          pageLength = 25,
+                                                                          deferRender = TRUE,
+                                                                          scrollY = '50vh'
+                                                           ), caption = HTML("<center>Click on a product to view it</center>"),
+                                                           selection = list(mode = 'single', target = 'cell')))
+  output$ui_selectkeywords_product2 <- renderUI({
+    selectInput(inputId = "NEONproductkeywords_product2", label = "Keywords", choices = get(x = input$NEONsite_site, envir = .NEON_keywords), multiple = TRUE)
+  })
+  observeEvent(input$NEONproductkeywords_product2, updateSelectInput(session, inputId = "NEONproductkeywords_product", selected = input$NEONproductkeywords_product2))
+  observe({
+    if (length(input$NEONproductkeywords_product2) == 0) {
+      updateSelectInput(session, inputId = "NEONproductkeywords_product", selected = NA)
+    }
+  })
+  observeEvent(input$selectproducttype_product2, updateSelectInput(session, inputId = "selectproducttype_product", selected = input$selectproducttype_product2))
+  observe({
+    if (length(input$selectproducttype_product2) == 0) {
+      updateSelectInput(session, inputId = "selectproducttype_product", selected = NA)
+    }
+  })
+  observeEvent(input$selectproducttheme_product2, updateSelectInput(session, inputId = "selectproducttheme_product", selected = input$selectproducttheme_product2))
+  observe({
+    if (length(input$selectproducttheme_product2) == 0) {
+      updateSelectInput(session, inputId = "selectproducttheme_product", selected = NA)
+    }
+  })
+  observe({
+    if (input$showfilterinfo_product2 == TRUE) {
+      addTooltip(session, id = "NEONproductkeywords_product2", title = HTML("Filter data products by keywords describing their contents. Each product can have more than one, so only products that have <u>all</u> of the keywords chosen will appear."), trigger = "focus", placement = "top")
+      addTooltip(session, id = "selectproducttype_product2", title = HTML("Filter data products by their data collection method. Each product has one type, so the filter includes all products with the chosen types. Learn more about what each method means <a href='https://www.neonscience.org/data-collection' target='_blank'>here</a>."), trigger = "focus", placement = "top")
+      addTooltip(session, id = "selectproducttheme_product2", title = HTML("Filter data products by their theme. Each product can have more than one, so only products that have <u>all</u> of the themes chosen will appear. Learn more about each theme <a href='https://www.neonscience.org/data/data-themes' target='_blank'>here</a>"), trigger = "focus", placement = "top")
+    } else {
+      removeTooltip(session, id = "NEONproductkeywords_product2")
+      removeTooltip(session, id = "selectproducttype_product2")
+      removeTooltip(session, id = "selectproducttheme_product2")
+    }
+  })
+  observeEvent(eventExpr = input$NEONproductoptions_product2_cells_selected,
+               handlerExpr = {
+                 if (length(input$NEONproductoptions_product2_cells_selected) > 0) {
+                   updateRadioButtons(session, inputId = "NEONbrowsingstep_product", selected = "single")
+                   toggleModal(session, modalId = "tableexpand_product", toggle = "close")
+                 }
+                 updateTextInput(session = session, inputId = "NEONproductID_product", value = ifelse(length(input$NEONproductoptions_product2_cells_selected)==0, NA, NEONproductlist_product()[[2]][[input$NEONproductoptions_product2_cells_selected[1]]]))
+               })
+  modal_clicked_product <- 0
+  observeEvent(input$expandtable_product, handlerExpr = {
+    modal_clicked_product <<- modal_clicked_product + 1
+    if (modal_clicked_product < 2) {
+      toggleDropdownButton(inputId = "filter_product")
+      delay(ms = 2000, expr = toggleDropdownButton(inputId = "filter_product"))
+    }
+  })
+  # Single: filtering one row of parent NEON products table through ID
+  NEONproductID_product <- reactive(req(
+    ifelse(gsub(pattern = " ", replacement = "", x = input$NEONproductID_product) == "",
+           yes = "random string that will not match to anything",
+           no = gsub(pattern = " ", replacement = "", x = input$NEONproductID_product))
+  ))
+  NEONproductinfo_product <- reactive(req(filter(.data = NEONproducts_product, productCode == NEONproductID_product())))
   # Display products: single
   output$NEONproductname_product <- renderUI({
     if (length(NEONproductinfo_product()$productName) == 0) {
@@ -1440,12 +1565,42 @@ function(input, output, session) {
     },
     contentType = "application/zip")
   
+  ####Tutorial####
+  
+  ####— Welcome tab####
+  observeEvent(input$help_NEON, handlerExpr = {
+    updateNavlistPanel(session, inputId = "tutorial", selected = "What is NEON?")
+  })
+  observeEvent(input$help_map, handlerExpr = {
+    updateNavlistPanel(session, inputId = "tutorial", selected = "Using the interactive map")
+  })
+  observeEvent(input$help_browse, handlerExpr = {
+    updateNavlistPanel(session, inputId = "tutorial", selected = "Finding data products")
+  })
+  observeEvent(input$help_download, handlerExpr = {
+    updateNavlistPanel(session, inputId = "tutorial", selected = "Downloading data products")
+  })
+  ####— NEON tab####
+  observeEvent(input$about_NEON, handlerExpr = {
+    updateNavbarPage(session, inputId = "main", selected = "About This Project")
+    updateNavlistPanel(session, inputId = "about", selected = "About NEON")
+  })
+  observeEvent(input$help_map2, handlerExpr = {
+    updateNavlistPanel(session, inputId = "tutorial", selected = "Using the interactive map")
+  })
+  observeEvent(input$help_browse2, handlerExpr = {
+    updateNavlistPanel(session, inputId = "tutorial", selected = "Finding data products")
+  })
+  observeEvent(input$help_download2, handlerExpr = {
+    updateNavlistPanel(session, inputId = "tutorial", selected = "Downloading data products")
+  })
+  
   ####FOR ME TAB####
   
   #Text for troublshooting
-  output$text_me <- renderText(input$NEONproductID_site)
+  output$text_me <- renderText(input$NEONproductkeywords_site2)
   #Text for troublshooting 2
-  output$text_me_two <- renderText(as.numeric(as.character(input$map_marker_click)[4]))
+  output$text_me_two <- renderText(modal_clicked_site)
   #Table for troubleshooting
   #output$table_me <- shiny::renderDataTable()
 }
