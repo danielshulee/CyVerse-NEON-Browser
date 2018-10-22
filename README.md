@@ -1,10 +1,10 @@
-# NEON-Shiny-Browser
+# CyVerse NEON Browser
 
 A multifunctional R Shiny tool designed to make NEON data accessible, visible, and easy to interact with.
 
 ## Overview
 
-The NEON Shiny Browser is an interactive tool to browse, pull, and manipulate data collected by [NEON](https://www.neonscience.org/). This R Shiny app uses [leaflet](https://leafletjs.com/), [neonUtilities](https://github.com/NEONScience/NEON-utilities/tree/master/neonUtilities), and [nneo](https://github.com/ropensci/nneo) to create a comprehensive tool that allows users to do everything from browsing NEON sites, to finding and downloading and unziping data products.
+The CyVerse NEON Browser is an interactive tool to browse, pull, and manipulate data collected by [NEON](https://www.neonscience.org/). This R Shiny app uses [leaflet](https://leafletjs.com/), [neonUtilities](https://github.com/NEONScience/NEON-utilities/tree/master/neonUtilities), and [nneo](https://github.com/ropensci/nneo) (community compiled packages) to create a comprehensive tool that allows users to do everything from browsing NEON sites, to finding and downloading and unziping data products.
 
 ### Features
 
@@ -20,16 +20,10 @@ Additionally, this app provides an easy, in-app alternative to NEON's [data port
 
 The National Ecological Observatory Network <a href="https://www.neonscience.org/"><img src = "Img/NEON.png" width=30/></a> is a "continental-scale ecological observation facility" that provides open data on our ecosystems. The envisioned 30-year project collects environmental data like precipitation, soil temperature, humidity, and pressure across 81 field sites (47 terrestrial and 34 aquatic) to measure the patterns and changes in our environment. With over 180 data products describing the characteristics of a diverse range of ecosystems, their data will be crucial to future studies of biology and climate change over time.
 
-## Install and Run
+## Use
 
-To install, change the working directory on your shell to the desired directory, and clone from git:
-
-```
-cd /Desktop
-git clone https://github.com/Danielslee51/NEON-Shiny-Browser
-```
-
-Open an instance of RStudio and navigate to the `/NEON-Shiny-Browser` folder. Click and run `server.R`.
+The CyVerse NEON Browser is officially recognized a NEON community-contributed app and hosted by CyVerse. Visit the app here:
+\*Add link\*
 
 ## Package Requirements
 
