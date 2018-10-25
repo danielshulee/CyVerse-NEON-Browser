@@ -1,1 +1,1 @@
-This download might take a while, and progess can be tracked on the console (on RStudio).
+This download might take a while, depending on how many dates are included. You can estimate the size of the downloads above

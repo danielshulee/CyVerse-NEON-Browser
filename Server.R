@@ -3,10 +3,13 @@ function(input, output, session) {
   
   # Initialization
   source('Functions/datesTable_function.R')
-  delay(ms = 5000, expr = showNotification(ui = "First time here?", action = actionLink(inputId = "firsttime", label = "Yes"), duration = 15, type = "message", id = "first"))
-  observeEvent(input$firsttime, handlerExpr = {
+  delay(ms = 0, expr = showNotification(ui = "First time here?", action = actionLink(inputId = "firsttime", label = "Yes"), duration = 20, type = "message", id = "first"))
+  observeEvent(input$firsttime, confirmSweetAlert(session, inputId = "firsttime_confirm", title = "Welcome to the CyVerse NEON Browser!", text = "This will bring you to the tutorial section and get you started with NEON and this app.", btn_labels = c("Cancel", "Confirm")))
+  observeEvent(input$firsttime_confirm, handlerExpr = {
+    if (input$firsttime_confirm == TRUE) {
     updateNavbarPage(session, inputId = "main", selected = "Help/Tutorials")
     removeNotification(id = "first", session)
+    }
   })
   
   # Script to add buttons to leaflet popups
@@ -71,7 +74,7 @@ function(input, output, session) {
         # Add option for fullscreen
         leaflet.extras::addFullscreenControl(pseudoFullscreen = TRUE)
     )
-    map %>% setView(lng = -98.5795, lat = 39.8283, zoom = 2.5)
+    map %>% setView(lng = -98.5795, lat = 39.8283, zoom = 2.5) %>% hideGroup("Flight Boxes")
   })
   #### — Filter Map Features ####
   #### —— Filtered Features ####
@@ -200,7 +203,7 @@ function(input, output, session) {
   observeEvent(input$addsublocs_map, handlerExpr = {
     table <- FieldSite_point %>% filter(round(FieldSite_point$siteLongitude, digits = 3) == round(as.numeric(as.character(input$map_marker_click)[4]), digits = 3))
     site <- table$siteCode
-    leafletProxy('map') %>% showGroup(group = "Sub Locations")
+    leafletProxy("map") %>% showGroup(group = "Sub Locations")
     updateTabsetPanel(session, inputId = "main", selected = "filter")
     updateRadioButtons(session, inputId = "map_features", selected = "fieldsites")
     choices <- input$fieldsite_sublocs
@@ -252,7 +255,7 @@ function(input, output, session) {
   #### ——— Terrestrial ####
   # Base
   observe({
-    proxy <- leafletProxy('map')
+    proxy <- leafletProxy("map")
     if (input$sublocs_baseplot & nrow(Subloc_tes_plots_base()) != 0) {
       for (i in 1:nrow(Subloc_tes_plots_base())) {
         proxy %>%
@@ -287,7 +290,7 @@ function(input, output, session) {
   })
   # Bird
   observe({
-    proxy <- leafletProxy('map')
+    proxy <- leafletProxy("map")
     if (input$sublocs_birdgrid & nrow(Subloc_tes_plots_bird()) != 0) {
       for (i in 1:nrow(Subloc_tes_plots_bird())) {
         proxy %>%
@@ -316,7 +319,7 @@ function(input, output, session) {
   })
   # Mammal
   observe({
-    proxy <- leafletProxy('map')
+    proxy <- leafletProxy("map")
     if (input$sublocs_mammalgrid & nrow(Subloc_tes_plots_mam()) != 0) {
       for (i in 1:nrow(Subloc_tes_plots_mam())) {
         proxy %>%
@@ -351,7 +354,7 @@ function(input, output, session) {
   })
   # Mosquito
   observe({
-    proxy <- leafletProxy('map')
+    proxy <- leafletProxy("map")
     if (input$sublocs_mosquitoplot & nrow(Subloc_tes_plots_mos()) != 0) {
       for (i in 1:nrow(Subloc_tes_plots_mos())) {
         proxy %>%
@@ -373,7 +376,7 @@ function(input, output, session) {
   })
   # Tick
   observe({
-    proxy <- leafletProxy('map')
+    proxy <- leafletProxy("map")
     if (input$sublocs_tickplot & nrow(Subloc_tes_plots_tick()) != 0) {
       for (i in 1:nrow(Subloc_tes_plots_tick())) {
         proxy %>%
@@ -408,7 +411,7 @@ function(input, output, session) {
   })
   # Phenology
   observe({
-    proxy <- leafletProxy('map')
+    proxy <- leafletProxy("map")
     if (input$sublocs_phenologyplot & nrow(Subloc_tes_plots_phe()) != 0) {
       for (i in 1:nrow(Subloc_tes_plots_phe())) {
         proxy %>%
@@ -444,7 +447,7 @@ function(input, output, session) {
   #### ——— Aquatic ####
   # Groundwater Well
   observe({
-    proxy <- leafletProxy('map')
+    proxy <- leafletProxy("map")
     if (input$sublocs_well & nrow(Subloc_aqu_plots_well()) != 0) {
       for (i in 1:nrow(Subloc_aqu_plots_well())) {
         proxy %>%
@@ -463,7 +466,7 @@ function(input, output, session) {
   })
   # Met. Station
   observe({
-    proxy <- leafletProxy('map')
+    proxy <- leafletProxy("map")
     if (input$sublocs_metstn & nrow(Subloc_aqu_plots_metstn()) != 0) {
       for (i in 1:nrow(Subloc_aqu_plots_metstn())) {
         proxy %>%
@@ -482,7 +485,7 @@ function(input, output, session) {
   })
   # Sensor Station
   observe({
-    proxy <- leafletProxy('map')
+    proxy <- leafletProxy("map")
     if (input$sublocs_sensor & nrow(Subloc_aqu_plots_sensor()) != 0) {
       for (i in 1:nrow(Subloc_aqu_plots_sensor())) {
         proxy %>%
@@ -501,7 +504,7 @@ function(input, output, session) {
   })
   # Staff gauge/camera
   observe({
-    proxy <- leafletProxy('map')
+    proxy <- leafletProxy("map")
     if (input$sublocs_gauge & nrow(Subloc_aqu_plots_gauge()) != 0) {
       for (i in 1:nrow(Subloc_aqu_plots_gauge())) {
         proxy %>%
@@ -520,7 +523,7 @@ function(input, output, session) {
   })
   # Sampling Reach Boundary
   observe({
-    proxy <- leafletProxy('map')
+    proxy <- leafletProxy("map")
     if (input$sublocs_reach & nrow(Subloc_aqu_plots_reach()) != 0) {
       for (i in 1:nrow(Subloc_aqu_plots_reach())) {
         proxy %>%
@@ -539,7 +542,7 @@ function(input, output, session) {
   })
   # Riparian Assessment
   observe({
-    proxy <- leafletProxy('map')
+    proxy <- leafletProxy("map")
     if (input$sublocs_riparian & nrow(Subloc_aqu_plots_riparian()) != 0) {
       for (i in 1:nrow(Subloc_aqu_plots_riparian())) {
         proxy %>%
@@ -591,56 +594,54 @@ function(input, output, session) {
     updateCheckboxInput(session, inputId = "sublocs_reach", value = FALSE)
     updateCheckboxInput(session, inputId = "sublocs_riparian", value = FALSE)
   })
-  # Hide Flight Boxes when launching app
-  leafletProxy("map") %>% hideGroup("Flight Boxes")
   
   #### NEON ####
   observeEvent(eventExpr = input$zoomtosite,
                handlerExpr = {
-                 if (input$NEONsite_zoom %in% FieldSite_Tes) {
-                   leafletProxy("map") %>% flyTo(lng = FieldSite_point$siteLongitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
-                                                 lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
+                 if (input$NEONsite_dropdown %in% FieldSite_Tes) {
+                   leafletProxy("map") %>% flyTo(lng = FieldSite_point$siteLongitude[FieldSite_point$siteCode %in% input$NEONsite_dropdown],
+                                                 lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite_dropdown],
                                                  zoom = 12)
-                 } else if (input$NEONsite_zoom %in% FieldSite_Aqu) {
-                   leafletProxy("map") %>% flyTo(lng = FieldSite_point$siteLongitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
-                                                 lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
+                 } else if (input$NEONsite_dropdown %in% FieldSite_Aqu) {
+                   leafletProxy("map") %>% flyTo(lng = FieldSite_point$siteLongitude[FieldSite_point$siteCode %in% input$NEONsite_dropdown],
+                                                 lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite_dropdown],
                                                  zoom = 15.5)
                  }
                }
   )
   observeEvent(eventExpr = input$addsublocs,
                handlerExpr = {
-                 leafletProxy('map') %>% showGroup(group = "Sub Locations")
+                 leafletProxy("map") %>% showGroup(group = "Sub Locations")
                  updateTabsetPanel(session, inputId = "main_data", selected = "filter")
                  updateRadioButtons(session, inputId = "map_features", selected = "fieldsites")
                  choices <- input$fieldsite_sublocs
-                 updateSelectInput(session, inputId = "fieldsite_sublocs", selected = c(choices, input$NEONsite_zoom))
+                 updateSelectInput(session, inputId = "fieldsite_sublocs", selected = c(choices, input$NEONsite_dropdown))
                })
   observeEvent(eventExpr = input$togglesite,
                handlerExpr = {
-                 if (input$NEONsite_zoom %in% FieldSite_Tes) {
-                   leafletProxy("map") %>% flyTo(lng = FieldSite_point$siteLongitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
-                                                 lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
+                 if (input$NEONsite_dropdown %in% FieldSite_Tes) {
+                   leafletProxy("map") %>% flyTo(lng = FieldSite_point$siteLongitude[FieldSite_point$siteCode %in% input$NEONsite_dropdown],
+                                                 lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite_dropdown],
                                                  zoom = 12)
-                 } else if (input$NEONsite_zoom %in% FieldSite_Aqu) {
-                   leafletProxy("map") %>% flyTo(lng = FieldSite_point$siteLongitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
-                                                 lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
+                 } else if (input$NEONsite_dropdown %in% FieldSite_Aqu) {
+                   leafletProxy("map") %>% flyTo(lng = FieldSite_point$siteLongitude[FieldSite_point$siteCode %in% input$NEONsite_dropdown],
+                                                 lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite_dropdown],
                                                  zoom = 15.5)
                  }
-                 leafletProxy('map') %>% showGroup(group = "Sub Locations")
+                 leafletProxy("map") %>% showGroup(group = "Sub Locations")
                  choices <- input$fieldsite_sublocs
-                 updateSelectInput(session, inputId = "fieldsite_sublocs", selected = c(choices, input$NEONsite_zoom))
+                 updateSelectInput(session, inputId = "fieldsite_sublocs", selected = c(choices, input$NEONsite_dropdown))
                  updateTabsetPanel(session, inputId = "main_data", selected = "data")
                  updateTabsetPanel(session, inputId = "data", selected = "find")
                  updateRadioButtons(session, inputId = "NEON_browsing_type", selected = "site")
                  updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "list")
-                 updateSelectInput(session, inputId = "NEONsite_site", selected = input$NEONsite_zoom)
+                 updateSelectInput(session, inputId = "NEONsite_site", selected = input$NEONsite_dropdown)
                })
   ####— NEON: Step 1- Find data ####
   ## for dropdown
-  output$dropdown_site <- renderPrint(paste0(FieldSite_point$siteName[FieldSite_point$siteCode %in% input$NEONsite_zoom], " ", FieldSite_point$`Habitat Specific`[FieldSite_point$siteCode %in% input$NEONsite_zoom]))
-  output$dropdown_state <- renderPrint(FieldSite_point$stateName[FieldSite_point$siteCode %in% input$NEONsite_zoom])
-  output$dataproduct_number <- renderPrint(nrow(NEONproducts_product[filter_site(site = input$NEONsite_zoom),]))
+  output$dropdown_site <- renderPrint(paste0(FieldSite_point$siteName[FieldSite_point$siteCode %in% input$NEONsite_dropdown], " ", FieldSite_point$`Habitat Specific`[FieldSite_point$siteCode %in% input$NEONsite_dropdown]))
+  output$dropdown_state <- renderPrint(FieldSite_point$stateName[FieldSite_point$siteCode %in% input$NEONsite_dropdown])
+  output$dataproduct_number <- renderPrint(nrow(NEONproducts_product[filter_site(site = input$NEONsite_dropdown),]))
   
   ####—— 1a: By Site####
   # Variables
@@ -668,7 +669,7 @@ function(input, output, session) {
     if (input$showfilterinfo_site == TRUE) {
       addTooltip(session, id = "NEONproductkeywords_site", title = HTML("Filter data products by keywords describing their contents. Each product can have more than one, so only products that have <u>all</u> of the keywords chosen will appear."), trigger = "focus", placement = "top")
       addTooltip(session, id = "selectproducttype_site", title = HTML("Filter data products by their data collection method. Each product has one type, so the filter includes all products with the chosen types. Learn more about what each method means <a href='https://www.neonscience.org/data-collection' target='_blank'>here</a>."), trigger = "focus", placement = "top")
-      addTooltip(session, id = "selectproducttheme_site", title = HTML("Filter data products by their theme. Each product can have more than one, so only products that have <u>all</u> of the themes chosen will appear. Learn more about each theme <a href='https://www.neonscience.org/data/data-themes' target='_blank'>here</a>"), trigger = "focus", placement = "top")
+      addTooltip(session, id = "selectproducttheme_site", title = HTML("Filter data products by their theme. Each product can have more than one, so only products that have <u>all</u> of the themes chosen will appear. Learn more about each theme <a href='https://www.neonscience.org/data/data-themes' target='_blank'>here</a>."), trigger = "focus", placement = "top")
     } else {
       removeTooltip(session, id = "NEONproductkeywords_site")
       removeTooltip(session, id = "selectproducttype_site")
@@ -711,16 +712,34 @@ function(input, output, session) {
      updateSelectInput(session, inputId = "NEONproductkeywords_site", selected = NA)
    }
   })
+  observeEvent(input$NEONproductkeywords_site, updateSelectInput(session, inputId = "NEONproductkeywords_site2", selected = input$NEONproductkeywords_site))
+  observe({
+    if (length(input$NEONproductkeywords_site) == 0) {
+      updateSelectInput(session, inputId = "NEONproductkeywords_site2", selected = NA)
+    }
+  })
   observeEvent(input$selectproducttype_site2, updateSelectInput(session, inputId = "selectproducttype_site", selected = input$selectproducttype_site2))
   observe({
     if (length(input$selectproducttype_site2) == 0) {
       updateSelectInput(session, inputId = "selectproducttype_site", selected = NA)
     }
   })
+  observeEvent(input$selectproducttype_site, updateSelectInput(session, inputId = "selectproducttype_site2", selected = input$selectproducttype_site))
+  observe({
+    if (length(input$selectproducttype_site) == 0) {
+      updateSelectInput(session, inputId = "selectproducttype_site2", selected = NA)
+    }
+  })
   observeEvent(input$selectproducttheme_site2, updateSelectInput(session, inputId = "selectproducttheme_site", selected = input$selectproducttheme_site2))
   observe({
     if (length(input$selectproducttheme_site2) == 0) {
       updateSelectInput(session, inputId = "selectproducttheme_site", selected = NA)
+    }
+  })
+  observeEvent(input$selectproducttheme_site, updateSelectInput(session, inputId = "selectproducttheme_site2", selected = input$selectproducttheme_site))
+  observe({
+    if (length(input$selectproducttheme_site) == 0) {
+      updateSelectInput(session, inputId = "selectproducttheme_site2", selected = NA)
     }
   })
   observe({
@@ -994,10 +1013,22 @@ function(input, output, session) {
       updateSelectInput(session, inputId = "NEONproductkeywords_product", selected = NA)
     }
   })
+  observeEvent(input$NEONproductkeywords_product, updateSelectInput(session, inputId = "NEONproductkeywords_product2", selected = input$NEONproductkeywords_product))
+  observe({
+    if (length(input$NEONproductkeywords_product) == 0) {
+      updateSelectInput(session, inputId = "NEONproductkeywords_product2", selected = NA)
+    }
+  })
   observeEvent(input$selectproducttype_product2, updateSelectInput(session, inputId = "selectproducttype_product", selected = input$selectproducttype_product2))
   observe({
     if (length(input$selectproducttype_product2) == 0) {
       updateSelectInput(session, inputId = "selectproducttype_product", selected = NA)
+    }
+  })
+  observeEvent(input$selectproducttype_product, updateSelectInput(session, inputId = "selectproducttype_product2", selected = input$selectproducttype_product))
+  observe({
+    if (length(input$selectproducttype_product) == 0) {
+      updateSelectInput(session, inputId = "selectproducttype_product2", selected = NA)
     }
   })
   observeEvent(input$selectproducttheme_product2, updateSelectInput(session, inputId = "selectproducttheme_product", selected = input$selectproducttheme_product2))
@@ -1006,11 +1037,17 @@ function(input, output, session) {
       updateSelectInput(session, inputId = "selectproducttheme_product", selected = NA)
     }
   })
+  observeEvent(input$selectproducttheme_product, updateSelectInput(session, inputId = "selectproducttheme_product2", selected = input$selectproducttheme_product))
+  observe({
+    if (length(input$selectproducttheme_product) == 0) {
+      updateSelectInput(session, inputId = "selectproducttheme_product2", selected = NA)
+    }
+  })
   observe({
     if (input$showfilterinfo_product2 == TRUE) {
       addTooltip(session, id = "NEONproductkeywords_product2", title = HTML("Filter data products by keywords describing their contents. Each product can have more than one, so only products that have <u>all</u> of the keywords chosen will appear."), trigger = "focus", placement = "top")
       addTooltip(session, id = "selectproducttype_product2", title = HTML("Filter data products by their data collection method. Each product has one type, so the filter includes all products with the chosen types. Learn more about what each method means <a href='https://www.neonscience.org/data-collection' target='_blank'>here</a>."), trigger = "focus", placement = "top")
-      addTooltip(session, id = "selectproducttheme_product2", title = HTML("Filter data products by their theme. Each product can have more than one, so only products that have <u>all</u> of the themes chosen will appear. Learn more about each theme <a href='https://www.neonscience.org/data/data-themes' target='_blank'>here</a>"), trigger = "focus", placement = "top")
+      addTooltip(session, id = "selectproducttheme_product2", title = HTML("Filter data products by their theme. Each product can have more than one, so only products that have <u>all</u> of the themes chosen will appear. Learn more about each theme <a href='https://www.neonscience.org/data/data-themes' target='_blank'>here</a>."), trigger = "focus", placement = "top")
     } else {
       removeTooltip(session, id = "NEONproductkeywords_product2")
       removeTooltip(session, id = "selectproducttype_product2")
@@ -1594,13 +1631,102 @@ function(input, output, session) {
   observeEvent(input$help_download2, handlerExpr = {
     updateNavlistPanel(session, inputId = "tutorial", selected = "Downloading data products")
   })
+  ####— Map tab####
+  observeEvent(input$help_tutorial_dropdown, handlerExpr = {
+    updateNavlistPanel(session, inputId = "main", selected = "Map Browser")
+    confirmSweetAlert(session, inputId = "alert_dropdown", title = "Dropdown Tutorial", text = "When you click continue, the map will zoom towards the Santa Rita Experimental Range (SRER) and the dropdown will open. Click on some map features and the dropdown buttons and see what happens.", btn_labels = c("Cancel", "Continue"))
+  })
+  observeEvent(input$alert_dropdown, handlerExpr = {
+    if (input$alert_dropdown == TRUE) {
+      leafletProxy("map") %>% flyTo(lng = -110.8355, lat = 31.91068, zoom = 10)
+      toggleDropdownButton(inputId = "map_dropdown")
+      updateSelectInput(session, inputId = "NEONsite_dropdown", selected = "SRER")
+    }
+  })
+  observeEvent(input$help_tutorial_map_manager, handlerExpr = {
+    updateNavlistPanel(session, inputId = "main", selected = "Map Browser")
+    confirmSweetAlert(session, inputId = "alert_map_manager", title = "Map Manager Tutorial", text = "When you click continue, the map will reset over the US and the map manager will appear. Play around with the various layers to see how the map is affected.", btn_labels = c("Cancel", "Continue"))
+  })
+  observeEvent(input$alert_map_manager, handlerExpr = {
+    if (input$alert_map_manager == TRUE) {
+      leafletProxy("map") %>% flyTo(lng = -98.5795, lat = 39.8283, zoom = 2.5)
+      updateTabsetPanel(session, inputId = "main_data", selected = "filter")
+      leafletProxy("map") %>% showGroup(legend$group)
+    }
+  })
+  observeEvent(input$tutorial_help, handlerExpr = {
+    if (input$tutorial_help == '<i class="fa fa-forward"></i>') {
+      updateTabsetPanel(session, inputId = "tutorial_help", selected = "layers")
+      updateNavlistPanel(session, inputId = "tutorial", selected = "Finding data products")
+    }
+  })
+  ####— Browse Tab####
+  observeEvent(input$help_tutorial_browse_site, handlerExpr = {
+    updateNavlistPanel(session, inputId = "main", selected = "Map Browser")
+    confirmSweetAlert(session, inputId = "alert_browse_site", title = "Browsing by Site Tutorial", text = "When you click continue, the product catalog will appear with the Santa Rita Experimental Range (SRER) selected and the filters open. Try filtering products, opening the table full screen, and then clicking cells in the table and see what happens.", btn_labels = c("Cancel", "Continue"))
+  })
+  observeEvent(input$alert_browse_site, handlerExpr = {
+    if (input$alert_browse_site == TRUE) {
+      updateTabsetPanel(session, inputId = "main_data", selected = "data")
+      updateTabsetPanel(session, inputId = "data", selected = "find")
+      updateAwesomeRadio(session, inputId = "NEON_browsing_type", selected = "site")
+      updateAwesomeRadio(session, inputId = "NEONbrowsingstep_site", selected = "list")
+      updateSelectInput(session, inputId = "NEONsite_site", selected = "SRER")
+      toggleDropdownButton(inputId = "filter_site")
+    }
+  })
+  observeEvent(input$help_tutorial_browse_product, handlerExpr = {
+    updateNavlistPanel(session, inputId = "main", selected = "Map Browser")
+    confirmSweetAlert(session, inputId = "alert_browse_product", title = "Browsing by Product Tutorial", text = "When you click continue, the product catalog will appear with all 180 products listed and the filters open. Try filtering products, opening the table full screen, and then clicking cells in the table and see what happens.", btn_labels = c("Cancel", "Continue"))
+  })
+  observeEvent(input$alert_browse_product, handlerExpr = {
+    if (input$alert_browse_product == TRUE) {
+      updateTabsetPanel(session, inputId = "main_data", selected = "data")
+      updateTabsetPanel(session, inputId = "data", selected = "find")
+      updateAwesomeRadio(session, inputId = "NEON_browsing_type", selected = "product")
+      updateAwesomeRadio(session, inputId = "NEONbrowsingstep_product", selected = "list")
+      toggleDropdownButton(inputId = "filter_product")
+    }
+  })
+  observeEvent(input$help_tutorial_browse_details, handlerExpr = {
+    updateNavlistPanel(session, inputId = "main", selected = "Map Browser")
+    confirmSweetAlert(session, inputId = "alert_browse_details", title = "Viewing Product Details Tutorial", text = "When you click continue, the product catalog will open with the product 'Elevation of groundwater' already selected. Look through the product details, the various availabilities, and experiment with some of the buttons.", btn_labels = c("Cancel", "Continue"))
+  })
+  observeEvent(input$alert_browse_details, handlerExpr = {
+    if (input$alert_browse_details == TRUE) {
+      updateTabsetPanel(session, inputId = "main_data", selected = "data")
+      updateTabsetPanel(session, inputId = "data", selected = "find")
+      updateAwesomeRadio(session, inputId = "NEON_browsing_type", selected = "product")
+      updateAwesomeRadio(session, inputId = "NEONbrowsingstep_product", selected = "single")
+      updateTextInput(session, inputId = "NEONproductID_product", value = "DP1.20100.001")
+    }
+  })
+  observeEvent(input$tutorial_browse, handlerExpr = {
+    if (input$tutorial_browse == '<i class="fa fa-forward"></i>') {
+      updateTabsetPanel(session, inputId = "tutorial_browse", selected = "site")
+      updateNavlistPanel(session, inputId = "tutorial", selected = "Downloading data products")
+    }
+  })
+  ####— Download Tab####
+  observeEvent(input$tutorial_download, handlerExpr = {
+    if (input$tutorial_download == '<i class="fa fa-forward"></i>') {
+      confirmSweetAlert(session, inputId = "alert_done", title = "Tutorial Finished", text = "You made it through the tutorial! Press 'continue' to go and try everything out. We look foward from hearing your reactions and feedback!", btn_labels = c("Cancel", "Continue"))
+    }
+  })
+  observeEvent(input$alert_done, handlerExpr = {
+    if (input$alert_done == TRUE) {
+      updateTabsetPanel(session, inputId = "tutorial_download", selected = "general")
+      updateNavlistPanel(session, inputId = "tutorial", selected = "Introduction to the app")
+      updateNavlistPanel(session, inputId = "main", selected = "Map Browser")
+    }
+  })
   
   ####FOR ME TAB####
   
   #Text for troublshooting
-  output$text_me <- renderText(input$NEONproductkeywords_site2)
+  output$text_me <- renderText(input$tutorial_help == '<i class="fa fa-forward"></i>')
   #Text for troublshooting 2
-  output$text_me_two <- renderText(modal_clicked_site)
+  output$text_me_two <- renderText(cat(input$map_dropdown_state))
   #Table for troubleshooting
   #output$table_me <- shiny::renderDataTable()
 }

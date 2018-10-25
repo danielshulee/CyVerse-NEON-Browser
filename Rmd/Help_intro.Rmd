@@ -1,5 +1,5 @@
-## Welcome to the CyVerse NEON Browser!
-
+# Welcome to the CyVerse NEON Browser!
+<br>
 <center> <img src='https://static.wixstatic.com/media/276a43_2533596ce91044bea0f1298563122fce~mv2.png/v1/fill/w_516,h_112,al_c,q_80,usm_0.66_1.00_0.01/276a43_2533596ce91044bea0f1298563122fce~mv2.webp' height='50'>
 <img src='https://github.com/Danielslee51/NEON-Hosted-Browser/blob/master/Img/NEON_logo.png?raw=true' height='50' hspace='40'> </center>
 
@@ -13,3 +13,4 @@ This help section will explain NEON's services, how they correspond to this app,
 2. <a id='help_map' href='#' class='action-button'>Learn how to use the interactive map</a>
 3. <a id='help_browse' href='#' class='action-button'>Learn how to find data products</a>
 4. <a id='help_download' href='#' class='action-button'>Learn how to download data products</a>
+<hr>
