@@ -318,11 +318,12 @@ fluidPage(theme = shinytheme('cerulean'),
                                                     includeMarkdown("Rmd/Help_download_chars.Rmd")),
                                            tabPanel(icon("forward"))
                                          )
-                              ))),
+                              )))#,
                      ####Tab 4: Includes outputs to help with testing or troubleshooting####
-                     tabPanel("For me (troubleshooting)",
-                              textOutput("text_me"),
-                              textOutput("text_me_two"),
-                              shiny::dataTableOutput("table_me"))
+                     
+                     # tabPanel("For me (troubleshooting)",
+                     #          textOutput("text_me"),
+                     #          textOutput("text_me_two"),
+                     #          shiny::dataTableOutput("table_me"))
           )
 )

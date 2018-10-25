@@ -1724,9 +1724,9 @@ function(input, output, session) {
   ####FOR ME TAB####
   
   #Text for troublshooting
-  output$text_me <- renderText(input$tutorial_help == '<i class="fa fa-forward"></i>')
+  #output$text_me <- renderText(input$tutorial_help == '<i class="fa fa-forward"></i>')
   #Text for troublshooting 2
-  output$text_me_two <- renderText(cat(input$map_dropdown_state))
+  #output$text_me_two <- renderText(cat(input$map_dropdown_state))
   #Table for troubleshooting
   #output$table_me <- shiny::renderDataTable()
 }
