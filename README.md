@@ -26,7 +26,7 @@ The National Ecological Observatory Network <a href="https://www.neonscience.org
 
 ## Use
 
-The CyVerse NEON Browser is officially recognized a NEON community-contributed app and hosted by CyVerse using VICE (Visual Interactive Computing Environment) technology. This means that everybody with a CyVerse account can access this app in the [discovery environment](https://www.cyverse.org/discovery-environment). Visit the app **<here>**. The reason that only CyVerse users can access the app on the web spawns from limitations with [R Shiny](https://shiny.rstudio.com/)'s framework; we intended to host the app through a public server, but quickly found that one user downloading locked everyone else out.
+The CyVerse NEON Browser is officially recognized a NEON community-contributed app and hosted by CyVerse using VICE (Visual Interactive Computing Environment) technology. This means that everybody with a CyVerse account can access this app in the [discovery environment](https://www.cyverse.org/discovery-environment). Visit the app **\<here\>**. The reason that only CyVerse users can access the app on the web spawns from limitations with [R Shiny](https://shiny.rstudio.com/)'s framework; we intended to host the app through a public server, but quickly found that one user downloading locked everyone else out.
 
 However, those without CyVerse accounts *can* host the app on their own computer using [R](https://www.r-project.org/) and [R Shiny](https://shiny.rstudio.com/). Learn how [here](https://github.com/Danielslee51/NEON-Shiny-Browser).
 
