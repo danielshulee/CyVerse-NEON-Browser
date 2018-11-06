@@ -8,7 +8,7 @@ The CyVerse NEON Browser is an interactive tool to browse, pull, and manipulate 
 
 ### Features
 
-First, this app displays relevant features of NEON and their operations on a map. Users can view and filter map features such as NEON [Field Sites](https://www.neonscience.org/field-sites), NEON domains, [AOP](https://www.neonscience.org/data-collection/airborne-remote-sensing) flight boxes, and field site sublocations (plots, grids, sensors).
+First, this app displays relevant features of NEON and their operations on a map. Users can view and filter map features such as NEON [Field Sites](https://www.neonscience.org/field-sites), NEON domains, [AOP](https://www.neonscience.org/data-collection/airborne-remote-sensing) flight boxes, and sublocations within field sites (plots, grids, sensors).
 
 <**image/gif**>
 
