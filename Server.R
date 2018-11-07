@@ -1710,7 +1710,7 @@ function(input, output, session) {
   ####— Download Tab####
   observeEvent(input$tutorial_download, handlerExpr = {
     if (input$tutorial_download == '<i class="fa fa-forward"></i>') {
-      confirmSweetAlert(session, inputId = "alert_done", title = "Tutorial Finished", text = "You made it through the tutorial! Press 'continue' to go and try everything out. We look foward from hearing your reactions and feedback!", btn_labels = c("Cancel", "Continue"))
+      confirmSweetAlert(session, inputId = "alert_done", title = "Tutorial Finished", text = "You made it through the tutorial! Press 'continue' to go and try everything out. We look foward to hearing your reactions and feedback!", btn_labels = c("Cancel", "Continue"))
     }
   })
   observeEvent(input$alert_done, handlerExpr = {
