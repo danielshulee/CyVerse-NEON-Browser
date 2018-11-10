@@ -20,6 +20,8 @@ source('Functions/unzipEddy_function.R')
 source('Functions/datesTable_function.R')
 source('Functions/checkDownload_function.R')
 
+wd <- getwd()
+
 ####———MAP DATA———####
 
 ####——NEON——####
