@@ -120,13 +120,12 @@ function(input, output, session) {
     proxy <- leafletProxy("map")
     proxy %>%
       clearGroup(group = "Domains") %>%
-      addPolygons(data = Domain_unincluded(),
+      addPolygons(data = Domain_unincluded()$geometry,
                   weight = 2,
                   fillOpacity = '0.18',
                   group = "Domains",
-                  popup = paste0(Domain_unincluded()$DomainName),
                   color = "gray") %>%
-      addPolygons(data = Domain_included(),
+      addPolygons(data = Domain_included()$geometry,
                   weight = 2,
                   fillOpacity = '0.18',
                   group = "Domains",
