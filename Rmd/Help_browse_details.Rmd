@@ -1,5 +1,5 @@
 <br>
-After you find an interesting data product, whether it be through browsing by site or product, the next step is viewing the important details. These details include:
+After you find an interesting data product, whether it is through browsing by site or product, the next step is viewing the important details. These details include:
 * The description of the product
 * The abstract/importance of the ecological characteristic described by the product
 * The design of how the product is captured

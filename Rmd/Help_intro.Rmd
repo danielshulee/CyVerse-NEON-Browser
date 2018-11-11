@@ -7,7 +7,7 @@ If this is your first time here, welcome to the CyVerse NEON Browser! This app p
 
 <center> <img src='https://github.com/Danielslee51/NEON-Hosted-Browser/blob/master/Img/demo_screen.png?raw=true' height='300'> </center>
 
-This help section will explain NEON's services, how they correspond to this app, and how to use the app's functionalities. Using this app should be relatively straight-foward to use once you know how, and this tutorial will explain its major parts and even some more subtle features that can save lots of time. Click on any of these to jump to a section.
+This help section will explain NEON's services, how they correspond to this app, and how to use the app's functionalities. Using this app should be relatively straight-forward to use once you know how, and this tutorial will explain its major parts and even some more subtle features that can save lots of time. Click on any of these to jump to a section.
 
 1. <a id='help_NEON' href='#' class='action-button'>Learn about NEON's services</a>
 2. <a id='help_map' href='#' class='action-button'>Learn how to use the interactive map</a>

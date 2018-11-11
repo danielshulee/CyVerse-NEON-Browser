@@ -7,7 +7,7 @@ Here is a video detailing how NEON will enable scientific discovery in ecology a
 
 ### Goal
 
-By providing comprehensive data across many ecosystems, NEON hopes to stimulate research at a level not acheivable by previous generations of ecologists. With an anticipated 30 years of operation, NEON will be critical for analyzing the human impact on ecology and "how our society can more effectively address critical ecological questions and issues". According to NEON, their primary purpose is to provide:
+By providing comprehensive data across many ecosystems, NEON hopes to stimulate research at a level not achievable by previous generations of ecologists. With an anticipated 30 years of operation, NEON will be critical for analyzing the human impact on ecology and "how our society can more effectively address critical ecological questions and issues". According to NEON, their primary purpose is to provide:
 * <a href='https://www.neonscience.org/data/neon-data-portal' target='_blank'>Continental-scale environmental data</a>
 * <a href='https://www.neonscience.org/resources/information-researchers' target='_blank'>Infrastructure for research</a>
 * <a href='https://www.neonscience.org/opportunities/learning-opportunities' target='_blank'>Educational tools to work with large data</a>

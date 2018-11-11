@@ -1,0 +1,11 @@
+match(x= c(2,3,4), table= 3)
+match(x = 3, table = c(2,3,4,3)
+)
+library(leafl)
+library(leaflet)
+leaflet::projectRasterForLeaflet
+?projectRasterForLeaflet
+library(shiny)
+getwd()
+setwd('Desktop/NEON-Hosted-Browser/')
+shiny::runApp()
