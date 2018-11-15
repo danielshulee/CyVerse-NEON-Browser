@@ -10,7 +10,6 @@ library(sf)
 library(dplyr)
 library(jsonlite)
 library(neonUtilities)
-library(nneo)
 source('Functions/flight_function.R')
 source('Functions/filter_keyword_function.R')
 source('Functions/filter_site_function.R')
@@ -19,6 +18,9 @@ source('Functions/getProductSize_function.R')
 source('Functions/unzipEddy_function.R')
 source('Functions/datesTable_function.R')
 source('Functions/checkDownload_function.R')
+for (func in list.files('Functions/nneo/')) {
+  source(paste0("Functions/nneo/", func))
+}
 
 wd <- getwd()
 

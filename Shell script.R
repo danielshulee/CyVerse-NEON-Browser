@@ -21,7 +21,7 @@ libudunits2-dev \
 libssl-dev \
 libgit2-dev
 RUN sudo su - \
--c "R -e \"install.packages(c('leaflet','leaflet.extras','neonUtilities','nneo','shinythemes','shinyWidgets','shinyBS','shinyjs','sf','geosphere','jsonlite', 'dplyr', 'DT'))\""
+-c "R -e \"install.packages(c('leaflet','leaflet.extras','neonUtilities','shinythemes','shinyWidgets','shinyBS','shinyjs','sf','geosphere','jsonlite', 'dplyr', 'DT'))\""
 # Get app onto shiny server, modify config file to change user
 RUN sudo rm -rf /srv/shiny-server/*
 cd /srv/shiny-server/ \

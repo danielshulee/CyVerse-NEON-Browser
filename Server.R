@@ -191,7 +191,8 @@ function(input, output, session) {
                                   Field_sites_point_filtered()$`Habitat Specific`,
                                   "<br><b>Host: </b>",
                                   Field_sites_point_filtered()$Host,
-                                  "<br>", uiOutput("link")),
+                                  "<br>"#, uiOutput("link")
+                                  ),
                    clusterOptions = markerClusterOptions(),
                    label = paste0(Field_sites_point_filtered()$siteDescription),
                    icon = NEON_icon
