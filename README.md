@@ -1,6 +1,6 @@
 # CyVerse NEON Browser
 
-A multifunctional R Shiny tool hosted by [CyVerse](https://cyverse.org) and designed to make NEON data accessible, visible, and easy to interact with. This app can be deployed locally [here](https://github.com/Danielslee51/NEON-Shiny-Browser).
+A multifunctional R Shiny tool hosted by [CyVerse](https://cyverse.org) and designed to make NEON data accessible, visible, and easy to interact with. This app can also be deployed locally [here](https://github.com/Danielslee51/NEON-Shiny-Browser).
 
 ## Overview
 
