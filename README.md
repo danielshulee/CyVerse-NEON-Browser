@@ -10,12 +10,12 @@ The CyVerse NEON Browser is an interactive tool to browse, pull, and manipulate 
 
 First, this app displays relevant features of NEON and their operations on a map. Users can view and filter map features such as NEON [Field Sites](https://www.neonscience.org/field-sites), NEON domains, [AOP](https://www.neonscience.org/data-collection/airborne-remote-sensing) flight boxes, and sublocations within field sites (plots, grids, sensors).
 
-<p align="center"><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Map.gif?raw=true' width='650'></p>
+<p align="center"><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Map.gif?raw=true' width='750'></p>
 
 Additionally, this app provides an easy, in-app alternative to NEON's [data portal](http://data.neonscience.org/browse-data). Users can browse data products, view their details (e.g. description, abstract, availability), and easily download them to their computer and CyVerse account.
 
-<p align="center"><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Browse.gif?raw=true' width='650'></p>
-<p align="center"><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Download_Hosted.gif?raw=true' width='650'></p>
+<p align="center"><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Browse.gif?raw=true' width='750'></p>
+<p align="center"><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Download_Hosted.gif?raw=true' width='750'></p>
 
 ### Goal
 
@@ -33,7 +33,7 @@ The reason that only CyVerse users can access the app on the web spawns from lim
 
 ## CyVerse
 
-<p align="center"><img src='https://silvrback.s3.amazonaws.com/uploads/c3b34e9c-5131-4ca0-88fc-f5503a422c68/cyverse_cmyk-01.37809aadf1f2.png' height='75'></p>
+<a href='https://cyverse.org'><p align="center"><img src='https://silvrback.s3.amazonaws.com/uploads/c3b34e9c-5131-4ca0-88fc-f5503a422c68/cyverse_cmyk-01.37809aadf1f2.png' height='75'></p></a>
 
 [CyVerse](https://www.cyverse.org/) is an NSF-funded organization that promotes data-driven discovery by providing free and accessible cyberinfrastucute to scientists across the globe. CyVerse offers computing services like [data storage](http://www.cyverse.org/data-store), [analytical platforms](http://www.cyverse.org/discovery-environment), and [cloud computing](http://www.cyverse.org/atmosphere), with this app being hosted in the [discovery environment](https://www.cyverse.org/discovery-environment). For those that are not CyVerse users, becoming one is easy; not only will it give access to the CyVerse NEON Browser, but all the other useful cloud computing services. Do so [here](https://user.cyverse.org/register). 
 
