@@ -3,7 +3,7 @@ function(input, output, session) {
   
   # Initialization
   source('Functions/datesTable_function.R')
-  delay(ms = 0, expr = showNotification(ui = "First time here?", action = actionLink(inputId = "firsttime", label = "Yes"), duration = 20, type = "message", id = "first"))
+  showNotification(ui = "First time here?", action = actionLink(inputId = "firsttime", label = "Yes"), duration = 20, type = "message", id = "first")
   observeEvent(input$firsttime, confirmSweetAlert(session, inputId = "firsttime_confirm", title = "Welcome to the CyVerse NEON Browser!", text = "This will bring you to the tutorial section and get you started with NEON and this app.", btn_labels = c("Cancel", "Confirm")))
   observeEvent(input$firsttime_confirm, handlerExpr = {
     if (input$firsttime_confirm == TRUE) {
@@ -793,65 +793,36 @@ function(input, output, session) {
   
   # Buttons to toggle downloads
   observe({
-    if (nrow(NEONproductinfo_product()) == 0) {
-      hideElement(id = "togglegeneral_site", anim = TRUE, animType = "slide")
-      hideElement(id = "togglespecific_site", anim = TRUE, animType = "slide") 
-      hideElement(id = "toggleAOP_site", anim = TRUE, animType = "slide")
-    }
-    is_AOP <- if (nrow(NEONproductinfo_site()) > 0) {
-      if (NEONproductinfo_site()$productScienceTeamAbbr == "AOP") {
-        TRUE
+    if (nrow(NEONproductinfo_site()) == 0) {
+      hideElement(id = "toggledownload_site", anim = TRUE, animType = "slide")
+    } else {
+      if (NEONproductinfo_site()$productStatus == "ACTIVE") {
+        showElement(id = "toggledownload_site", anim = TRUE, animType = "slide")
       } else {
-        FALSE
-      }
-    }
-    if (nrow(NEONproductinfo_site()) > 0) {
-      if (is_AOP == FALSE) {
-        hideElement(id = "toggleAOP_site", anim = TRUE, animType = "slide")
-        showElement(id = "togglegeneral_site", anim = TRUE, animType = "slide")
-        showElement(id = "togglespecific_site", anim = TRUE, animType = "slide")  
-      } else if (is_AOP == TRUE) {
-        hideElement(id = "togglegeneral_site", anim = TRUE, animType = "slide")
-        hideElement(id = "togglespecific_site", anim = TRUE, animType = "slide") 
-        showElement(id = "toggleAOP_site", anim = TRUE, animType = "slide")
+        hideElement(id = "toggledownload_site", anim = TRUE, animType = "slide")
       }
     }
   })
-  observeEvent(eventExpr = input$togglegeneral_site,
-               handlerExpr = {
-                 updateTextInput(session, inputId = "dpID_general", value = input$NEONproductID_site)
-                 updateSelectInput(session, inputId = "location_NEON_general", selected = input$NEONsite_site)
-                 updateTabsetPanel(session, inputId = "data", selected = "download")
-                 updateRadioButtons(session, inputId = "NEON_download_type", selected = "general")
-                 updateCheckboxInput(session, inputId = "toggledownload_site", value = FALSE)
-                 updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "list")
-               })
-  observeEvent(eventExpr = input$togglespecific_site,
-               handlerExpr = {
-                 updateTextInput(session, inputId = "dpID_specific", value = input$NEONproductID_site)
-                 updateSelectInput(session, inputId = "location_NEON_specific", selected = input$NEONsite_site)
-                 if (length(input$NEONproducttable_site_cells_selected) > 0 & input$NEONproducttable_site_cells_selected[2] > 0) {
-                   month_date <- datesTable(dates = NEONproductinfo_site()$siteCodes[[1]]$availableMonths[NEONproductinfo_site()$siteCodes[[1]]$siteCode %in% input$NEONsite_site][[1]], process = "cell", cells = input$NEONproducttable_site_cells_selected)
-                   updateAirDateInput(session, inputId = "date_NEON", value = month_date)
-                 }
-                 updateTabsetPanel(session, inputId = "data", selected = "download")
-                 updateRadioButtons(session, inputId = "NEON_download_type", selected = "specific")
-                 updateCheckboxInput(session, inputId = "toggledownload_site", value = FALSE)
-                 updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "list")
-               })
-  observeEvent(eventExpr = input$toggleAOP_site,
-               handlerExpr = {
-                 updateTextInput(session, inputId = "dpID_AOP", value = input$NEONproductID_site)
-                 updateSelectInput(session, inputId = "location_NEON_AOP", selected = input$NEONsite_site)
-                 if (length(input$NEONproducttable_site_cells_selected) > 0 & input$NEONproducttable_site_cells_selected[2] > 0) {
-                   month_date <- datesTable(dates = NEONproductinfo_site()$siteCodes[[1]]$availableMonths[NEONproductinfo_site()$siteCodes[[1]]$siteCode %in% input$NEONsite_site][[1]], process = "cell", cells = input$NEONproducttable_site_cells_selected)
-                   updateAirDateInput(session, inputId = "year_AOP", value = month_date)
-                 }
-                 updateTabsetPanel(session, inputId = "data", selected = "download")
-                 updateRadioButtons(session, inputId = "NEON_download_type", selected = "AOP")
-                 updateCheckboxInput(session, inputId = "toggledownload_site", value = FALSE)
-                 updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "list")
-               })
+  observeEvent(input$toggledownload_site, handlerExpr = {
+    is_AOP <- if (NEONproductinfo_site()$productScienceTeamAbbr == "AOP") {
+      TRUE
+    } else {
+      FALSE
+    }
+    if (!is_AOP) {
+      updateTextInput(session, inputId = "dpID_regular", value = input$NEONproductID_site)
+      delay(ms = 1000, updateSelectInput(session, inputId = "fieldsite_NEON_regular", selected = input$NEONsite_site))
+      updateTabsetPanel(session, inputId = "data", selected = "download")
+      updateRadioButtons(session, inputId = "NEON_download_type", selected = "regular")
+      updateCheckboxInput(session, inputId = "toggledownload_site", value = FALSE)
+    } else if (is_AOP) {
+      updateTextInput(session, inputId = "dpID_AOP", value = input$NEONproductID_site)
+      delay(ms = 1000, updateSelectInput(session, inputId = "fieldsite_NEON_AOP", selected = input$NEONsite_site))
+      updateTabsetPanel(session, inputId = "data", selected = "download")
+      updateRadioButtons(session, inputId = "NEON_download_type", selected = "AOP")
+      updateCheckboxInput(session, inputId = "toggledownload_site", value = FALSE)
+    }
+  })
   
   output$NEONproductdesc_site <- renderUI({
     desc <- ifelse(length(NEONproductinfo_site()$productDescription) == 0,
@@ -889,51 +860,6 @@ function(input, output, session) {
       }
       write.csv(x = table, file = file)
     })
-  output$NEONproducttable_site <- renderDT({
-    dates <- if (length(NEONproductinfo_site()$siteCodes) == 0) {
-      NA
-    } else {
-      NEONproductinfo_site()$siteCodes[[1]]$availableMonths[NEONproductinfo_site()$siteCodes[[1]]$siteCode %in% input$NEONsite_site][[1]]}
-    if (sum(is.na(dates))) {
-      datatable(data = data.frame())
-    } else {
-      date_table_names <- c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
-      date_tables <- character(12)
-      years <- NULL
-      for (date in dates) {
-        years <- c(years, strsplit(date, "-")[[1]][1])
-      }
-      years <- unique(years)
-      years <- years[order(years)]
-      datatable(datesTable(dates, "table"), colnames = years, rownames = date_table_names, class = 'cell-border stripe hover order-column compact',
-                options = list(dom = "t",
-                               pageLength = 12,
-                               ordering = FALSE),
-                selection = list(mode = 'single', target = 'cell'))
-    }
-  })
-  output$NEONproductdates_site <- renderUI({
-    dates <- if (length(NEONproductinfo_site()$siteCodes) == 0) {
-      NULL
-    } else {
-      NEONproductinfo_site()$siteCodes[[1]]$availableMonths[NEONproductinfo_site()$siteCodes[[1]]$siteCode %in% input$NEONsite_site][[1]]}
-    if (sum(is.na(dates)) | length(dates) == 0) {
-      NULL
-    } else {
-      years <- NULL
-      for (date in dates) {
-        years <- c(years, strsplit(date, "-")[[1]][1])
-      }
-      years <- unique(years)
-      years <- years[order(years)]
-      date_list <- c("<b>", years[1], ": ", "</b>", paste(dates[grepl(years[1], dates)], collapse = ", "))
-      for (year in years[-1]) {
-        date_list <- c(date_list, "<br>","<b>", year, ": ", "</b>", paste(dates[grepl(year, dates)], collapse = ", "))
-      }
-      date_list <- paste(date_list, collapse = "")
-      HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>", date_list, "</p>"))
-    }
-  })
   output$NEONproductURL_site <- renderPrint({
     Urls <- if (length(NEONproductinfo_site()$siteCodes) == 0) {
       NA
@@ -1097,74 +1023,37 @@ function(input, output, session) {
       NULL
     }
   })
+  observeEvent(input$toggledownload_product, handlerExpr = {
+    is_AOP <- if (NEONproductinfo_product()$productScienceTeamAbbr == "AOP") {
+      TRUE
+    } else {
+      FALSE
+    }
+    if (!is_AOP) {
+      updateTextInput(session, inputId = "dpID_regular", value = input$NEONproductID_product)
+      delay(ms = 1000, updateSelectInput(session, inputId = "fieldsite_NEON_regular", selected = input$NEONsite_product))
+      updateTabsetPanel(session, inputId = "data", selected = "download")
+      updateRadioButtons(session, inputId = "NEON_download_type", selected = "regular")
+      updateCheckboxInput(session, inputId = "toggledownload_product", value = FALSE)
+    } else if (is_AOP) {
+      updateTextInput(session, inputId = "dpID_AOP", value = input$NEONproductID_product)
+      delay(ms = 1000, updateSelectInput(session, inputId = "fieldsite_NEON_AOP", selected = input$NEONsite_product))
+      updateTabsetPanel(session, inputId = "data", selected = "download")
+      updateRadioButtons(session, inputId = "NEON_download_type", selected = "AOP")
+      updateCheckboxInput(session, inputId = "toggledownload_product", value = FALSE)
+    }
+  })
   observe({
     if (nrow(NEONproductinfo_product()) == 0) {
-      hideElement(id = "togglegeneral_product", anim = TRUE, animType = "slide")
-      hideElement(id = "togglespecific_product", anim = TRUE, animType = "slide") 
-      hideElement(id = "toggleAOP_product", anim = TRUE, animType = "slide")
+      hideElement(id = "toggledownload_product", anim = TRUE, animType = "slide")
     } else {
-      available <- if (NEONproductinfo_product()$productStatus == "ACTIVE") {
-        TRUE
+      if (NEONproductinfo_product()$productStatus == "ACTIVE") {
+          showElement(id = "toggledownload_product", anim = TRUE, animType = "slide")
       } else {
-        FALSE
-      }
-      is_AOP <- if (NEONproductinfo_product()$productScienceTeamAbbr == "AOP") {
-        TRUE
-      } else {
-        FALSE
-      }
-      if (available == TRUE) {
-        if (is_AOP == FALSE) {
-          hideElement(id = "toggleAOP_product", anim = TRUE, animType = "slide")
-          showElement(id = "togglegeneral_product", anim = TRUE, animType = "slide")
-          showElement(id = "togglespecific_product", anim = TRUE, animType = "slide")  
-        } else if (is_AOP == TRUE) {
-          hideElement(id = "togglegeneral_product", anim = TRUE, animType = "slide")
-          hideElement(id = "togglespecific_product", anim = TRUE, animType = "slide") 
-          showElement(id = "toggleAOP_product", anim = TRUE, animType = "slide")
-        }
-      } else {
-        hideElement(id = "togglegeneral_product", anim = TRUE, animType = "slide")
-        hideElement(id = "togglespecific_product", anim = TRUE, animType = "slide") 
-        hideElement(id = "toggleAOP_product", anim = TRUE, animType = "slide")
+        hideElement(id = "toggledownload_product", anim = TRUE, animType = "slide")
       }
     }
   })
-  observeEvent(eventExpr = input$togglegeneral_product,
-               handlerExpr = {
-                 updateTextInput(session, inputId = "dpID_general", value = input$NEONproductID_product)
-                 updateSelectInput(session, inputId = "location_NEON_general", selected = input$NEONsite_product)
-                 updateTabsetPanel(session, inputId = "data", selected = "download")
-                 updateRadioButtons(session, inputId = "NEON_download_type", selected = "general")
-                 updateCheckboxInput(session, inputId = "toggledownload_product", value = FALSE)
-                 updateRadioButtons(session, inputId = "NEONbrowsingstep_product", selected = "list")
-               })
-  observeEvent(eventExpr = input$togglespecific_product,
-               handlerExpr = {
-                 updateTextInput(session, inputId = "dpID_specific", value = input$NEONproductID_product)
-                 updateSelectInput(session, inputId = "location_NEON_specific", selected = input$NEONsite_product)
-                 if (length(input$NEONproducttable_product_cells_selected) > 0 & input$NEONproducttable_product_cells_selected[2] > 0) {
-                   month_date <- datesTable(dates = NEONproductinfo_product()$siteCodes[[1]]$availableMonths[NEONproductinfo_product()$siteCodes[[1]]$siteCode %in% input$NEONsite_product][[1]], process = "cell", cells = input$NEONproducttable_product_cells_selected)
-                   updateAirDateInput(session, inputId = "date_NEON", value = month_date)
-                 }
-                 updateTabsetPanel(session, inputId = "data", selected = "download")
-                 updateRadioButtons(session, inputId = "NEON_download_type", selected = "specific")
-                 updateCheckboxInput(session, inputId = "toggledownload_product", value = FALSE)
-                 updateRadioButtons(session, inputId = "NEONbrowsingstep_product", selected = "list")
-               })
-  observeEvent(eventExpr = input$toggleAOP_product,
-               handlerExpr = {
-                 updateTextInput(session, inputId = "dpID_AOP", value = input$NEONproductID_product)
-                 updateSelectInput(session, inputId = "location_NEON_AOP", selected = input$NEONsite_product)
-                 if (length(input$NEONproducttable_product_cells_selected) > 0 & input$NEONproducttable_product_cells_selected[2] > 0) {
-                   month_date <- datesTable(dates = NEONproductinfo_product()$siteCodes[[1]]$availableMonths[NEONproductinfo_product()$siteCodes[[1]]$siteCode %in% input$NEONsite_product][[1]], process = "cell", cells = input$NEONproducttable_product_cells_selected)
-                   updateAirDateInput(session, inputId = "year_AOP", value = month_date)
-                 }
-                 updateTabsetPanel(session, inputId = "data", selected = "download")
-                 updateRadioButtons(session, inputId = "NEON_download_type", selected = "AOP")
-                 updateCheckboxInput(session, inputId = "toggledownload_product", value = FALSE)
-                 updateRadioButtons(session, inputId = "NEONbrowsingstep_product", selected = "list")
-               })
   
   output$NEONproductdesc_product <- renderUI({
     desc <- ifelse(length(NEONproductinfo_product()$productDescription) == 0,
@@ -1226,51 +1115,6 @@ function(input, output, session) {
     } else {}
   })
   observeEvent(input$eddy_covariance, updateTextInput(session, inputId = "NEONproductID_product", value = "DP4.00200.001"))
-  output$NEONproducttable_product <- renderDT({
-    dates <- if (length(NEONproductinfo_product()$siteCodes) == 0) {
-      NA
-    } else { 
-      NEONproductinfo_product()$siteCodes[[1]]$availableMonths[NEONproductinfo_product()$siteCodes[[1]]$siteCode %in% input$NEONsite_product][[1]]}
-    if (sum(is.na(dates)) | length(dates) == 0) {
-      datatable(data = data.frame())
-    } else {
-      date_table_names <- c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
-      date_tables <- character(12)
-      years <- NULL
-      for (date in dates) {
-        years <- c(years, strsplit(date, "-")[[1]][1])
-      }
-      years <- unique(years)
-      years <- years[order(years)]
-      datatable(datesTable(dates, "table"), colnames = years, rownames = date_table_names, class = 'cell-border stripe hover order-column compact',
-                options = list(dom = "t",
-                               pageLength = 12,
-                               ordering = FALSE),
-                selection = list(mode = 'single', target = 'cell'))
-    }
-  })
-  output$NEONproductdates_product <- renderUI({
-    dates <- if (length(NEONproductinfo_product()$siteCodes) == 0) {
-      NA
-    } else { 
-      NEONproductinfo_product()$siteCodes[[1]]$availableMonths[NEONproductinfo_product()$siteCodes[[1]]$siteCode %in% input$NEONsite_product][[1]]}
-    if (sum(is.na(dates)) | length(dates) == 0) {
-      NULL
-    } else {
-      years <- NULL
-      for (date in dates) {
-        years <- c(years, strsplit(date, "-")[[1]][1])
-      }
-      years <- unique(years)
-      years <- years[order(years)]
-      date_list <- c("<b>", years[1], ": ", "</b>", paste(dates[grepl(years[1], dates)], collapse = ", "))
-      for (year in years[-1]) {
-        date_list <- c(date_list, "<br>","<b>", year, ": ", "</b>", paste(dates[grepl(year, dates)], collapse = ", "))
-      }
-      date_list <- paste(date_list, collapse = "")
-      HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>", date_list, "</p>"))
-    }
-  })
   output$NEONproductURL_site <- renderPrint({
     Urls <- if (length(NEONproductinfo_site()$siteCodes) == 0) {
       NA
@@ -1288,37 +1132,142 @@ function(input, output, session) {
   
   ####— NEON: Step 2- Download Data####
   ####—— Variables####
-  Product_ID_general <- reactive(req(gsub(pattern = " ", replacement = "", x = input$dpID_general)))
-  General_ID_middle <- reactive(req(strsplit(Product_ID_general(), "[.]")[[1]][2]))
-  Folder_general <- reactive(req(paste0("filesToStack", General_ID_middle())))
-  Product_ID_specific <- reactive(req(gsub(pattern = " ", replacement = "", x = input$dpID_specific)))
-  Specific_ID_middle <- reactive(req(strsplit(Product_ID_specific(), "[.]")[[1]][2]))
-  Product_ID_AOP <- reactive(req(gsub(pattern = " ", replacement = "", x = input$dpID_AOP)))
+  Product_ID_regular <- reactive(req(
+    ifelse(gsub(pattern = " ", replacement = "", x = input$dpID_regular) == "",
+           yes = "random string that will not match to anything",
+           no = gsub(pattern = " ", replacement = "", x = input$dpID_regular))
+  ))
+  Regular_ID_middle <- reactive(req(strsplit(Product_ID_regular(), "[.]")[[1]][2]))
+  Folder_regular <- reactive(req(paste0("filesToStack", Regular_ID_middle())))
+  Product_ID_AOP <- reactive(req(
+    ifelse(gsub(pattern = " ", replacement = "", x = input$dpID_AOP) == "",
+           yes = "random string that will not match to anything",
+           no = gsub(pattern = " ", replacement = "", x = input$dpID_AOP))
+  ))
   AOP_ID_middle <- reactive(req(strsplit(Product_ID_AOP(), "[.]")[[1]][2]))
-  Field_Site_general <- reactive(req(input$location_NEON_general))
-  Field_Site_specific <- reactive(req(input$location_NEON_specific))
-  Field_Site_AOP <- reactive(req(input$location_NEON_AOP))
-  Package_type_general <- reactive(req(input$package_type_general))
-  Package_type_specific <- reactive(req(input$package_type_specific))
-  Date_specific_long <- reactive(req(as.character(input$date_NEON)))
-  Date_specific_parts <- reactive(req(strsplit(Date_specific_long(), "-")[[1]]))
-  Date_specific <- reactive(req(paste0(Date_specific_parts()[1], "-", Date_specific_parts()[2])))
-  Year_AOP <- reactive(req(strsplit(as.character(input$year_AOP), "-")[[1]][1]))
-  Folder_path_general <- reactive(req(paste0("NEON_", Field_Site_general(), "_", Product_ID_general())))
-  Folder_path_specific <- reactive(req(paste0("NEON_", Field_Site_specific(), "_", Product_ID_specific(), "_", Date_specific())))
+  Field_Site_regular <- reactive(req(input$fieldsite_NEON_regular))
+  Field_Site_AOP <- reactive(req(input$fieldsite_NEON_AOP))
+  Package_type_regular <- reactive(req(input$package_type_regular))
+  Folder_path_regular <- reactive(req(paste0("NEON_", Field_Site_regular(), "_", Product_ID_regular())))
   Folder_path_AOP <- reactive(req(paste0("NEON_", Field_Site_AOP(), "_", Product_ID_AOP(), "_", Year_AOP())))
   
-  ####—— Download NEON data: general ####
+  ####—— Download NEON data: Regular ####
+  NEONproductinfo_regular <- reactive(req(filter(.data = NEONproducts_product, productCode == Product_ID_regular())))
+  output$ui_fieldsite_regular <- renderUI({
+    sites <- if (length(NEONproductinfo_regular()$siteCodes) == 0) {
+      NA
+    } else {
+      sort(NEONproductinfo_regular()$siteCodes[[1]]$siteCode)}
+    selectInput(inputId = "fieldsite_NEON_regular", label = "Field Site", choices = sites)}
+  )
+  output$download_dates_regular <- renderDT({
+    dates <- if (length(NEONproductinfo_regular()$siteCodes) == 0) {
+      NA
+    } else { 
+      NEONproductinfo_regular()$siteCodes[[1]]$availableMonths[NEONproductinfo_regular()$siteCodes[[1]]$siteCode %in% input$fieldsite_NEON_regular][[1]]}
+    if (sum(is.na(dates)) | length(dates) == 0) {
+      datatable(data = data.frame())
+    } else {
+      date_table_names <- c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
+      date_tables <- character(12)
+      years <- NULL
+      for (date in dates) {
+        years <- c(years, strsplit(date, "-")[[1]][1])
+      }
+      years <- unique(years)
+      years <- years[order(years)]
+      datatable(datesTable(dates, "table"), colnames = years, rownames = date_table_names, class = 'cell-border stripe hover order-column compact',
+                options = list(dom = "t",
+                               pageLength = 12,
+                               ordering = FALSE),
+                selection = list(mode = 'multiple', target = input$target_download_regular))
+    }
+  })
+  product_dates <- reactive(NEONproductinfo_regular()$siteCodes[[1]]$availableMonths[NEONproductinfo_regular()$siteCodes[[1]]$siteCode %in% input$fieldsite_NEON_regular][[1]])
+  download_dates <- reactive({
+    if (nrow(NEONproductinfo_regular()) == 0) {
+      NULL
+    } else {
+    if (length(product_dates()) == 0) {
+    } else {
+      if (input$target_download_regular == "cell") {
+        if (input$cellselection_download_regular == "Start End") {
+          selected <- input$download_dates_regular_cells_selected
+          if (length(selected) == 0) {
+            NULL
+          } else {
+            selected <- split(selected, ceiling(2*seq_along(selected)/length(selected)))
+            dates <- NULL
+            for (i in 1:length(selected[[1]])) {
+              date <- datesTable(dates = product_dates(), process = "regular", selected = c(selected[[1]][i], selected[[2]][i]), target = input$target_download_regular)
+              dates <- c(dates, date)
+            }
+            dates <- sort(dates)
+            dates <- dates[grepl(pattern = "20", x = dates)]
+            if (length(dates) >= 2) {
+              start_date <- min(dates)
+              stop_date <- max(dates)
+              all_dates <- product_dates()[product_dates() >= start_date & product_dates() <= stop_date]
+              all_dates 
+            }
+          }
+        } else {
+          selected <- input$download_dates_regular_cells_selected
+          if (length(selected) == 0) {
+            NULL
+          } else {
+            selected <- split(selected, ceiling(2*seq_along(selected)/length(selected)))
+            dates <- NULL
+            for (i in 1:length(selected[[1]])) {
+              date <- datesTable(dates = product_dates(), process = "regular", selected = c(selected[[1]][i], selected[[2]][i]), target = input$target_download_regular)
+              dates <- c(dates, date)
+            }
+            dates <- sort(dates)
+            dates <- dates[grepl(pattern = "20", x = dates)]
+            dates
+          }
+        }
+      } else if (input$target_download_regular == "row") {
+        selected <- input$download_dates_regular_rows_selected
+        if (length(selected) == 0) {
+          NULL
+        } else {
+          dates <- NULL
+          for (i in 1:length(selected)) {
+            date <- datesTable(dates = product_dates(), process = "regular", selected = selected[i], target = input$target_download_regular)
+            dates <- c(dates, date)
+          }
+          dates <- sort(dates)
+          dates
+        }
+      } else if (input$target_download_regular == "column") {
+        selected <- input$download_dates_regular_columns_selected
+        if (length(selected) == 0) {
+          NULL
+        } else {
+          selected <- selected[selected != 0]
+          dates <- NULL
+          for (i in 1:length(selected)) {
+            date <- datesTable(dates = product_dates(), process = "regular", selected = selected[i], target = input$target_download_regular)
+            dates <- c(date, dates)
+          }
+          dates <- sort(dates)
+          dates
+        }
+      }
+    }
+    }
+  })
   # Calculate Download Size
-  observeEvent(eventExpr = input$get_general_size, ignoreInit = TRUE,
+  observeEvent(eventExpr = input$get_regular_size, ignoreInit = TRUE,
                handlerExpr = {
-                 if (input$dpID_general == "") {}
+                 if (input$dpID_regular == "" | length(download_dates()) == 0) {}
                  else {
-                   output$general_size <- renderPrint("")
-                   showNotification(ui = "Calculation in progress...", id = "calculation_general", type = "message")
-                   size <- try(getProductSize(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general()), silent = TRUE)
+                   output$regular_size <- renderPrint("")
+                   withProgress(message = "Calculation in progress", value = 0, max = 1.1, expr = {
+                     size <- try(getProductSize(dpID = Product_ID_regular(), site = Field_Site_regular(), package = Package_type_regular(), dates = download_dates()))
+                   })
                    if (class(size) == "try-error") {
-                     removeNotification(id = "calculation_general")
                      sendSweetAlert(session, title = "Calculation failed", text = paste0("The product that you tried to calculate size for was invalid. Read the error message: ", strsplit(size, ":")[[1]][2]), type = 'error')
                    } else {
                      if (size < 1 & size != 0) {
@@ -1330,169 +1279,79 @@ function(input, output, session) {
                      } else if (size == 0) {
                        total_size <- "No data available"
                      }
-                     output$general_size <- renderPrint(total_size)
+                     output$regular_size <- renderPrint(total_size)
                    }
-                   removeNotification(id = "calculation_general")
                  }
                })
-  # Download Function
-  downloadFunction_general <- function() {
-    disable(id = "download_NEON_general")
-    disable(id = "transfer_NEON_general")
-    showNotification(ui = "Downloading files…", duration = NULL, id = "download", type = "message")
-    download <- try(zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = paste0("../NEON General Downloads/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general())), silent = TRUE)
-    if (class(download) == "try-error") {
-      removeNotification(id = "download")
-      sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to a faulty request or a problem with the product itself. Read the error code message: ", strsplit(download, ":")[[1]][-1]), type = 'error')
-      enable(id = "download_NEON_general")
-      unlink(paste0("../NEON General Downloads/", Field_Site_general(), "/", Product_ID_general()), recursive = TRUE, force = TRUE)
-    } else {
-      removeNotification(id = "download")
-      if (Product_ID_general() == "DP4.00200.001") {
-        setwd(paste0("../NEON General Downloads/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general(), "/"))
-        unzipEddy(site = Field_Site_general())
-        removeNotification(id = "zip")
-        enable(id = "transfer_NEON_general")
-        runjs("document.getElementById('transfer_NEON_general').click();")
-      } else {
-        showNotification(ui = "Stacking files…", duration = NULL, id = "stack", type = "message")
-        stack <- try(stackByTable(filepath = paste0("../NEON General Downloads/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general()), folder = TRUE), silent = TRUE)
-        if (class(stack) == "try-error") {
-          removeNotification(id = "stack")
-          sendSweetAlert(session, title = "Stack failed", text = "Something went wrong in the stacking process. Please submit an issue on Github.", type = "error")
-          enable(id = "download_NEON_general")
-        } else {
-          removeNotification(id = "stack")
-          file.rename(from = paste0("../NEON General Downloads/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general(), "/stackedFiles"), to = paste0("../NEON General Downloads/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general(), "/", Folder_path_general()))
-          setwd(paste0("../NEON General Downloads/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general(), "/"))
-          showNotification(ui = "Transferring as zip…", duration = NULL, id = "zip", type = "message")
-          zip(zipfile = paste0("NEON_", Field_Site_general(), "_", General_ID_middle()), files = Folder_path_general())
-          removeNotification(id = "zip")
-          # setwd(wd)
-          enable(id = "transfer_NEON_general")
-          runjs("document.getElementById('transfer_NEON_general').click();")
-        }
-      }
-    }
-  }
   # Download
-  observeEvent(eventExpr = input$download_NEON_general, ignoreInit = TRUE,
+  observeEvent(eventExpr = input$download_NEON_regular, ignoreInit = TRUE,
                handlerExpr = {
-                 if (dir.exists(paste0("../NEON General Downloads/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general()))) {
-                   if (dir.exists(paste0("../NEON General Downloads/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general()))) {
-                     if (sum(grepl(paste0("NEON_", Field_Site_general(), "_", General_ID_middle(), ".zip"), list.files(paste0("../NEON General Downloads/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general()))))) {
-                       setwd(paste0("../NEON General Downloads/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/", Folder_general(), "/"))
-                       disable(id = "download_NEON_general")
-                       enable(id = "transfer_NEON_general")
-                       runjs("document.getElementById('transfer_NEON_general').click();")
-                     } else {
-                       unlink(paste0("../NEON General Downloads/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general(), "/*"), recursive = TRUE)
-                       downloadFunction_general()
+                 if (regexpr("DP[1-4]{1}.[0-9]{5}.001", Product_ID_regular()) != 1 | nrow(NEONproductinfo_regular()) == 0 | length(download_dates()) == 0) {}
+                 else {
+                   disable(id = "download_NEON_regular")
+                   disable(id = "transfer_NEON_regular")
+                   folder <- unique_folderpath(pathname = Folder_path_regular())
+                   dir.create(paste0("../", folder))
+                   withProgress(message = "Downloading files", value = 0, expr = {
+                     dates_left <- length(download_dates())
+                     for (date in download_dates()) {
+                       incProgress(amount = 0, detail = paste0("Downloading ", date))
+                       try(getPackage(dpID = Product_ID_regular(), site_code = Field_Site_regular(), year_month = date, package = Package_type_regular(), savepath = paste0("../", folder)))
+                       incProgress(amount = 1/dates_left)
                      }
+                   })
+                   if (length(list.files(paste0("../", folder))) == 0) {
+                     sendSweetAlert(session, title = "No Files", text = "There were no files downloaded. Please select available dates.", type = "error")
+                     unlink(paste0("../", folder), recursive = T)
+                     enable(id = "download_NEON_regular")
                    } else {
-                     downloadFunction_general()
+                     if (Product_ID_regular() == "DP4.00200.001") {
+                       withProgress(message = "Transferring as zip", value = 0, expr = {
+                         setwd(paste0("../", folder))
+                         unzipEddy(site = Field_Site_regular(), path = folder)
+                       })
+                       enable(id = "transfer_NEON_regular")
+                       runjs("document.getElementById('transfer_NEON_regular').click();")
+                     } else {
+                       withProgress(message = "Stacking files", value = 0, expr = {
+                         stack <- try(stackByTable(filepath = paste0("../", folder), folder = T))
+                       })
+                       if (class(stack) == "try-error") {
+                         sendSweetAlert(session, title = "Stack failed", text = "Something went wrong in the stacking process. Please submit an issue on Github.", type = "error")
+                         enable(id = "download_NEON_regular")
+                       } else {
+                         for (file in list.files(paste0("../", folder, "/stackedFiles/"))) {
+                           file.rename(from = paste0("../", folder, "/stackedFiles/", file), to = paste0("../", folder, "/", file))
+                         }
+                         unlink(x = paste0("../", folder, "/stackedFiles/"), recursive = T)
+                         size <- sum(file.info(list.files(paste0("../", folder), all.files = TRUE, recursive = TRUE, full.names = T))$size)
+                         write_downloadSummary(method = "Regular", dpID = Product_ID_regular(), dpName = NEONproducts_product$productName[NEONproducts_product$productCode == Product_ID_regular()], site = Field_Site_regular(), dates = download_dates(), package = Package_type_regular(), size = utils:::format.object_size(x = size, units = "auto"), path = folder)
+                         withProgress(message = "Transferring as zip", detail = "Bar stays at 0 until complete", value = 0, expr = {
+                           setwd("..")
+                           zipfile_regular <<- unique_folderpath(pathname = paste0("NEON_", Field_Site_regular(), "_", Regular_ID_middle()), zip = T)
+                           zip(zipfile = zipfile_regular, files = folder)
+                         })
+                         enable(id = "transfer_NEON_regular")
+                         runjs("document.getElementById('transfer_NEON_regular').click();")
+                       }
+                     }
                    }
-                 } else {
-                   dir.create(paste0("../NEON General Downloads/", Field_Site_general(), "/", Product_ID_general(), "/", Package_type_general()), recursive = TRUE)
-                   downloadFunction_general()
                  }
-                 updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "list")
-                 updateRadioButtons(session, inputId = "NEONbrowsingstep_product", selected = "list")
-                 updateSelectInput(session, inputId = "package_type_general", selected = "basic")
                })
   # Transfer
-  output$transfer_NEON_general <- downloadHandler(
+  output$transfer_NEON_regular <- downloadHandler(
     filename = function() {
-      paste0(Folder_path_general(),".zip")
+      paste0(Folder_path_regular(),".zip")
     },
     content = function(file) {
-      file.copy(from = paste0("NEON_", Field_Site_general(), "_", General_ID_middle(), ".zip"), to = file)
+      file.copy(from = paste0(zipfile_regular, ".zip"), to = file)
       setwd(wd)
-      enable(id = "download_NEON_general")
-      disable(id = "transfer_NEON_general")
+      enable(id = "download_NEON_regular")
+      disable(id = "transfer_NEON_regular")
       showNotification(ui = "Download Complete!", type = "message")
     },
     contentType = "application/zip")
   
-  ####—— Download NEON data: specific ####
-  downloadFunction_specific <- function() {
-    disable(id = "download_NEON_specific")
-    disable(id = "transfer_NEON_specific")
-    showNotification(ui = "Downloading files…", duration = NULL, id = "download", type = "message")
-    download <- try(getPackage(dpID = Product_ID_specific(), site_code = Field_Site_specific(), year_month = Date_specific(), package = Package_type_specific(), savepath = paste0("../NEON Specific Downloads//", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific())), silent = TRUE)
-    if (class(download) == "try-error") {
-      removeNotification(id = "download")
-      sendSweetAlert(session, title = "Download failed", text = "This could be due to a faulty request or a problem with the product itself.", type = 'error')
-      enable(id = "download_NEON_specific")
-      unlink(paste0("../NEON Specific Downloads//", Field_Site_specific(), "/", Product_ID_specific()), recursive = TRUE, force = TRUE)
-    } else {
-      removeNotification(id = "download")
-      if (Product_ID_specific() == "DP4.00200.001") {
-        setwd(paste0("../NEON Specific Downloads//", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))
-        file.rename(from = list.files(), to = paste0("NEON_", Field_Site_specific(), "_", Specific_ID_middle(), "_", Date_specific(), ".zip"))
-        enable(id = "transfer_NEON_specific")
-        runjs("document.getElementById('transfer_NEON_specific').click();")
-      } else {
-        showNotification(ui = "Stacking files…", duration = NULL, id = "stack", type = "message")
-        stack <- try(stackByTable(filepath = paste0("../NEON Specific Downloads//", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()), folder = TRUE), silent = TRUE)
-        if (class(stack) == "try-error") {
-          removeNotification(id = "stack")
-          sendSweetAlert(session, title = "Stack failed", text = "Something went wrong in the stacking process. Please submit an issue on Github.", type = "error")
-          enable(id = "download_NEON_specific")
-        } else {
-          removeNotification(id = "stack")
-          file.rename(from = paste0("../NEON Specific Downloads//", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific(), "/stackedFiles"), to = paste0("../NEON Specific Downloads//", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific(), "/", Folder_path_specific()))
-          setwd(paste0("../NEON Specific Downloads//", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))
-          showNotification(ui = "Transferring as zip…", duration = NULL, id = "zip", type = "message")
-          zip(zipfile = paste0("NEON_", Field_Site_specific(), "_", Specific_ID_middle(), "_", Date_specific()), files = Folder_path_specific())
-          removeNotification(id = "zip")
-          enable(id = "transfer_NEON_specific")
-          runjs("document.getElementById('transfer_NEON_specific').click();")
-        }
-      }
-    }
-  }
-  # Download
-  observeEvent(eventExpr = input$download_NEON_specific, ignoreInit = TRUE,
-               handlerExpr = {
-                 check <- try(checkDownload(dpID = Product_ID_specific(), site = Field_Site_specific(), year_month = Date_specific()), silent = TRUE)
-                 if (check != TRUE) {
-                   sendSweetAlert(session, title = "Download failed", text = check, type = 'error')
-                   enable(id = "download_NEON_specific")
-                 } else {
-                   if (dir.exists(paste0("../NEON Specific Downloads//", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))) {
-                     if (sum(grepl(paste0("NEON_", Field_Site_specific(), "_", Specific_ID_middle(), "_", Date_specific(), ".zip"), list.files(paste0("../NEON Specific Downloads//", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))))) {
-                       setwd(paste0("../NEON Specific Downloads//", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()))
-                       disable(id = "download_NEON_specific")
-                       enable(id = "transfer_NEON_specific")
-                       runjs("document.getElementById('transfer_NEON_specific').click();")
-                     } else {
-                       unlink(paste0("../NEON Specific Downloads//", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific(), "/*"))
-                       downloadFunction_specific()
-                     }
-                   } else {
-                     dir.create(paste0("../NEON Specific Downloads//", Field_Site_specific(), "/", Product_ID_specific(), "/", Date_specific(), "/", Package_type_specific()), recursive = TRUE)
-                     downloadFunction_specific()
-                   }
-                   updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "list")
-                   updateRadioButtons(session, inputId = "NEONbrowsingstep_product", selected = "list")
-                   updateSelectInput(session, inputId = "package_type_specific", selected = "basic")
-                 }
-               })
-  # Transfer
-  output$transfer_NEON_specific <- downloadHandler(
-    filename = function() {
-      paste0(Folder_path_specific(),".zip")
-    },
-    content = function(file) {
-      file.copy(from = paste0("NEON_", Field_Site_specific(), "_", Specific_ID_middle(), "_", Date_specific(), ".zip"), to = file)
-      setwd(wd)
-      enable(id = "download_NEON_specific")
-      disable(id = "transfer_NEON_specific")
-      showNotification(ui = "Download Complete!", type = "message")
-    },
-    contentType = "application/zip"
-  )
   ####—— Download NEON data: AOP####
   product_table <- reactive(NEONproducts_product[NEONproducts_product$productCode == Product_ID_AOP(),])
   # Checking is data product is AOP
@@ -1510,26 +1369,70 @@ function(input, output, session) {
       is_AOP()
     }
   })
+  # Display dates
+  NEONproductinfo_AOP <- reactive(req(filter(.data = NEONproducts_product, productCode == Product_ID_AOP())))
+  output$ui_fieldsite_AOP <- renderUI({
+    sites <- if (length(NEONproductinfo_AOP()$siteCodes) == 0) {
+      NA
+    } else {
+      sort(NEONproductinfo_AOP()$siteCodes[[1]]$siteCode)}
+    selectInput(inputId = "fieldsite_NEON_AOP", label = "Field Site", choices = sites)
+    })
+  output$download_dates_AOP <- renderDT({
+    dates <- if (length(NEONproductinfo_AOP()$siteCodes) == 0) {
+      NA
+    } else { 
+      NEONproductinfo_AOP()$siteCodes[[1]]$availableMonths[NEONproductinfo_AOP()$siteCodes[[1]]$siteCode %in% input$fieldsite_NEON_AOP][[1]]}
+    if (sum(is.na(dates)) | length(dates) == 0) {
+      datatable(data = data.frame())
+    } else {
+      date_table_names <- c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
+      date_tables <- character(12)
+      years <- NULL
+      for (date in dates) {
+        years <- c(years, strsplit(date, "-")[[1]][1])
+      }
+      years <- unique(years)
+      years <- years[order(years)]
+      datatable(datesTable(dates, "table"), colnames = years, rownames = date_table_names, class = 'cell-border stripe hover order-column compact',
+                options = list(dom = "t",
+                               pageLength = 12,
+                               ordering = FALSE),
+                selection = list(mode = 'single', target = "column"))
+    }
+  })
+  Year_AOP <- reactive({
+    dates <- if (length(NEONproductinfo_AOP()$siteCodes) == 0) {
+      NA
+    } else { 
+      NEONproductinfo_AOP()$siteCodes[[1]]$availableMonths[NEONproductinfo_AOP()$siteCodes[[1]]$siteCode %in% input$fieldsite_NEON_AOP][[1]]}
+    selected <- input$download_dates_AOP_columns_selected
+    year <- datesTable(dates = dates, process = "AOP", selected = selected)
+    year
+  })
   # Calculating Size
   observeEvent(eventExpr = input$get_AOP_size,
                handlerExpr = {
                  if (is_AOP() != "YES") {
-                   sendSweetAlert(session, title = "Calculation failed", text = "Please choose an AOP product", type = 'error')
+                   sendSweetAlert(session, title = "Calculation failed", text = "Please choose an AOP product.", type = 'error')
+                 } else if (length(Year_AOP()) == 0) {
+                   sendSweetAlert(session, title = "Calculation failed", text = "Please choose a year.", type = 'error')
                  } else {
-                   showNotification(ui = "Calculation in progress...", id = "calculation_AOP", type = "message")
                    data_test <- try(nneo_data(product_code = Product_ID_AOP(), site_code = Field_Site_AOP(), year_month = paste0(Year_AOP(), "-01")))
                    if (class(data_test) == "try-error") {
-                     removeNotification(id = "calculation_AOP")
                      sendSweetAlert(session, title = "Calculation failed", text = paste0("The product/site/year-month combination that you tried to calculate size for was invalid. Read the error message: ", strsplit(data_test, ":")[[1]][2]), type = 'error')
                    } else {
                      total_size <- 0
-                     for (i in c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")) {
-                       data <- try(nneo_data(product_code = Product_ID_AOP(), site_code = Field_Site_AOP(), year_month = paste0(Year_AOP(), "-", i))$data$files, silent = TRUE)
-                       if (class(data) != "try-error") {
-                         size <- as.numeric(data$size)
-                         total_size <- total_size + sum(size)
+                     withProgress(message = "Calculation in progress", value = 0, expr = {
+                       for (i in c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")) {
+                         data <- try(nneo_data(product_code = Product_ID_AOP(), site_code = Field_Site_AOP(), year_month = paste0(Year_AOP(), "-", i))$data$files)
+                         incProgress(amount = 1/12)
+                         if (class(data) != "try-error") {
+                           size <- as.numeric(data$size)
+                           total_size <- total_size + sum(size)
+                         }
                        }
-                     }
+                     })
                      if (total_size < 10^9 & total_size != 0) {
                        size_mb <- total_size * 10^-6
                        total_size <- paste0(as.character(size_mb), " MB")
@@ -1539,53 +1442,39 @@ function(input, output, session) {
                      } else if (total_size == 0) {
                        total_size <- "No data available"
                      }
-                     removeNotification(id = "calculation_AOP")
                      output$AOP_size <- renderPrint(total_size)
                    }
                  }
                })
-  # Download Function
-  downloadFunction_AOP <- function() {
-    disable(id = "download_NEON_AOP")
-    disable(id = "transfer_NEON_AOP")
-    showNotification(ui = "Downloading files (This may take a long time)…", duration = NULL, id = "download", type = "message")
-    download <- try(byFileAOP(dpID = Product_ID_AOP(), site = Field_Site_AOP(), year = Year_AOP(), check.size = FALSE, savepath = paste0("../NEON AOP Downloads//", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP())), silent = TRUE)
-    if (class(download) == "try-error") {
-      removeNotification(id = "download")
-      sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to a faulty request or a problem with the product itself. Read the error code message: ", strsplit(download, ":")[[1]][-1]), type = 'error')
-      enable(id = "download_NEON_AOP")
-      unlink(paste0("../NEON AOP Downloads//", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()), recursive = TRUE)
-    } else {
-      removeNotification(id = "download")
-      setwd(paste0("../NEON AOP Downloads//", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))
-      file.rename(from = Product_ID_AOP(), to = Folder_path_AOP())
-      showNotification(ui = "Transferring as zip…", duration = NULL, id = "zip", type = "message")
-      zip(zipfile = paste0("NEON_", Field_Site_AOP(), "_", AOP_ID_middle(), "_", Year_AOP()), files = Folder_path_AOP())
-      removeNotification(id = "zip")
-      enable(id = "transfer_NEON_AOP")
-      runjs("document.getElementById('transfer_NEON_AOP').click();")
-    }
-  }
   # Download
   observeEvent(eventExpr = input$download_NEON_AOP,
                handlerExpr = {
                  if (is_AOP() != "YES") {
-                   sendSweetAlert(session, title = "Download failed", text = "Please choose an AOP product", type = 'error')
+                   sendSweetAlert(session, title = "Download failed", text = "Please choose an AOP product.", type = 'error')
+                 } else if (length(Year_AOP()) == 0) {
+                   sendSweetAlert(session, title = "Download failed", text = "Please choose a year.", type = 'error')
                  } else {
-                   if (dir.exists(paste0("../NEON AOP Downloads//", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))) {
-                       if (sum(grepl(paste0("NEON_", Field_Site_AOP(), "_", AOP_ID_middle(), "_", Year_AOP(), ".zip"), list.files(paste0("../NEON AOP Downloads//", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))))) {
-                         setwd(paste0("../NEON AOP Downloads//", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()))
-                         disable(id = "download_NEON_AOP")
-                         enable(id = "transfer_NEON_AOP")
-                         runjs("document.getElementById('transfer_NEON_AOP').click();")
-                       } else {
-                         unlink(paste0("../NEON AOP Downloads//", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP(), "/*"))
-                         downloadFunction_AOP()
-                       }
-                   }
-                   else {
-                     dir.create(paste0("../NEON AOP Downloads//", Field_Site_AOP(), "/", Product_ID_AOP(), "/", Year_AOP()), recursive = TRUE)
-                     downloadFunction_AOP()
+                   disable(id = "download_NEON_AOP")
+                   disable(id = "transfer_NEON_AOP")
+                   folder <- unique_folderpath(pathname = Folder_path_AOP())
+                   withProgress(message = "Downloading files", value = 0, max = 1.1, expr = {
+                     download <- try(byFileAOP(dpID = Product_ID_AOP(), site = Field_Site_AOP(), year = Year_AOP(), check.size = FALSE, savepath = ".."))
+                   })
+                   if (class(download) == "try-error") {
+                     sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to a faulty request or a problem with the product itself. Read the error code message: ", strsplit(download, ":")[[1]][-1]), type = 'error')
+                     enable(id = "download_NEON_AOP")
+                     unlink(paste0("../", Product_ID_AOP()), recursive = TRUE)
+                   } else {
+                     file.rename(from = paste0("../", Product_ID_AOP()), to = paste0("../", folder))
+                     size <- sum(file.info(list.files(paste0("../", folder), all.files = TRUE, recursive = TRUE, full.names = T))$size) 
+                     write_downloadSummary(method = "AOP", dpID = Product_ID_AOP(), dpName = NEONproducts_product$productName[NEONproducts_product$productCode == Product_ID_AOP()], site = Field_Site_AOP(), dates = Year_AOP(), package = "NA", size = utils:::format.object_size(size, units = "auto"), path = folder)
+                     setwd("..")
+                     withProgress(message = "Transferring as zip", value = 0, expr = {
+                       zipfile_AOP <<- unique_folderpath(paste0("NEON_", Field_Site_AOP(), "_", AOP_ID_middle(), "_", Year_AOP()), zip = T)
+                       zip(zipfile = zipfile_AOP, files = Folder_path_AOP())  
+                     })
+                     enable(id = "transfer_NEON_AOP")
+                     runjs("document.getElementById('transfer_NEON_AOP').click();")
                    }
                  }
                })
@@ -1595,7 +1484,7 @@ function(input, output, session) {
       paste0(Folder_path_AOP(),".zip")
     },
     content = function(file) {
-      file.copy(from = paste0("NEON_", Field_Site_AOP(), "_", AOP_ID_middle(), "_", Year_AOP(), ".zip"), to = file)
+      file.copy(from = paste0(zipfile_AOP, ".zip"), to = file)
       setwd(wd)
       enable(id = "download_NEON_AOP")
       disable(id = "transfer_NEON_AOP")
@@ -1691,7 +1580,7 @@ function(input, output, session) {
   })
   observeEvent(input$help_tutorial_browse_details, handlerExpr = {
     updateNavlistPanel(session, inputId = "main", selected = "Map Browser")
-    confirmSweetAlert(session, inputId = "alert_browse_details", title = "Viewing Product Details Tutorial", text = "When you click continue, the product catalog will open with the product 'Elevation of groundwater' already selected. Look through the product details, the various availabilities, and experiment with some of the buttons.", btn_labels = c("Cancel", "Continue"))
+    confirmSweetAlert(session, inputId = "alert_browse_details", title = "Viewing Product Details Tutorial", text = "When you click continue, the product catalog will open with the product 'Elevation of groundwater' already selected. Look through the product details and experiment with some of the buttons.", btn_labels = c("Cancel", "Continue"))
   })
   observeEvent(input$alert_browse_details, handlerExpr = {
     if (input$alert_browse_details == TRUE) {
@@ -1716,7 +1605,7 @@ function(input, output, session) {
   })
   observeEvent(input$alert_done, handlerExpr = {
     if (input$alert_done == TRUE) {
-      updateTabsetPanel(session, inputId = "tutorial_download", selected = "general")
+      updateTabsetPanel(session, inputId = "tutorial_download", selected = "regular")
       updateNavlistPanel(session, inputId = "tutorial", selected = "Introduction to the app")
       updateNavlistPanel(session, inputId = "main", selected = "Map Browser")
     }
@@ -1725,9 +1614,9 @@ function(input, output, session) {
   ####FOR ME TAB####
   
   #Text for troublshooting
-  #output$text_me <- renderText(input$tutorial_help == '<i class="fa fa-forward"></i>')
+  #output$text_me <- renderText(regexpr("DP[1-4]{1}.[0-9]{5}.001", Product_ID_regular()))
   #Text for troublshooting 2
-  #output$text_me_two <- renderText(cat(input$map_dropdown_state))
+  #output$text_me_two <- renderText(nrow(NEONproductinfo_regular()))
   #Table for troubleshooting
   #output$table_me <- shiny::renderDataTable()
 }

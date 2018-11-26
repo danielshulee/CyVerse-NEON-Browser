@@ -18,6 +18,9 @@ source('Functions/getProductSize_function.R')
 source('Functions/unzipEddy_function.R')
 source('Functions/datesTable_function.R')
 source('Functions/checkDownload_function.R')
+source('Functions/unique_folderpath_function.R')
+source('Functions/write_downloadSummary_function.R')
+source("Functions/neonUtilities.R")
 for (func in list.files('Functions/nneo/')) {
   source(paste0("Functions/nneo/", func))
 }

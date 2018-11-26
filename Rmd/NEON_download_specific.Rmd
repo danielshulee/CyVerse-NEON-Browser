@@ -1,5 +1,0 @@
-##### Obtain a specific instance of a data product
-
-Download files for a single NEON data product, site, and year-month. A product ID from the Product Catalog or the NEON <a href='http://data.neonscience.org/static/browse.html' target='_blank'>data portal</a> is required.
-
-These downloads will come unzipped and stacked, meaning that they will be already opened into folders and organized based on measurement variables (see the difference by downloading directly from NEON). 

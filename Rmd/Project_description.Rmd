@@ -26,5 +26,5 @@ This app provides many useful features to anyone ranging from a student research
 
 ### Feedback
 
-Any feedback on anything is welcome. Feel free to check out the <a href='https://github.com/Danielslee51/NEON-Hosted-Browser' target='_blank'>Github</a> or submit issues <a href='https://github.com/Danielslee51/NEON-Hosted-Browser/issues' target='_blank'>here</a>, or email the author, Daniel Lee, at dantheman6100@gmail.com.
+Any feedback on anything is welcome. Feel free to check out the <a href='https://github.com/Danielslee51/CyVerse-NEON-Browser' target='_blank'>Github</a> or submit issues <a href='https://github.com/Danielslee51/CyVerse-NEON-Browser/issues' target='_blank'>here</a>, or email the author, Daniel Lee, at dantheman6100@gmail.com.
 <hr>
