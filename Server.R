@@ -1308,7 +1308,13 @@ function(input, output, session) {
                      if (Product_ID_regular() == "DP4.00200.001") {
                        withProgress(message = "Transferring as zip", value = 0, expr = {
                          setwd(paste0("../", folder))
-                         unzipEddy(site = Field_Site_regular(), path = folder)
+                         unzipEddy()
+                         size <- sum(file.info(list.files(paste0("../", folder), all.files = TRUE, recursive = TRUE, full.names = T))$size)
+                         write_downloadSummary(method = "Regular", dpID = Product_ID_regular(), dpName = NEONproducts_product$productName[NEONproducts_product$productCode == Product_ID_regular()], site = Field_Site_regular(), dates = download_dates(), package = Package_type_regular(), size = utils:::format.object_size(x = size, units = "auto"), path = folder)
+                         setwd("..")
+                         zipfile_regular <<- unique_folderpath(pathname = paste0("NEON_", Field_Site_regular(), "_00200"), zip = T)
+                         zip(zipfile = zipfile_regular, files = folder)
+                         incProgress(0.75)
                        })
                        enable(id = "transfer_NEON_regular")
                        runjs("document.getElementById('transfer_NEON_regular').click();")
